@@ -3510,7 +3510,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,1271,c.encounter_id,e.createDate,c.location_id,
-		101,1,e.createDate,
+		1013,1,e.createDate,
 		UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
@@ -3524,7 +3524,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 		creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
-		101,c.encounter_id,
+		1013,c.encounter_id,
 		CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
 			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
 			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
