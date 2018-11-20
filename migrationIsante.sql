@@ -141,6 +141,9 @@ SET SQL_SAFE_UPDATES = 0;
    call labsMigration();
    select 6 as Lab;
    SET SQL_SAFE_UPDATES = 0;
+   call labsMigrationOldData();
+   select 6 as LabOLD;
+   SET SQL_SAFE_UPDATES = 0;
 /* ordonance migration */ 
    call ordonanceMigration();
    select 7 as Ordonance;
@@ -174,7 +177,7 @@ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value
 SELECT DISTINCT e.patient_id,5096,e.encounter_id,e.encounter_datetime,e.location_id,
 formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e
-WHERE e.uuid = c.encGuid ;
+WHERE e.uuid = c.encGuid and formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd) is not null;
 
 /*Statut de la fiche*/
 /* complete/Incomplete */
@@ -211,7 +214,7 @@ WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum a
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
 v.followupComments<>'';
 
-
+ select 13 as comments;
 
 /* premiere visit  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
@@ -224,7 +227,7 @@ WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum a
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
 v.assessmentPlan<>'';
 
-
+ select 14 as comments;
 
  /* migration for From Autor*/  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)

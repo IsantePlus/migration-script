@@ -21,7 +21,7 @@ BEGIN
  create table if not exists itech.obs_concept_group (obs_id int,person_id int,concept_id int,encounter_id int);
  
  create table if not exists itech.location_mapping(siteCode text, location_id int(11)); 
- truncate  table location_mapping;
+ truncate  table itech.location_mapping;
 INSERT INTO itech.location_mapping(siteCode,location_id)
 select distinct value_reference as siteCode,location_id  from location_attribute l, location_attribute_type sl
 where sl.name='iSanteSiteCode' and sl.location_attribute_type_id=l.attribute_type_id;
@@ -51,7 +51,7 @@ CASE WHEN date(deathDt) <> "0000-00-00" then 1 ELSE 0 END,
 CASE WHEN date(deathDt) = "0000-00-00" then NULL ELSE deathDt END, 
 1,e.visitDate, patGuid 
 FROM itech.patient p,itech.encounter e
-where p.location_id > 0 and p.patientID=e.patientID and e.encounterType in (10,15) ON DUPLICATE KEY UPDATE
+where p.location_id > 0 and p.patStatus=0 and p.patientID=e.patientID and e.encounterType in (10,15) ON DUPLICATE KEY UPDATE
 gender=VALUES(gender),
 birthdate=VALUES(birthdate),
 birthdate_estimated=VALUES(birthdate_estimated),
@@ -150,7 +150,7 @@ date_created=VALUES(date_created);
 /* Numero TB*/
 INSERT INTO patient_identifier(patient_id,  identifier, identifier_type, preferred, location_id, creator, date_created, uuid)
 SELECT p.person_id, 
-case when t.name = 'No. de dossier TB' then left(j.nationalid,50) end, t.patient_identifier_type_id, 1, l.location_id, 1, p.date_created,UUID()
+case when t.name = 'No. de dossier TB' then left(st.currentTreatNo,50) end, t.patient_identifier_type_id, 1, l.location_id, 1, p.date_created,UUID()
 FROM person p, itech.patient j, patient_identifier_type t , itech.location_mapping l,itech.tbStatus st
 WHERE p.uuid = j.patGuid and st.patientID=j.patientID and j.patStatus<255 AND  l.siteCode=j.location_id AND (t.name = 'No. de dossier TB' and st.currentTreatNo is not null and st.currentTreatNo <> '') ON DUPLICATE KEY UPDATE
 identifier=VALUES(identifier),
@@ -185,7 +185,6 @@ value=VALUES(value),
 person_attribute_type_id=VALUES(person_attribute_type_id), 
 creator=VALUES(creator), 
 date_created=VALUES(date_created);
-
 
 
 /*

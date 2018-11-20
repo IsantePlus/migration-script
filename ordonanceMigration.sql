@@ -8714,23 +8714,15 @@ v.drugID=75 and FindNumericValue(v.dispAltNumPills)>0;
 /* Date de renouvellement de la prescription*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,162549,e.encounter_id,e.encounter_datetime,e.location_id,
-    CASE WHEN c.nxtVisitYy>0 and c.nxtVisitMm>0 and c.nxtVisitDd>0 THEN date(concat(c.nxtVisitYy,'-',c.nxtVisitMm,'-',c.nxtVisitDd))
-	     WHEN c.nxtVisitYy>0 and c.nxtVisitMm>0 and c.nxtVisitDd<1 THEN date(concat(c.nxtVisitYy,'-',c.nxtVisitMm,'-01'))
-	     WHEN c.nxtVisitYy>0 and c.nxtVisitMm<1 and c.nxtVisitDd<1 THEN date(concat(c.nxtVisitYy,'-01-01'))
-		ELSE NULL
-	END,1,e.date_created,UUID()
+formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e
-WHERE e.uuid = c.encGuid and c.encounterType in (5,18);
+WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd) is not null;
 
 
  /* Date d'initiation ARV in ordonance form*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,159599,e.encounter_id,e.encounter_datetime,e.location_id,
-    CASE WHEN pr.arvStartDateYy>0 and pr.arvStartDateMm>0 and pr.arvStartDateDd>0 THEN date(concat(pr.arvStartDateYy,'-',pr.arvStartDateMm,'-',pr.arvStartDateDd))
-	     WHEN pr.arvStartDateYy>0 and pr.arvStartDateMm>0 and pr.arvStartDateDd<1 THEN date(concat(pr.arvStartDateYy,'-',pr.arvStartDateMm,'-01'))
-	     WHEN pr.arvStartDateYy>0 and pr.arvStartDateMm<1 and pr.arvStartDateDd<1 THEN date(concat(pr.arvStartDateYy,'-01-01'))
-		ELSE NULL
-	END,1,e.date_created,UUID()
+formatDate(pr.arvStartDateYy,pr.arvStartDateMm,pr.arvStartDateDd),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e,itech.prescriptionOtherFields pr
 WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and pr.patientID=c.patientID and pr.arvStartDateYy>0 and
 date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(pr.visitDateYy,'-',pr.visitDateMm,'-',pr.visitDateDd);
@@ -8746,9 +8738,28 @@ FROM itech.encounter c, encounter e,itech.prescriptionOtherFields pr
 WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and pr.patientID=c.patientID and pr.startedArv>=0 and
 date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(pr.visitDateYy,'-',pr.visitDateMm,'-',pr.visitDateDd);
 
-
-
-
+/* migration for others Drugs */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,163322,e.encounter_id,e.encounter_datetime,e.location_id,
+    other.otherDrugs,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e,
+(select visitDate,patientID,seqNum,concat(ifnull(otherdrug1,''),ifnull(otherdrug2,''),ifnull(otherdrug3,''),ifnull(otherdrug4,''),ifnull(otherdrug5,'')) as otherDrugs from 
+(
+select formatDate(visitDateYy,visitDateMm,visitDateDd) as visitDate,patientID,seqNum,
+GROUP_CONCAT(case when rxSlot=1 then concat('Drug Name:',drug,'; Dosage:',altDosageSpecify,'; Nombre de Jour:',numDaysDesc,'; Date Dispensation:',case when dispensed=1 then formatDate(dispDateYy,dispDateMm,dispDateDd) else '' end,'||') else null end SEPARATOR '||') as otherdrug1, 
+GROUP_CONCAT(case when rxSlot=2 then concat('Drug Name:',drug,'; Dosage:',altDosageSpecify,'; Nombre de Jour:',numDaysDesc,'; Date Dispensation:',case when dispensed=1 then formatDate(dispDateYy,dispDateMm,dispDateDd) else '' end,'||') else null end SEPARATOR '||') as otherdrug2, 
+GROUP_CONCAT(case when rxSlot=3 then concat('Drug Name:',drug,'; Dosage:',altDosageSpecify,'; Nombre de Jour:',numDaysDesc,'; Date Dispensation:',case when dispensed=1 then formatDate(dispDateYy,dispDateMm,dispDateDd) else '' end,'||') else null end SEPARATOR '||') as otherdrug3, 
+GROUP_CONCAT(case when rxSlot=4 then concat('Drug Name:',drug,'; Dosage:',altDosageSpecify,'; Nombre de Jour:',numDaysDesc,'; Date Dispensation:',case when dispensed=1 then formatDate(dispDateYy,dispDateMm,dispDateDd) else '' end,'||') else null end SEPARATOR '||') as otherdrug4,
+GROUP_CONCAT(case when rxSlot=5 then concat('Drug Name:',drug,'; Dosage:',altDosageSpecify,'; Nombre de Jour:',numDaysDesc,'; Date Dispensation:',case when dispensed=1 then formatDate(dispDateYy,dispDateMm,dispDateDd) else '' end,'||') else null end SEPARATOR '||')  as otherdrug5 
+from itech.otherPrescriptions group by 1,2 order by 2,1
+) ot where (otherdrug1 is not null
+            or otherdrug2 is not null
+			or otherdrug3 is not null
+			or otherdrug4 is not null
+			or otherdrug5 is not null)
+) other
+WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and other.patientID=c.patientID and other.seqNum=c.seqNum and
+date_format(date(e.encounter_datetime),'%y-%m-%d')  = other.visitDate and other.otherDrugs<>'';
 
 
 END;

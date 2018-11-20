@@ -5,3 +5,6 @@ LEFT JOIN (SELECT id, identifier FROM idgen_log_entry WHERE identifier NOT IN (S
  AND pit.uuid='05a29f94-c0ed-11e2-94be-8c13b969e334')) as ident
 ON pt.patient_id = ident.id
 where pt.patient_id NOT IN (select pid.patient_id from patient_identifier pid,patient_identifier_type p1 where p1.patient_identifier_type_id=pid.identifier_type and p1.name = "iSantePlus ID");
+
+
+update patient_identifier set location_id=913;

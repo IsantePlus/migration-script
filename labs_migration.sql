@@ -13670,7 +13670,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
  AND ito.value_numeric IN(1,2,3,4);
 	
 	
-	/*Start migration for charge virale qualitative*/
+ /*Start migration for charge virale qualitative*/
   INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
  creator,date_created,uuid)
  SELECT DISTINCT c.patient_id,1271,c.encounter_id,e.createDate,c.location_id,
@@ -13687,6 +13687,15 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
   OR (l.result2 like lower("D%") AND l.result2 like lower("I%"))
   OR (l.result3 like lower("D%") AND l.result3 like lower("I%"))
   OR (l.result4 like lower("D%") AND l.result4 like lower("I%"))
+ )
+ AND (
+  (l.result <> "" AND digits(l.result) < 1)
+  OR
+  (l.result2 <> "" AND digits(l.result2) < 1)
+  OR
+  (l.result3 <> "" AND digits(l.result3) < 1)
+  OR
+  (l.result4 <> "" AND digits(l.result4) < 1)
  );
    /*Answer*/
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
@@ -13732,11 +13741,18 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
   OR (l.result2 like lower("D%") AND l.result2 like lower("I%"))
   OR (l.result3 like lower("D%") AND l.result3 like lower("I%"))
   OR (l.result4 like lower("D%") AND l.result4 like lower("I%"))
+ )
+ AND (
+  (l.result <> "" AND digits(l.result) < 1)
+  OR
+  (l.result2 <> "" AND digits(l.result2) < 1)
+  OR
+  (l.result3 <> "" AND digits(l.result3) < 1)
+  OR
+  (l.result4 <> "" AND digits(l.result4) < 1)
  );
 
-/*End migration for charge virale qualitative*/
-	
-	
+/*End migration for charge virale qualitative*/	
 	
 	
 	/*Ending migration for labs data*/

@@ -120,8 +120,8 @@ date_changed=VALUES(date_changed);
 select 3 as encounter1;
 
 /*migration for form history */
-insert into isanteplus_form_history(visit_id,encounter_id,creator,date_created,date_changed,uuid)
-select visit_id,encounter_id,creator,date_format(date(date_created),'%y-%m-%d'),date_format(date(date_changed),'%y-%m-%d'), uuid() from encounter e where encounter_type not in (select e.encounter_type_id from encounter_type e where uuid='873f968a-73a8-4f9c-ac78-9f4778b751b6')
+insert into isanteplus_form_history(visit_id,encounter_id,patient_id,creator,date_created,date_changed,uuid)
+select visit_id,encounter_id,e.patient_id,creator,date_format(date(date_created),'%y-%m-%d'),date_format(date(date_changed),'%y-%m-%d'), uuid() from encounter e where encounter_type not in (select e.encounter_type_id from encounter_type e where uuid='873f968a-73a8-4f9c-ac78-9f4778b751b6')
 ON DUPLICATE KEY UPDATE
 visit_id=values(visit_id),
 encounter_id=values(encounter_id),

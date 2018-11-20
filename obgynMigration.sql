@@ -396,8 +396,8 @@ select 30 as objn;
 /*Aucune, Inconnu*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,163730,e.encounter_id,e.encounter_datetime,e.location_id,
-CASE WHEN o.concept_id=71097 AND o.value_numeric=1 THEN 163729
-     WHEN o.concept_id=71097 AND o.value_numeric=2 THEN 163728
+CASE WHEN o.concept_id=71097 AND o.value_numeric=1 THEN 163608
+     WHEN o.concept_id=71097 AND o.value_numeric=2 THEN 163609
 	 ELSE NULL
 END,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
@@ -1912,10 +1912,10 @@ o.concept_id=70630 and o.value_boolean>0;
 /* Toux ≥ 2 semaines */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,159614,e.encounter_id,e.encounter_datetime,e.location_id,
-case when o.concept_id=70206 and o.value_boolean>0 then 159799 else null end,1,e.date_created,UUID()
+case when o.concept_id=70207 and o.value_boolean>0 then 159799 else null end,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
-o.concept_id=70206 and o.value_boolean>0;
+o.concept_id=70207 and o.value_boolean>0;
 
 
 /* Douleurs Hypogastriques */
