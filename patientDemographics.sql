@@ -233,7 +233,7 @@ from person p, itech.patient j, encounter e
 /* birthDistrict */
 	  /* migration group */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164969,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,165194,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null
 and ((j.birthDistrict IS NOT NULL AND j.birthDistrict <> ''));
@@ -242,7 +242,7 @@ delete from itech.obs_concept_group where 1;
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
 FROM openmrs.obs
-WHERE openmrs.obs.concept_id=164969 
+WHERE openmrs.obs.concept_id=165194 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 select now() as birthDistrict;
@@ -261,7 +261,7 @@ and ((j.birthDistrict IS NOT NULL AND j.birthDistrict <> '')
 /*Emergency contact */	
 	  /* migration group */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164968,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,165210,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null
 and ((j.contact IS NOT NULL AND j.contact <> '') or 
@@ -274,12 +274,12 @@ delete from itech.obs_concept_group where 1;
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
 FROM openmrs.obs
-WHERE openmrs.obs.concept_id=164968 
+WHERE openmrs.obs.concept_id=165210 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 /* migration of contact*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164950,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.contact ,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,163258,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.contact ,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.obs_concept_group og
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null
  and og.person_id=e.patient_id and e.encounter_id=og.encounter_id 
@@ -288,7 +288,7 @@ and ((j.contact IS NOT NULL AND j.contact <> '')
  
  /* migration of Telephone contact*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164956,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.phoneContact ,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,159635,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.phoneContact ,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.obs_concept_group og
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null
   and og.person_id=e.patient_id and e.encounter_id=og.encounter_id 
@@ -328,7 +328,7 @@ and ((j.relationContact IS NOT NULL AND j.relationContact <> '')
  
  	  /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164959,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,165211,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null
 and ((j.medicalPoa IS NOT NULL AND j.medicalPoa <> '') or 
@@ -342,12 +342,12 @@ delete from itech.obs_concept_group where 1;
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
 FROM openmrs.obs
-WHERE openmrs.obs.concept_id=164959 
+WHERE openmrs.obs.concept_id=165211 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 /* migration of contact*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164950,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.medicalPoa ,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,163258,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.medicalPoa ,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.obs_concept_group og
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null
  and og.person_id=e.patient_id and e.encounter_id=og.encounter_id 
@@ -356,7 +356,7 @@ and ((j.medicalPoa IS NOT NULL AND j.medicalPoa <> '')
  
  /* migration of Telephone contact*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164956,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.phoneMedicalPoa ,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,159635,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.phoneMedicalPoa ,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.obs_concept_group og
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null
   and og.person_id=e.patient_id and e.encounter_id=og.encounter_id 
@@ -395,7 +395,7 @@ and ((j.relationMedicalPoa IS NOT NULL AND j.relationMedicalPoa <> '')
  
  	  /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164965,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,165212,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.allowedDisclosures a
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null and a.patientID=j.patientID and disclosureSlot=1
 and ((a.disclosureName IS NOT NULL AND a.disclosureName <> '') or 
@@ -410,12 +410,12 @@ delete from itech.obs_concept_group where 1;
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
 FROM openmrs.obs
-WHERE openmrs.obs.concept_id=164965 
+WHERE openmrs.obs.concept_id=165212 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 /* migration of contact*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164950,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,a.disclosureName,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,163258,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,a.disclosureName,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.allowedDisclosures a,itech.obs_concept_group og
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null and a.patientID=j.patientID and disclosureSlot=1
   and og.person_id=e.patient_id and e.encounter_id=og.encounter_id 
@@ -424,7 +424,7 @@ and ((a.disclosureName IS NOT NULL AND a.disclosureName <> ''));
  
  /* migration of Telephone contact*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164956,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,a.disclosureTelephone,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,159635,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,a.disclosureTelephone,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.allowedDisclosures a,itech.obs_concept_group og
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null and a.patientID=j.patientID and disclosureSlot=1
   and og.person_id=e.patient_id and e.encounter_id=og.encounter_id 
@@ -461,7 +461,7 @@ and ((a.disclosureRel IS NOT NULL AND a.disclosureRel <> ''));
  
  	  /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164961,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,165213,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.allowedDisclosures a
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null and a.patientID=j.patientID and disclosureSlot=2
 and ((a.disclosureName IS NOT NULL AND a.disclosureName <> '') or 
@@ -476,12 +476,12 @@ delete from itech.obs_concept_group where 1;
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
 FROM openmrs.obs
-WHERE openmrs.obs.concept_id=164961 
+WHERE openmrs.obs.concept_id=165213 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 /* migration of contact*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164950,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,a.disclosureName,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,163258,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,a.disclosureName,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.allowedDisclosures a,itech.obs_concept_group og
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null and a.patientID=j.patientID and disclosureSlot=2
   and og.person_id=e.patient_id and e.encounter_id=og.encounter_id 
@@ -490,7 +490,7 @@ and ((a.disclosureName IS NOT NULL AND a.disclosureName <> ''));
  
  /* migration of Telephone contact*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164956,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,a.disclosureTelephone,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,159635,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,a.disclosureTelephone,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.allowedDisclosures a,itech.obs_concept_group og
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null and a.patientID=j.patientID and disclosureSlot=2
   and og.person_id=e.patient_id and e.encounter_id=og.encounter_id 
