@@ -115,6 +115,8 @@ DELIMITER $$
 CREATE PROCEDURE migrationIsante()
 BEGIN
 
+  DECLARE cnt INT;
+
 create table if not exists migration_log(id int(11) primary key auto_increment,prcodedure varchar(25),starttime datetime,endtime datetime);
 
  select count(*) into cnt from migration_log where prcodedure = 'encounter'  and endtime is not null;
