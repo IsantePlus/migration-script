@@ -17,7 +17,7 @@ function createProcedure() {
 
 
 createProcedure cleanOpenmrs.sql
-echo "procedure cleanOpenmrs created" > /home/hup/migration/migrationLog.txt
+echo "procedure cleanOpenmrs created" > /home/hup/migration/migration.Log.txt
 
 createProcedure patientDemographics.sql
 echo "procedure patientDemographics created"  >> /home/hup/migration/migrationLog.txt

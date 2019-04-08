@@ -937,7 +937,7 @@ SET FOREIGN_KEY_CHECKS=1;
 		AND l.labID = 161
 		AND (l.result <> "" AND l.result is not null AND digits(l.result) >= 0);
 	/*End migration for Amylase*/
-	/*Starting migration for Lipase*/
+	/*Starting migration forLipase */
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,1271,c.encounter_id,e.createDate,c.location_id,
@@ -952,7 +952,7 @@ SET FOREIGN_KEY_CHECKS=1;
 		AND l.labID = 162;
 		
 		/*concept*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
+		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		1013,c.encounter_id,

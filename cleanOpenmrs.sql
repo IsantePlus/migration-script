@@ -6,7 +6,6 @@ BEGIN
      DECLARE myInc INT;
 	 SET SQL_SAFE_UPDATES = 0;
 	 SET FOREIGN_KEY_CHECKS=0;
-
 	 
 update obs set obs_group_id=null;
 delete from obs ;
@@ -16,7 +15,6 @@ delete from encounter;
 truncate table encounter;
 delete from visit;
 truncate table visit;
-
 
 
 delete from person_attribute where person_id in (select p.person_id from person p, itech.patient j where  j.patGuid = p.uuid);

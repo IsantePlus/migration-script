@@ -1,3 +1,36 @@
+
+
+ use itech;
+update itech.encounter set visitDateDd=31 where visitDateMm in (1,3,5,7,8,10,12) and visitDateDd>31;
+update itech.encounter set visitDateDd=30 where visitDateMm in (4,6,9,11) and visitDateDd>30;
+update itech.encounter set visitDateDd=28 where visitDateMm in (2) and visitDateDd>29;
+update itech.encounter e set createDate=concat(e.visitDateYy,'-',e.visitDateMm,'-',e.visitDateDd) where createDate is null or createDate=''; 
+update itech.encounter set lastModified=createDate where lastModified is null or lastModified='' or lastModified like '%0000%'; 
+
+ALTER TABLE encounter  DROP INDEX encounterINDEX; 
+CREATE INDEX `encounterINDEX` ON `encounter` (patientID,visitDateYy,visitDateMm,visitDateDd,seqNum,siteCode,encounterType);
+update itech.encounter set visitDateDd=concat('0',visitDateDd) where LENGTH(visitDateDd)=1;
+update itech.encounter set visitDateMm=concat('0',visitDateMm) where LENGTH( visitDateMm )=1;
+
+ALTER TABLE prescriptions  DROP INDEX prescriptionsINDEX; 
+CREATE INDEX `prescriptionsINDEX` ON `prescriptions` (patientID,visitDateYy,visitDateMm,visitDateDd,seqNum,drugID,siteCode);
+update itech.prescriptions set visitDateDd=concat('0',visitDateDd) where LENGTH(visitDateDd)=1;
+update itech.prescriptions set visitDateMm=concat('0',visitDateMm) where LENGTH( visitDateMm )=1;
+
+
+ALTER TABLE vitals  DROP INDEX vitalsINDEX; 
+CREATE INDEX `vitalsINDEX` ON `vitals` (patientID,visitDateYy,visitDateMm,visitDateDd,seqNum,siteCode);
+update itech.vitals set visitDateDd=concat('0',visitDateDd) where LENGTH(visitDateDd)=1;
+update itech.vitals set visitDateMm=concat('0',visitDateMm) where LENGTH( visitDateMm )=1;
+
+
+update itech.labs set result=lower(result),result2=lower(result2),result3=lower(result3),result4=lower(result4);
+update itech.labs set result='pos' where result=1 and labID in (100,181);
+update itech.labs set result='neg' where result=2 and labID in (100,181);
+
+use openmrs;
+
+
 drop procedure if exists encounter_Migration;
 DELIMITER $$ 
 
@@ -18,12 +51,7 @@ select visit_type_id into vvisit_type_id from visit_type where uuid='7b0f5697-27
  * find all unique patientid, visitdate instances in the encounter table and consider these visits
  */
  SET SQL_SAFE_UPDATES = 0;
- 
-update itech.encounter set visitDateDd=31 where visitDateMm in (1,3,5,7,8,10,12) and visitDateDd>31;
-update itech.encounter set visitDateDd=30 where visitDateMm in (4,6,9,11) and visitDateDd>30;
-update itech.encounter set visitDateDd=28 where visitDateMm in (2) and visitDateDd>29;
-update itech.encounter e set createDate=concat(e.visitDateYy,'-',e.visitDateMm,'-',e.visitDateDd) where createDate is null or createDate=''; 
-update itech.encounter set lastModified=createDate where lastModified is null or lastModified='' or lastModified like '%0000%'; 
+
 
   /* remove old obs, visit and encounter data */
 update obs set obs_group_id=null where encounter_id in (select encounter_id from encounter where encounter_type not in (select e.encounter_type_id from encounter_type e where uuid='873f968a-73a8-4f9c-ac78-9f4778b751b6'));

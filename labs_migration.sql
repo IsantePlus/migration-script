@@ -7,12 +7,12 @@ BEGIN
  /*Delete all inserted labs data if the script fail*/
  SET SQL_SAFE_UPDATES = 0;
  SET FOREIGN_KEY_CHECKS=0;
- DELETE FROM obs WHERE encounter_id IN
+/* DELETE FROM obs WHERE encounter_id IN
  (
 	SELECT en.encounter_id FROM encounter en, encounter_type ent
 	WHERE en.encounter_type=ent.encounter_type_id
 	AND ent.uuid='f037e97b-471e-4898-a07c-b8e169e0ddc4'
- );
+ );*/
   SET SQL_SAFE_UPDATES = 1;
   SET FOREIGN_KEY_CHECKS=1;
   /*End of delete all inserted labs data*/

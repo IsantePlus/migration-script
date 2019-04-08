@@ -109,7 +109,6 @@ BEGIN
 END$$
 DELIMITER ;
 
-
 drop procedure if exists migrationIsante;
 DELIMITER $$ 
 CREATE PROCEDURE migrationIsante()
