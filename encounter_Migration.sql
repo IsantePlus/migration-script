@@ -24,9 +24,14 @@ update itech.vitals set visitDateDd=concat('0',visitDateDd) where LENGTH(visitDa
 update itech.vitals set visitDateMm=concat('0',visitDateMm) where LENGTH( visitDateMm )=1;
 
 
+ALTER TABLE labs  DROP INDEX labsINDEX; 
+CREATE INDEX `labsINDEX` ON `labs` (patientID,visitDateYy,visitDateMm,visitDateDd,seqNum,labID,siteCode);
+update itech.labs set visitDateDd=concat('0',visitDateDd) where LENGTH(visitDateDd)=1;
+update itech.labs set visitDateMm=concat('0',visitDateMm) where LENGTH( visitDateMm )=1;
+
 update itech.labs set result=lower(result),result2=lower(result2),result3=lower(result3),result4=lower(result4);
-update itech.labs set result='pos' where result=1 and labID in (100,181);
-update itech.labs set result='neg' where result=2 and labID in (100,181);
+update itech.labs set result='pos' where result=1 and labID in (100,181,134,101,1568,1223,1224,1225,1567,1566,1618,1619,1621,1611,1612,1614,1655,1656,1657);
+update itech.labs set result='neg' where result=2 and labID in (100,181,134,101,1568,1223,1224,1225,1567,1566,1618,1619,1621,1611,1612,1614,1655,1656,1657); 
 
 use openmrs;
 

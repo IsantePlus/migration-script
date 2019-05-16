@@ -1646,7 +1646,7 @@ select 4 as tbEvaluation;
 				  when v.conditionID=408 then 5333
 				  when v.conditionID=202 then 5337
 				  when v.conditionID=205 then 121255
-				  when v.conditionID=409 then 42
+				  when v.conditionID in (409,21,208) then 42
 				  when v.conditionID=715 then 159355
 				  when v.conditionID=410 then 5030
 				  when v.conditionID=218 then 116023
@@ -1672,6 +1672,8 @@ select 4 as tbEvaluation;
 				  when v.conditionID=323 then case when v.conditionActive=1 then 149743
 				                                   when v.conditionActive=2 then 145347
 												   end
+				  when v.conditionID=20 then 111873
+												   
 				  when v.conditionID=326 then 117441
 				  when v.conditionID=329 then 117339
 				  when v.conditionID=332 then 135761
@@ -1692,9 +1694,9 @@ select 4 as tbEvaluation;
 				  when v.conditionID=420 then 507
 				  when v.conditionID=421 then 5041
 				  when v.conditionID=422 then 115195
-				  when v.conditionID=423 then case when v.conditionActive=1 then 118890
-				                                   when v.conditionActive=2 then 5042
-												   end
+				  when v.conditionID in (423,41,405) then case when v.conditionActive=1 then 118890
+				                                           when v.conditionActive=2 then 5042
+												      end
 				  when v.conditionID=424 then case when v.conditionActive=1 then 5043
 				                                   when v.conditionActive=2 then 5044
 												   end		
@@ -1718,8 +1720,9 @@ select 4 as tbEvaluation;
 FROM itech.encounter c, encounter e, itech.conditions v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.conditionID in (435,406,403,402,407,192,297,196,396,408,202,205,409,715,410,218,411,230,233,257,412,433,428,303,306,429,430,315,320,323,326,329,332,716,335,416,434,414,415,416,417,418,419,251,287,242,290,420,421,422,423,424,425,426,427,272,248,717,344,350,353,431,383,386,368,371)
+v.conditionID in (435,406,403,402,407,192,297,196,396,408,202,205,409,715,410,218,411,230,233,257,412,433,428,303,306,429,430,315,320,323,326,329,332,716,335,416,434,414,415,416,417,418,419,251,287,242,290,420,421,422,423,424,425,426,427,272,248,717,344,350,353,431,383,386,368,371,21,41,405,208,20)
 AND (v.conditionActive=1 OR v.conditionActive=2);
+
 	/*END OF MIGRATION FOR ANTÉCEDENTS MÉDICAUX ET DIAGNOSTICS ACTUELS*/
 select 12 as arvTraitement;
 	

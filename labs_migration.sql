@@ -10899,7 +10899,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1568;
+	AND l.labID in (1568,1223,1224,1225,1567,1566);
    /*Answer*/
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
@@ -10951,7 +10951,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1568
+	AND l.labID  in (1568,1223,1224,1225,1567,1566);
 	AND ((l.result <> "" AND l.result is not null)
 		OR (l.result2 <> "" AND l.result2 is not null)
 		OR (l.result3 <> "" AND l.result3 is not null)
@@ -11322,7 +11322,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1601;
+	AND l.labID in (1601,1602);
    /*Answer*/
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
@@ -11368,7 +11368,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1601
+	AND l.labID in (1601,1602)
 	AND ((l.result <> "" AND l.result is not null)
 		OR (l.result2 <> "" AND l.result2 is not null)
 		OR (l.result3 <> "" AND l.result3 is not null)
@@ -11676,7 +11676,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1603;
+	AND l.labID in (1603,134);
    /*Answer*/
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
@@ -11728,7 +11728,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1603
+	AND l.labID in (1603,134)
 	AND ((l.result <> "" AND l.result is not null)
 		OR (l.result2 <> "" AND l.result2 is not null)
 		OR (l.result3 <> "" AND l.result3 is not null)
@@ -12765,7 +12765,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1618;
+	AND l.labID in (1618,1619,1621);
    /*Answer*/
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
@@ -12811,7 +12811,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1618
+	AND l.labID  in (1618,1619,1621)
 	AND ((l.result <> "" AND l.result is not null)
 		OR (l.result2 <> "" AND l.result2 is not null)
 		OR (l.result3 <> "" AND l.result3 is not null)
@@ -12830,7 +12830,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1611;
+	AND l.labID in (1611,1612,1614,1655,1656,1657);
    /*Answer*/
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
@@ -12870,7 +12870,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1611
+	AND l.labID  in (1611,1612,1614,1655,1656,1657)
 	AND ((l.result <> "" AND l.result is not null)
 		OR (l.result2 <> "" AND l.result2 is not null)
 		OR (l.result3 <> "" AND l.result3 is not null)
@@ -12889,7 +12889,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1620;
+	AND l.labID in (1620,1622,1623);
    /*Answer*/
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
@@ -12983,7 +12983,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID=1620
+	AND l.labID  in (1620,1622,1623)
 	AND ((l.result <> "" AND l.result is not null)
 		OR (l.result2 <> "" AND l.result2 is not null)
 		OR (l.result3 <> "" AND l.result3 is not null)

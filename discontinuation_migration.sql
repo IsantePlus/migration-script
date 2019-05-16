@@ -290,6 +290,20 @@ BEGIN
 	AND(de.discRemarks <> "" AND de.discRemarks is not null);
 	/*End migration for REMARQUES*/
 	
+	
+	/*Start migration for Séroréversion*/
+			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
+			creator,date_created,uuid)
+			SELECT DISTINCT c.patient_id,1667,c.encounter_id,c.encounter_datetime,c.location_id,165439,1,e.createDate, UUID()
+			from encounter c, itech.encounter e, itech.discEnrollment de
+			WHERE c.uuid = e.encGuid and 
+			e.patientID = de.patientID and e.siteCode = de.siteCode 
+			and DATE_FORMAT(concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd),"%Y-%m-%d") = DATE_FORMAT(concat(de.visitdateYy,'-',de.visitDateMm,'-',de.visitDateDd),"%Y-%m-%d") 
+			and e.seqNum = de.seqNum
+			AND de.seroreversion = 1;
+		/*END migration for Séroréversion*/
+	
+	
 	/*End migration for discontinuation*/
 	/*Add data migration for Imagerie et autre form*/
 	
