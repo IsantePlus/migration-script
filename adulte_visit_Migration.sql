@@ -158,6 +158,37 @@ select 7 as source1;
   
   CLOSE source_reference;
   
+ /* Date des premiers soins dans cet établissement */ 
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='d9885523-a923-474b-88df-f3294d422c3c'),e.encounter_id,e.encounter_datetime,e.location_id,
+formatDate(v.firstCareOtherYy,v.firstCareOtherMm,'01'),1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+FindNumericValue(v.firstCareOtherYy)>0 AND FindNumericValue(v.firstCareOtherMm)>0; 
+  
+/* Transfert avec dossier médical */
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='30735143-5968-4bee-8bb9-8a07f3c5b57b'),e.encounter_id,e.encounter_datetime,e.location_id,
+case when medRecord=1 then 1065
+     when medRecord=2 then 1066
+end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+medRecord in (1,2); 
+
+/* Transfert sous ARV */
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='84ea41d3-fc79-418b-ae8c-6a8cf27de66e'),e.encounter_id,e.encounter_datetime,e.location_id,
+case when transferOnArv=1 then 1065
+     when transferOnArv=2 then 1066
+end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+transferOnArv in (1,2); 
+  
   select 7 as source_reference;
   	
 	/*STARTING TEST ANTICORPS VIH MENU*/
@@ -193,7 +224,29 @@ SELECT DISTINCT e.patient_id,159936,e.encounter_id,e.encounter_datetime,e.locati
 FROM itech.encounter c, encounter e, itech.vitals v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.firstTestOtherFac=1;		
+v.firstTestOtherFac=1;	
+
+/* Date du test de répétition dans cet établissement */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='b8bdec55-6b04-4750-958c-e09eed84a2f8') ,e.encounter_id,e.encounter_datetime,e.location_id,
+	formatDate(v.repeatTestYy,v.repeatTestMm,'01'),1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.repeatTestYy>1;	
+
+/* Résultats reçus par le patient ? */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,164848 ,e.encounter_id,e.encounter_datetime,e.location_id,
+	case when ifnull(v.firstTestResultsReceived,0)=1 then 1065
+	     when ifnull(v.firstTestResultsReceived,0)=2 then 1066
+    end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+ifnull(v.firstTestResultsReceived,0) in (1,2);
+
+	
 	/*END OF TEST ANTICORPS VIH MENU*/
  
  select 9 as etablissement;
@@ -357,45 +410,284 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') =
  FindNumericValue(v.pregnantLmpYy)>0;	
 	
 	select 9 as pregnantLmpDd; 
+	
+	
+
+/*Migration of Dépistage du cancer du Col */	
+	/*Migration for obsgroup*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160714,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id in (146602,70485,163589,70029);	
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs
+WHERE openmrs.obs.concept_id=160714 
+GROUP BY openmrs.obs.person_id,encounter_id;
+
+
+		
+/*migration for the Dépistage du cancer du Col*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1651,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+CASE WHEN o.value_numeric=1 then 151185	 ELSE NULL END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.obs o ,itech.obs_concept_group og
+WHERE e.uuid = c.encGuid and c.encounter_id=o.encounter_id  and  o.value_numeric=1 and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+c.sitecode = o.location_id and o.concept_id=146602	;
+
+/*migration for the Dépistage du cancer du Col*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160721,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+CASE WHEN o.value_numeric=1 then 1065 when o.value_numeric=2 then 1066 ELSE NULL END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.obs o ,itech.obs_concept_group og
+WHERE e.uuid = c.encGuid and c.encounter_id=o.encounter_id  and  o.value_numeric=(1,2) and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+c.sitecode = o.location_id and o.concept_id=146602;	
+
+/* Date du dernier dépistage du cancer du Col */	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,165429,e.encounter_id,e.encounter_datetime,e.location_id,o.value_datetime,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.obs o
+WHERE e.uuid = c.encGuid and c.encounter_id=o.encounter_id  and 
+c.sitecode = o.location_id and o.concept_id=70485 and o.value_datetime is not null;
+
+/* Méthode utilisée du cancer du Col */	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,163589,e.encounter_id,e.encounter_datetime,e.location_id,
+case when o.value_numetric=1 then 885
+     when o.value_numetic=2 then 162816
+	 else null end ,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.obs o
+WHERE e.uuid = c.encGuid and c.encounter_id=o.encounter_id  and  o.value_numeric in (1,2) and 
+c.sitecode = o.location_id and o.concept_id=163589;
+
+/* Résultat du cancer du Col */	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160704,e.encounter_id,e.encounter_datetime,e.location_id,
+case when o.value_numetric=1 then 1115
+     when o.value_numetic=2 then 1116
+	 when o.value_numetic=4 then 1067
+	 else null end ,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.obs o
+WHERE e.uuid = c.encGuid and c.encounter_id=o.encounter_id  and  o.value_numeric in (1,2,4) and 
+c.sitecode = o.location_id and o.concept_id=70029;
+	
 	/*END OF ANTECEDENTS OBSTETRIQUES ET GROSSESSE MENU*/
  
  
   /*STARTING MIGRATION FOR MODE PROBABLE DE TRANSMISSION DU VIH MENU*/
 		/*Rapports sexuels avec un homme*/
-		/*Rapports sexuels avec une femme*/
-		/*Injection de drogues*/
-		/*Bénéficier de sang/dérivé sanguin*/
-		/*Migration FOR Transmission mère a enfant*/
-		/*MIGRATION FOR - homme bisexuel */
-		/*MIGRATION FOR Rapports hétérosexuelles avec :
-		  - personne SIDA/VIH+
-		*/
-INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1061,e.encounter_id,e.encounter_datetime,e.location_id,
-CASE WHEN v.riskID=1 AND v.riskAnswer=1 THEN 163290
-	 WHEN v.riskID=3 AND v.riskAnswer=1 THEN 163291
-	 WHEN v.riskID=9 AND v.riskAnswer=1 THEN 105
-	 WHEN v.riskID=15 AND v.riskAnswer=1 THEN 1063
-	 WHEN v.riskID=14 AND v.riskAnswer=1 THEN 163273
-	 WHEN v.riskID=19 AND v.riskAnswer=1 THEN 163289
-	 WHEN v.riskID=5 AND v.riskAnswer=1 THEN 105
-	 WHEN v.riskID=6 AND v.riskAnswer=1 THEN 163275
-	 WHEN v.riskID=31 AND v.riskAnswer=1 THEN 1063
-		ELSE NULL
-END,1,e.date_created,UUID()
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='c2b3c5cb-f1e6-4d3d-ad18-5ecf71b26dc2'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.riskAssessments v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.riskID in (1,3,5,6,9,14,15,19,31) and v.riskAnswer=1;
+v.riskID=1 and v.riskAnswer in (1,2);
 
 
-select 3 as sid;
-		/*FOR THE DATE*//*Bénéficier de sang/dérivé sanguin*/
-INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163268,e.encounter_id,e.encounter_datetime,e.location_id,
-formatDate(v.riskYy,v.riskMm,v.riskDd),1,e.date_created,UUID()
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='c2b3c5cb-f1e6-4d3d-ad18-5ecf71b26dc2'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1061,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+CASE WHEN v.riskID=1 AND v.riskAnswer=1 THEN 163290
+	 WHEN v.riskID=1 AND v.riskAnswer=2 THEN 1066
+	 ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v ,itech.obs_concept_group
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=1 and v.riskAnswer in (1,2);
+		
+		/*Rapports sexuels avec une femme*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='0906f171-72d4-4727-8ede-97a47c2e25ee'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.riskAssessments v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=3 and v.riskAnswer in (1,2);
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='0906f171-72d4-4727-8ede-97a47c2e25ee'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1061,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+CASE WHEN v.riskID=3 AND v.riskAnswer=1 THEN 163291
+	 WHEN v.riskID=3 AND v.riskAnswer=2 THEN 1066
+	 ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v ,itech.obs_concept_group
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=3 and v.riskAnswer in (1,2);		
+		
+		/*Injection de drogues*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f6a51d0c-eb19-4875-8c37-85e39f0def00'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=5 and v.riskAnswer in (1,2);
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f6a51d0c-eb19-4875-8c37-85e39f0def00'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1061,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+CASE WHEN v.riskID=5 AND v.riskAnswer=1 THEN 105
+	 WHEN v.riskID=5 AND v.riskAnswer=2 THEN 1066
+	 ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v ,itech.obs_concept_group
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=5 and v.riskAnswer in (1,2);		
+		/*Bénéficier de sang/dérivé sanguin*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='92259610-b7b8-4723-b879-6e33fdd4b817'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=15 and v.riskAnswer in (1,2);
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='92259610-b7b8-4723-b879-6e33fdd4b817'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1061,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+CASE WHEN v.riskID=15 AND v.riskAnswer=1 THEN 1063
+	 WHEN v.riskID=15 AND v.riskAnswer=2 THEN 1066
+	 ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v ,itech.obs_concept_group
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=15 and v.riskAnswer in (1,2);		
+		
+		/*Migration FOR Transmission mère a enfant*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='92259610-b7b8-4723-b879-6e33fdd4b817'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=14 and v.riskAnswer in (1,2,4);
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='92259610-b7b8-4723-b879-6e33fdd4b817'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1061,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+CASE WHEN v.riskID=14 AND v.riskAnswer=1 THEN 163273
+	 WHEN v.riskID=14 AND v.riskAnswer=2 THEN 1066
+	 WHEN v.riskID=14 AND v.riskAnswer=4 THEN 1067
+	 ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v ,itech.obs_concept_group
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=14 and v.riskAnswer in (1,2,4);		
+		
+		/*MIGRATION FOR - homme bisexuel */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='9d6ee2a2-8547-4fa9-a2d8-301d009ca3a5'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=6 and v.riskAnswer in (1,2,4);
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='9d6ee2a2-8547-4fa9-a2d8-301d009ca3a5'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1061,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+CASE WHEN v.riskID=6 AND v.riskAnswer=1 THEN 163275
+	 WHEN v.riskID=6 AND v.riskAnswer=2 THEN 1066
+	 WHEN v.riskID=6 AND v.riskAnswer=4 THEN 1067
+	 ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v ,itech.obs_concept_group
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=6 and v.riskAnswer in (1,2,4);		
+		/*MIGRATION FOR Rapports hétérosexuelles avec :
+		  - personne SIDA/VIH+
+		*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='844017f9-8d6a-4b9a-8347-637284b43893'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=19 and v.riskAnswer in (1,2,4);
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='844017f9-8d6a-4b9a-8347-637284b43893'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1061,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+CASE WHEN v.riskID=19 AND v.riskAnswer=1 THEN 163289
+	 WHEN v.riskID=19 AND v.riskAnswer=2 THEN 1066
+	 WHEN v.riskID=19 AND v.riskAnswer=4 THEN 1067
+	 ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v ,itech.obs_concept_group
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.riskID=19 and v.riskAnswer in (1,2,4);		
+		
+	
+select 3 as sid;
+		/*FOR THE DATE*//*Bénéficier de sang/dérivé sanguin*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,163268,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+formatDate(v.riskYy,v.riskMm,v.riskDd),1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.riskAssessments v ,itech.obs_concept_group
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
 v.riskID=15 and v.riskAnswer=1 and FindNumericValue(v.riskYy)>0;
 
@@ -794,17 +1086,17 @@ v.completeTreat=1 AND FindNumericValue(v.completeTreatYy)>0;
 	/*MIGRATION FOR Hépatite B*/
 	/*concept group */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1421,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='120157b7-a596-4623-8f7d-960fd686fb67'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals  v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-(v.vaccTetanus=1 OR v.vaccHepB=1);
+(v.vaccHepB=1);
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1421 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='120157b7-a596-4623-8f7d-960fd686fb67' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 
@@ -841,6 +1133,22 @@ v.vaccHepB=1 AND digits(v.hepBdoses)>0 and v.hepBdoses<>'';
 select 1 as hepatie;
 		/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		/*MIGRATION FOR Tétanos*/ 
+		
+	/*concept group */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f9e79221-424c-44e9-a23d-3b507d326c32'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals  v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+(v.vaccTetanus=1);
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f9e79221-424c-44e9-a23d-3b507d326c32' 
+GROUP BY openmrs.obs.person_id,encounter_id;		
+		
 /*migration for the concept*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,984,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
@@ -879,15 +1187,15 @@ select 2 as vaccin;
 	  /*migration for Douleur abdominale*/
 	  /*concept group */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='280f7e9e-73de-4fa1-899e-3e4db50915db'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7000 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id ans c.uuid='280f7e9e-73de-4fa1-899e-3e4db50915db'
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -913,15 +1221,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*migration for Anorexie/Perte d'appétit*/
 	  /*concept group */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='8d118f23-1934-4ae3-9a0c-2045dd67c849'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7001 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='8d118f23-1934-4ae3-9a0c-2045dd67c849' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -947,15 +1255,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*migration for Toux*/
 	  /*concept group */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='78b69c38-8119-4634-8def-4b75e079243f'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7004 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='78b69c38-8119-4634-8def-4b75e079243f' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -981,15 +1289,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Toux/Expectoration (sauf hémoptysie)*/		
 		 /*concept group */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='64e7b85c-355e-4c40-a11e-2893934bb38b'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7008 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='64e7b85c-355e-4c40-a11e-2893934bb38b' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -1016,15 +1324,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		 /*concept group */
 		 
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='81db35ed-27a7-4e26-a54a-1ddff821ca5e'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7007 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='81db35ed-27a7-4e26-a54a-1ddff821ca5e'
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 		/*migration for the concept*/
@@ -1051,15 +1359,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Céphalée*/
 	 /*concept group */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='7ff8201b-93b9-4aa3-b86c-ab9c567a1f35'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7011 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='7ff8201b-93b9-4aa3-b86c-ab9c567a1f35' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 		/*migration for the concept*/
@@ -1085,15 +1393,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*=============================================================================================================*/
 		/*Migration for Hémoptysie*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='3d584639-8c55-45de-b202-f7405af953df'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7012 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='3d584639-8c55-45de-b202-f7405af953df' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -1119,15 +1427,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Nausée*/
 		/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='244851ca-731c-4ee1-8557-4c75cb38fe9b'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7013 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='244851ca-731c-4ee1-8557-4c75cb38fe9b' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -1153,15 +1461,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Sueurs nocturnes*/
 		/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='3777f798-60fd-4f8c-acb6-c9bf879c8913'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7014 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='3777f798-60fd-4f8c-acb6-c9bf879c8913' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -1187,15 +1495,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Perte de sensibilité*/
 		/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='bfa2b9d6-75d1-407e-b4a9-1df36e639429'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7015 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and uuid='bfa2b9d6-75d1-407e-b4a9-1df36e639429' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -1221,15 +1529,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Odynophagie/dysphagie*/
 		/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='b41e4d9d-b0f7-455c-851f-dc9c05fc519a'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7016 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='b41e4d9d-b0f7-455c-851f-dc9c05fc519a' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 		/*migration for the concept*/
@@ -1255,15 +1563,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Eruption cutanée*/
 		/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='9c67aa65-9411-4ac7-b56f-b7f2ffe36192'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7024 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and uuid='9c67aa65-9411-4ac7-b56f-b7f2ffe36192' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -1289,15 +1597,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Vomissement*/
 		/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='89803a57-4a1b-475d-9a7a-fbcd9f74c0c9'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7025 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='89803a57-4a1b-475d-9a7a-fbcd9f74c0c9'
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -1324,15 +1632,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Prurigo*/
 		/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='696e5e96-c3ca-4b01-a792-583dfcd4af2a'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7042 and o.value_boolean=1;
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='696e5e96-c3ca-4b01-a792-583dfcd4af2a' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -1359,15 +1667,15 @@ og.person_id=e.patient_id and e.encounter_id=og.encounter_id;
 		/*Migration for Autres, préciser :*/
 		/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1727,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='0671685b-ced1-459f-b31d-fa851985d117'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and o.concept_id=7044 and value_text<>'';
 
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1727 
+FROM openmrs.obs,openms.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='0671685b-ced1-459f-b31d-fa851985d117' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 	
 		/*migration for the concept*/
@@ -1759,7 +2067,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') =
 	/*Migration for Abacavir (ABC)*/
 	/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f604049d-9959-49cb-812a-7dcf453b2d73'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -1768,8 +2076,8 @@ v.drugID=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f604049d-9959-49cb-812a-7dcf453b2d73' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
  /* 16819 */
@@ -1839,7 +2147,7 @@ v.drugID=1 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure=
 	/*Migration for Combivir (AZT+3TC)*/
 		/*Concept group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='4898493b-c3ba-42e0-b893-7e9ac50a5de0'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -1848,8 +2156,8 @@ v.drugID=8;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='4898493b-c3ba-42e0-b893-7e9ac50a5de0' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -1920,7 +2228,7 @@ v.drugID=8 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure=
 	/*Migration for Didanosine (ddI) */
 	/*Concept group*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='95ac7b3a-0bda-49d3-8562-ee77bc8fd733'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -1929,8 +2237,8 @@ v.drugID=10;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='95ac7b3a-0bda-49d3-8562-ee77bc8fd733' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -1999,7 +2307,7 @@ v.drugID=10 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 	/*======================================================================================================================*/
 	/*Migration for Emtricitabine (FTC)*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='3e8dea76-369d-45bf-970e-2005496587a5'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2008,8 +2316,8 @@ v.drugID=12;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='3e8dea76-369d-45bf-970e-2005496587a5' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -2078,7 +2386,7 @@ v.drugID=12 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 	/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
 	/*Migration for Lamivudine (3TC)*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='eb704fe8-7cf0-4e36-b86b-a69bc8ed5a4a'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2087,8 +2395,8 @@ v.drugID=20;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='eb704fe8-7cf0-4e36-b86b-a69bc8ed5a4a' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -2158,7 +2466,7 @@ v.drugID=20 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 		/*Migration for Stavudine (d4T)*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='544b0301-f89e-4ae6-b48f-9780b2ea4bed'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2167,8 +2475,8 @@ v.drugID=29;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='544b0301-f89e-4ae6-b48f-9780b2ea4bed' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 		
 		/*migration for the concept*/
@@ -2238,7 +2546,7 @@ v.drugID=29 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 		/*Migration for Tenofovir (TNF)*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='7ae7e7f7-db75-4533-bce3-caf77a75355e'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2247,8 +2555,8 @@ v.drugID=31;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='7ae7e7f7-db75-4533-bce3-caf77a75355e' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 		
@@ -2319,7 +2627,7 @@ v.drugID=31 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 		/*Migration for Trizivir (ABC+AZT+3TC)*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='60299c6d-de85-45d9-adbd-9d67906c658d'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2329,7 +2637,7 @@ delete from itech.obs_concept_group where 1;
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
 FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='60299c6d-de85-45d9-adbd-9d67906c658d' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 		
@@ -2396,7 +2704,7 @@ v.drugID=33 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 		/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		/*Migration for Zidovudine (AZT)*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='32bc1f59-e316-4c4f-84eb-dc0906f8e2fa'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2405,8 +2713,8 @@ v.drugID=34;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='32bc1f59-e316-4c4f-84eb-dc0906f8e2fa' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -2475,7 +2783,7 @@ v.drugID=34 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 		/*Migration for Efavirenz (EFV)*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='5b14f87d-3b64-418c-bfcf-90a8d0ae0e02'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2484,8 +2792,8 @@ v.drugID=11;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='5b14f87d-3b64-418c-bfcf-90a8d0ae0e02' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -2556,7 +2864,7 @@ v.drugID=11 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 		/*Migration for Nevirapine (NVP)*/
 			/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='dbd8e7e9-6b7a-4b70-8c8f-a80f8e64b710'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2565,8 +2873,8 @@ v.drugID=23;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='dbd8e7e9-6b7a-4b70-8c8f-a80f8e64b710' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -2635,7 +2943,7 @@ v.drugID=23 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 		/*Migration for Atazanavir (ATZN)*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='d1c8a581-4512-4874-8960-cb3306f06f11'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2644,8 +2952,8 @@ v.drugID=5;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='d1c8a581-4512-4874-8960-cb3306f06f11' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -2715,7 +3023,7 @@ v.drugID=5 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure=
 		/*Migration for Atazanavir+BostRTV*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='71cfae87-3d31-40d8-8a06-aeed72c799d0'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2724,8 +3032,8 @@ v.drugID=6;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='71cfae87-3d31-40d8-8a06-aeed72c799d0' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -2795,7 +3103,7 @@ v.drugID=6 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure=
 		/*Migration for Indinavir (IDV)*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='7f5144db-0182-4775-a0e5-78f71aa9d6e1'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2804,8 +3112,8 @@ v.drugID=16;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='7f5144db-0182-4775-a0e5-78f71aa9d6e1' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -2875,7 +3183,7 @@ v.drugID=16 and (v.isContinued=1 or v.toxicity=1 or v.intolerance=1 or v.failure
 		/*Migration for Lopinavir+BostRTV (Kaletra)*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='e017cfcf-a763-4e85-845a-e0aa6573c829'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2884,8 +3192,8 @@ v.drugID=21;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='e017cfcf-a763-4e85-845a-e0aa6573c829' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -2999,7 +3307,7 @@ select 6 as grossesse;
 		/*Migration for Ethambutol*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='439f0405-b70b-49a9-8c32-66b39b3186bd'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -3008,8 +3316,8 @@ v.drugID=13;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='439f0405-b70b-49a9-8c32-66b39b3186bd' 
 GROUP BY openmrs.obs.person_id,encounter_id;	
 
 set vobs_id=last_insert_id();
@@ -3064,7 +3372,7 @@ v.drugID=13 and v.isContinued=1;
 		/*Migration for Isoniazide (INH)*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='fee8bd39-2a95-47f9-b1f5-3f9e9b3ee959'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -3073,8 +3381,8 @@ v.drugID=18;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='fee8bd39-2a95-47f9-b1f5-3f9e9b3ee959' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -3128,7 +3436,7 @@ v.drugID=18 and v.isContinued=1;
 		/*Migration for Pyrazinamide*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='ee73ed0f-8fd5-4a3e-be10-c12cef9672e8'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -3137,8 +3445,8 @@ v.drugID=24;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='ee73ed0f-8fd5-4a3e-be10-c12cef9672e8' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -3195,7 +3503,7 @@ v.drugID=24 and v.isContinued=1;
 		/*Migration for the group*/
 		
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='137fc1c1-84b9-4cbc-97a3-124835f29866'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -3204,8 +3512,8 @@ v.drugID=2;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='137fc1c1-84b9-4cbc-97a3-124835f29866' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 		
@@ -3258,7 +3566,7 @@ v.drugID=2 and v.isContinued=1;
 		/*Migration for Cotrimoxazole (TMS)*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='ace97bb2-35d8-4195-ad08-edfee78f1ec2'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -3267,8 +3575,8 @@ v.drugID=9;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='ace97bb2-35d8-4195-ad08-edfee78f1ec2' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -3323,7 +3631,7 @@ v.drugID=9 and v.isContinued=1;
 		/*Migration for the group*/
 		
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1c4f7da3-2d64-4c58-aad5-16d7eafa53a0'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -3332,8 +3640,8 @@ v.drugID=14;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1c4f7da3-2d64-4c58-aad5-16d7eafa53a0' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -3387,7 +3695,7 @@ v.drugID=14 and v.isContinued=1;
 		/*Migration for Ketaconazole*/
 			/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1152e548-2161-43ab-94fa-76bf3d327b3a'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -3396,8 +3704,8 @@ v.drugID=19;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1152e548-2161-43ab-94fa-76bf3d327b3a' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -3451,7 +3759,7 @@ v.drugID=19 and v.isContinued=1;
 		/*Migration for Traitement traditionnelle*/
 		/*Migration for the group*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160741,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='0e545872-74fe-4a54-8e9f-6ee86262f28f'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -3460,8 +3768,8 @@ v.drugID=35;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160741 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='0e545872-74fe-4a54-8e9f-6ee86262f28f' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 set vobs_id=last_insert_id();
@@ -3757,8 +4065,382 @@ v.hospitalizedText<>'';
 /* END of MIGRATION FOR ÉTAT GENERAL MENU*/		
   
   
+/* Migration of alergies */
 
-  
-  
+/* Aucune */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160643,e.encounter_id,e.encounter_datetime,e.location_id,1107,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.noneTreatments=1;
+
+
+/* oui, non,Aucune for pediatrique */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160643,e.encounter_id,e.encounter_datetime,e.location_id,
+case when v.pedMedAllerg=1 then 1065
+     when v.pedMedAllerg=2 then 1066
+	 when v.pedMedAllerg=4 then 1107
+end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.pedMedAllerg in (1,2,4);
+
+/* Aliment for pediatrique */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160643,e.encounter_id,e.encounter_datetime,e.location_id,
+case when v.pedFoodAllerg=1 then 139994
+end,v.pedFoodAllergText,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.pedFoodAllerg=1;
+
+/* Autres for pediatrique */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160643,e.encounter_id,e.encounter_datetime,e.location_id,
+case when v.pedOtherAllerg=1 then 5622
+end,v.aMedOther,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.pedOtherAllerg=1;
+
+/* Médicaments, préciser:*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160643,e.encounter_id,e.encounter_datetime,e.location_id,
+case when v.pedMedAllergMeds=1 then 141760
+end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.vitals v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.pedMedAllergMeds=1;
+
+/* Alergie I group*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='c5e4b458-41cf-4d17-aa7a-6dfc00482198'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1;
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='c5e4b458-41cf-4d17-aa7a-6dfc00482198'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+/* Name of the Alergie I */		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160632,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,v.allergyName,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1;
+
+/* Start date of the Alergie I */		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1190,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+formatDate(v.allergyStartYy,v.allergyStartMm,'01'),1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1 and v.allergyStartYy>1 and v.allergyStartMM>0;	
+
+/* Stop date of the Alergie I */		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+formatDate(v.allergyStopYy,v.allergyStopMm,'01'),1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1 and v.allergyStopYy>1 and v.allergyStopMM>0; 
+ 
+/*erup of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.rash=1 then 512 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1 and v.rash=1;
+
+/*erupF of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.rashF=1 then 156083 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1 and v.rashF=1;
+
+/*ABC of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.ABC=1 then 137781 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1 and v.ABC=1;
+
+/*pap of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.hives=1 then 130908 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1 and v.hives=1;
+
+/*sj of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.SJ=1 then 125886 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1 and v.SJ=1;
+
+/*anaph of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.anaph=1 then 148888 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1 and v.anaph=1;
+
+
+/*other of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.allergyOther=1 then 5622 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=1 and v.allergyOther=1;
+
+
+/* *******************  end of alergie I */
+/* Alergi II group*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='09f30ecb-b6e8-4e44-9adc-e27bdf07b081'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2;
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='09f30ecb-b6e8-4e44-9adc-e27bdf07b081'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+/* Name of the Alergie I */		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160632,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,v.allergyName,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2;
+
+/* Start date of the Alergie I */		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1190,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+formatDate(v.allergyStartYy,v.allergyStartMm,'01'),1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2 and v.allergyStartYy>1 and v.allergyStartMM>0;	
+
+/* Stop date of the Alergie I */		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+formatDate(v.allergyStopYy,v.allergyStopMm,'01'),1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2 and v.allergyStopYy>1 and v.allergyStopMM>0; 
+ 
+/*erup of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.rash=1 then 512 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2 and v.rash=1;
+
+/*erupF of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.rashF=1 then 156083 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2 and v.rashF=1;
+
+/*ABC of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.ABC=1 then 137781 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2 and v.ABC=1;
+
+/*pap of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.hives=1 then 130908 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2 and v.hives=1;
+
+/*sj of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.SJ=1 then 125886 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2 and v.SJ=1;
+
+/*anaph of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.anaph=1 then 148888 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2 and v.anaph=1;
+
+
+/*other of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.allergyOther=1 then 5622 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=2 and v.allergyOther=1;
+
+/* *******************  end of alergie II */
+
+
+/* Alergi III group*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='6639a971-43ca-4baf-89b6-194ab3597ebd'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3;
+
+
+delete from itech.obs_concept_group where 1;
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='6639a971-43ca-4baf-89b6-194ab3597ebd'
+GROUP BY openmrs.obs.person_id,encounter_id;
+		
+/* Name of the Alergie I */		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160632,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,v.allergyName,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3;
+
+/* Start date of the Alergie I */		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1190,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+formatDate(v.allergyStartYy,v.allergyStartMm,'01'),1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3 and v.allergyStartYy>1 and v.allergyStartMM>0;	
+
+/* Stop date of the Alergie I */		
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+formatDate(v.allergyStopYy,v.allergyStopMm,'01'),1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3 and v.allergyStopYy>1 and v.allergyStopMM>0; 
+ 
+/*erup of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.rash=1 then 512 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3 and v.rash=1;
+
+/*erupF of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.rashF=1 then 156083 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3 and v.rashF=1;
+
+/*ABC of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.ABC=1 then 137781 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3 and v.ABC=1;
+
+/*pap of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.hives=1 then 130908 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3 and v.hives=1;
+
+/*sj of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.SJ=1 then 125886 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3 and v.SJ=1;
+
+/*anaph of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.anaph=1 then 148888 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3 and v.anaph=1;
+
+
+/*other of the Alergie I */ 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,160646,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+case when v.allergyOther=1 then 5622 end,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.allergies v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.allergySlot=3 and v.allergyOther=1;
+
+/* *******************  end of alergie III */
   
 END;
