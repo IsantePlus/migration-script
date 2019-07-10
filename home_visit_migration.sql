@@ -1,6 +1,6 @@
 DELIMITER $$ 
-DROP PROCEDURE IF EXISTS adherenceMigration$$
-CREATE PROCEDURE adherenceMigration()
+DROP PROCEDURE IF EXISTS homeVisitMigration$$
+CREATE PROCEDURE homeVisitMigration()
 BEGIN
 	 /*Delete all inserted discontinuations data if the script fail*/
 	 SET SQL_SAFE_UPDATES = 0;
@@ -9,34 +9,45 @@ BEGIN
 	 (
 		SELECT en.encounter_id FROM encounter en, encounter_type ent
 		WHERE en.encounter_type=ent.encounter_type_id
-		AND ent.uuid='c45d7299-ad08-4cb5-8e5d-e0ce40532939'
+		AND ent.uuid='1dd1e63a-1543-4885-b807-e49c6d18cffd'
 	 );
 	  SET SQL_SAFE_UPDATES = 1;
 	  SET FOREIGN_KEY_CHECKS=1;
-	/*Start migration for Évaluation faite par: */ 
-        /*Start migration for Médecin */	
-	    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-		creator,date_created,uuid)
-		SELECT DISTINCT c.patient_id,163556,c.encounter_id,c.encounter_datetime,c.location_id,162591,1,e.createDate, UUID()
-		from encounter c, itech.encounter e, itech.adherenceCounseling ac
+	/*BUT DE LA VISITE */ 
+        /*Start migration but de la visite*/	
+	    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
+		SELECT DISTINCT c.patient_id,160288,c.encounter_id,c.encounter_datetime,c.location_id,
+		case when ac.reasonVisit=1 then (select concept_id from concept where uuid='e2739712-ed4b-4a8d-b8e7-f6ef8cf780e5')
+		     when ac.reasonVisit=2 then 164370
+			 when ac.reasonVisit=4 then (select concept_id from concept where uuid='ef958f97-f811-49af-a0e1-c22546eca30d')
+			 when ac.reasonVisit=8 then 162192
+			 when ac.reasonVisit=16 then 5622
+		end as value_coded,reasonVisitOther,1,e.createDate, UUID()
+		from encounter c, itech.encounter e, itech.homeCareVisits ac
 		WHERE c.uuid = e.encGuid 
 		AND e.siteCode = ac.siteCode
 		AND e.patientID = ac.patientID
 		AND concat(e.visitDateYy,"-",e.visitDateMm,"-",e.visitDateDd)=concat(ac.visitDateYy,"-",ac.visitDateMm,"-",ac.visitDateDd)
-		AND ac.evaluationDoctor=1;
+		AND ac.reasonVisit in (1,2,4,8,16);
 		
-		select 1 as adherence;
-		/*Pharmacien/Dispensateur*/
+		select 1 as homeVisit;
+		/*SUIVI DES SOINS*/
+		/* Observation faite lors de la visite à domicile */
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
-		SELECT DISTINCT c.patient_id,163556,c.encounter_id,c.encounter_datetime,c.location_id,163557,1,e.createDate, UUID()
-		from encounter c, itech.encounter e, itech.adherenceCounseling ac
+		SELECT DISTINCT c.patient_id,1899,c.encounter_id,c.encounter_datetime,c.location_id,
+		case when ac.contactDuringVisit=1 then 
+		     when ac.contactDuringVisit=2 then 
+			 when ac.contactDuringVisit=4 then
+			 when ac.contactDuringVisit=8 then 
+		end,1,e.createDate, UUID()
+		from encounter c, itech.encounter e, itech.homeCareVisits ac
 		WHERE c.uuid = e.encGuid 
 		AND e.siteCode = ac.siteCode
 		AND e.patientID = ac.patientID
 		AND concat(e.visitDateYy,"-",e.visitDateMm,"-",e.visitDateDd) =concat(ac.visitDateYy,"-",ac.visitDateMm,"-",ac.visitDateDd)
-		AND ac.evaluationPharmacien=1;
-		select 2 as adherence;
+		AND ac.contactDuringVisit in (1,2,4,8);
+		select 2 as homeVisit;
 		/*Infirmière */
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -295,7 +306,7 @@ BEGIN
 	/*Migration for the concept question of Nausée ou vomissement*/
 	 /*Migration for obsgroup of Nausée ou vomissement*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,(select concept_id from concept where uuid='72074743-ae89-425e-ba48-718b02585b91'),c.encounter_id,c.encounter_datetime,c.location_id,1,c.date_created,UUID()
+	SELECT DISTINCT c.patient_id,(select concept_id from concept where uuid="72074743-ae89-425e-ba48-718b02585b91"),c.encounter_id,c.encounter_datetime,c.location_id,1,c.date_created,UUID()
 	FROM encounter c, itech.encounter e, itech.adherenceCounseling ac 
 	WHERE c.uuid = e.encGuid 
 	AND e.patientID = ac.patientID 

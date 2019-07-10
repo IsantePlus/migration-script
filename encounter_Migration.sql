@@ -75,7 +75,7 @@ date_format(date(concat(e.visitDateYy,'-',e.visitDateMm,'-',e.visitDateDd)),'%y-
 l.location_id,1, e.lastModified, UUID()
 FROM person p, itech.patient it, itech.encounter e,itech.location_mapping l
 WHERE p.uuid = it.patGuid AND it.patientid = e.patientid AND l.siteCode=e.siteCode AND e.encStatus<255 AND
-e.encounterType in (1,2,3,4,5,6,12,14,16,17,18,19,20,21,24,25,26,27,28,29,31,32);
+e.encounterType in (1,2,3,4,5,6,7,12,14,16,17,18,19,20,21,24,25,26,27,28,29,31,32);
 
 select 1 as visit;
 
@@ -124,6 +124,7 @@ INSERT INTO itech.typeToForm (encounterType, uuid) VALUES
 ( 28 , '3c7f88b0-b844-47ba-b4da-4b5dee2b8b0a' ),
 ( 2  , 'df621bc1-6f2e-46bf-9fe9-184f1fdd41f2' ),
 ( 17 , 'f55d3760-1bf1-4e42-a7f9-0a901fa49cf0' ),
+( 7 , '55070987-51e1-45e1-ba5a-c37848450978' ),
 ( 32 , '42ad13ab-db20-4aed-b8d5-fa4ca15317ee' );
  
 UPDATE itech.typeToForm i, form t SET i.form_id = t.form_id,i.encounterTypeOpenmrs=t.encounter_type where i.uuid = t.uuid; 
@@ -144,7 +145,7 @@ WHERE p.uuid = j.patGuid and
 e.patientID = j.patientID AND 
 v.patient_id = p.person_id AND 
 v.date_started = date(concat(case when length(e.visitDateYy)=2 then concat('20',e.visitDateYy) else e.visitDateYy end,'-',e.visitDateMm,'-',e.visitDateDd)) AND 
-e.encounterType in (1,2,3,4,5,6,12,14,16,17,18,19,20,21,24,25,26,27,28,29,31,32) AND
+e.encounterType in (1,2,3,4,5,6,7,12,14,16,17,18,19,20,21,24,25,26,27,28,29,31,32) AND
 e.encStatus<255 AND
 e.encounterType = f.encounterType 
 ON DUPLICATE KEY UPDATE
