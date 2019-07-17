@@ -100,7 +100,7 @@ select 6 as objn;
 /* Asthme */
   /* migration group*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160593,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='50f7bb2d-09e2-4ac1-9679-f6f171bae7ae'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70800,70801,70803) and o.value_boolean=1;
@@ -108,8 +108,8 @@ o.concept_id in (70800,70801,70803) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160593 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='50f7bb2d-09e2-4ac1-9679-f6f171bae7ae' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 7 as objn;
  /* name of the concept */
@@ -137,7 +137,7 @@ select 9 as objn;
 /* CANCER */
   /* migration group*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160593,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='2e3667fc-09e3-48f8-8aeb-9a02fac8b472'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70802,70804,70805) and o.value_boolean=1;
@@ -145,8 +145,8 @@ o.concept_id in (70802,70804,70805) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160593 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='2e3667fc-09e3-48f8-8aeb-9a02fac8b472' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 10 as objn;
  /* name of the concept */
@@ -173,7 +173,7 @@ select 12 as objn;
 /* Cardiopathie */
   /* migration group*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160593,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='c168326c-31b6-4f99-8a7c-c5124336d673'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70807,70808,70809) and o.value_boolean=1;
@@ -181,8 +181,8 @@ o.concept_id in (70807,70808,70809) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160593 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='c168326c-31b6-4f99-8a7c-c5124336d673' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 13 as objn;
  /* name of the concept */
@@ -209,7 +209,7 @@ select 15 as objn;
 /* Diabete */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160593,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='41bd1e8c-298f-4878-a094-369a298d64ab'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70810,70811,70812) and o.value_boolean=1;
@@ -217,8 +217,8 @@ o.concept_id in (70810,70811,70812) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160593 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='41bd1e8c-298f-4878-a094-369a298d64ab' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 16 as objn;
  /* name of the concept */
@@ -245,7 +245,7 @@ select 18 as objn;
 /* Epilepsie */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160593,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='fe686c52-a77b-4aee-8110-85d2897f6bd1'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70813,70814,70815) and o.value_boolean=1;
@@ -253,8 +253,8 @@ o.concept_id in (70813,70814,70815) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160593 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='fe686c52-a77b-4aee-8110-85d2897f6bd1' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 19 as objn;
  /* name of the concept */
@@ -281,7 +281,7 @@ select 21 as objn;
 /* HTA */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160593,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f0748bfb-1465-4d6c-89f1-c631f46c1510'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70816,70817,70818) and o.value_boolean=1;
@@ -289,8 +289,8 @@ o.concept_id in (70816,70817,70818) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160593 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f0748bfb-1465-4d6c-89f1-c631f46c1510' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 select 22 as objn; 
  /* name of the concept */
@@ -353,7 +353,7 @@ select 27 as objn;
 /* Tuberculose  MDR*/
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160593,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='07766a1b-fe6c-444a-9b53-c1a381bcc771'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71237,71238,71239) and o.value_boolean=1;
@@ -361,8 +361,8 @@ o.concept_id in (71237,71238,71239) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160593 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='07766a1b-fe6c-444a-9b53-c1a381bcc771' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 select 28 as objn; 
  /* name of the concept */
@@ -407,7 +407,7 @@ select 31 as objn;
 /* Accident cérébro-vasculaire */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='e2347728-d872-4f2b-9c86-64f16c274461'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70001 and o.value_boolean=1;
@@ -415,8 +415,8 @@ o.concept_id=70001 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='e2347728-d872-4f2b-9c86-64f16c274461' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 32 as objn;
  /* name of the concept */
@@ -430,7 +430,7 @@ select 33 as objn;
 /* Allergies */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='5d1236b4-f769-4691-9718-8762506c13bf'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70002 and o.value_boolean=1;
@@ -438,8 +438,8 @@ o.concept_id=70002 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='5d1236b4-f769-4691-9718-8762506c13bf' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 select 34 as objn; 
  /* name of the concept */
@@ -451,17 +451,18 @@ o.concept_id=70002 and o.value_boolean=1;
 select 35 as objn;
 /* Precisez*/
  /* name of the concept */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160221,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71002 and o.value_text<>'';
+o.concept_id=71002 and o.value_text<>'') a set comments=value_text 
+where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
+and obs.encounter_id=a.encounter_id and obs.value_coded='110247';
 /* end of Allergies */
 select 36 as objn;
 /* Asthme */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='15254540-025e-44f9-91ab-27c243cdf79f'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70005 and o.value_boolean=1;
@@ -469,8 +470,8 @@ o.concept_id=70005 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='15254540-025e-44f9-91ab-27c243cdf79f' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 37 as objn;
  /* name of the concept */
@@ -484,7 +485,7 @@ select 38 as objn;
 /* Cancer */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1633AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70006 and o.value_boolean=1;
@@ -492,8 +493,8 @@ o.concept_id=70006 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1633AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 39 as objn;
  /* name of the concept */
@@ -505,18 +506,19 @@ o.concept_id=70006 and o.value_boolean=1;
 select 40 as objn;
 /* Precisez*/
  /* name of the concept */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160221,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71003 and o.value_text<>'';
+o.concept_id=71003 and o.value_text<>'') a set comments=value_text 
+where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
+and obs.encounter_id=a.encounter_id and obs.value_coded='151286';
 select 41 as objn;
 /* end of Cancer */
 
 /* IST */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='94d7e3ae-c35b-48ca-a3c8-a2deea1731df'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70012 and o.value_boolean=1;
@@ -524,8 +526,8 @@ o.concept_id=70012 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='94d7e3ae-c35b-48ca-a3c8-a2deea1731df' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 42 as objn;
  /* name of the concept */
@@ -537,18 +539,19 @@ o.concept_id=70012 and o.value_boolean=1;
 select 43 as objn;
 /* Precisez*/
  /* name of the concept */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160221,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71016 and o.value_text<>'';
+o.concept_id=71016 and o.value_text<>'') a set comments=value_text 
+where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
+and obs.encounter_id=a.encounter_id and obs.value_coded='156660';
 select 44 as objn;
 /* end of IST */
 
 /* Cardiopathie */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='4c33937a-3cdc-49f1-8be8-611ecd41246f'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70007 and o.value_boolean=1;
@@ -556,8 +559,8 @@ o.concept_id=70007 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='4c33937a-3cdc-49f1-8be8-611ecd41246f' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 select 45 as objn; 
  /* name of the concept */
@@ -571,7 +574,7 @@ select 46 as objn;
 /* Chirurgie */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='35d13d8d-1fa2-4734-8c41-66c8ccee0c9f'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70736 and o.value_boolean=1;
@@ -579,8 +582,8 @@ o.concept_id=70736 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='35d13d8d-1fa2-4734-8c41-66c8ccee0c9f' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 select 47 as objn; 
  /* name of the concept */
@@ -592,18 +595,19 @@ o.concept_id=70736 and o.value_boolean=1;
 select 48 as objn;
 /* Precisez*/
  /* name of the concept */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160221,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=70737 and o.value_text<>'';
+o.concept_id=70737 and o.value_text<>'') a set comments=value_text 
+where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
+and obs.encounter_id=a.encounter_id and obs.value_coded='163521';
 select 49 as objn;
 /* end of Chirurgie */
 
 /* Epilepsie */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='fe686c52-a77b-4aee-8110-85d2897f6bd1'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70009 and o.value_boolean=1;
@@ -611,8 +615,8 @@ o.concept_id=70009 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='fe686c52-a77b-4aee-8110-85d2897f6bd1' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  select 50 as objn;
  /* name of the concept */
@@ -626,7 +630,7 @@ o.concept_id=70009 and o.value_boolean=1;
 /* Hémoglobinopathie */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='71a5c038-64f4-4ede-a9af-7bf76c0bf2d5'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70452 and o.value_boolean=1;
@@ -634,8 +638,8 @@ o.concept_id=70452 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='71a5c038-64f4-4ede-a9af-7bf76c0bf2d5' 
 GROUP BY openmrs.obs.person_id,encounter_id;
   select 52 as objn;
  /* name of the concept */
@@ -647,18 +651,19 @@ o.concept_id=70452 and o.value_boolean=1;
  select 53 as objn;
 /* Precisez*/
  /* name of the concept */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160221,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=70739 and o.value_text<>'';
+o.concept_id=70739 and o.value_text<>'') a set comments=value_text 
+where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
+and obs.encounter_id=a.encounter_id and obs.value_coded='163583';
  select 54 as objn;
 /* end of Hémoglobinopathie */
 
 /* HTA */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f0748bfb-1465-4d6c-89f1-c631f46c1510'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70011 and o.value_boolean=1;
@@ -666,8 +671,8 @@ o.concept_id=70011 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f0748bfb-1465-4d6c-89f1-c631f46c1510' 
 GROUP BY openmrs.obs.person_id,encounter_id;
   select 55 as objn;
  /* name of the concept */
@@ -682,7 +687,7 @@ o.concept_id=70011 and o.value_boolean=1;
 /* Hyperchoestérolémie */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f855932d-ed8a-4729-8741-c9d0c8b7a559'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71438,71007)  and o.value_boolean=1;
@@ -690,8 +695,8 @@ o.concept_id in (71438,71007)  and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f855932d-ed8a-4729-8741-c9d0c8b7a559' 
 GROUP BY openmrs.obs.person_id,encounter_id;
   select 57 as objn;
  /* name of the concept */
@@ -706,7 +711,7 @@ o.concept_id in (71438,71007) and o.value_boolean=1;
 /* Alcool */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='8e455764-beb8-4c99-9922-82bb4e06506e'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70015 and o.value_boolean=1;
@@ -714,8 +719,8 @@ o.concept_id=70015 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='8e455764-beb8-4c99-9922-82bb4e06506e' 
 GROUP BY openmrs.obs.person_id,encounter_id;
   select 59 as objn;
  /* name of the concept */
@@ -729,7 +734,7 @@ o.concept_id=70015 and o.value_boolean=1;
 /* Drogue */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='4c0d6e3c-0cbb-4ffe-923f-e65a0d81eb3e'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=71010 and o.value_boolean=1;
@@ -737,8 +742,8 @@ o.concept_id=71010 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='4c0d6e3c-0cbb-4ffe-923f-e65a0d81eb3e' 
 GROUP BY openmrs.obs.person_id,encounter_id;
   select 61 as objn;
  /* name of the concept */
@@ -750,11 +755,12 @@ o.concept_id=71010 and o.value_boolean=1;
  select 62 as objn;
 /* Precisez*/
  /* name of the concept */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160221,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71011 and o.value_text<>'';
+o.concept_id=71011 and o.value_text<>'') a set comments=value_text 
+where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
+and obs.encounter_id=a.encounter_id and obs.value_coded='162556';
 
 /* end of Drogue */
  select 63 as objn;
@@ -762,7 +768,7 @@ o.concept_id=71011 and o.value_text<>'';
 /* Tabac */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1741cdff-5df3-4d0b-8dca-1d0082e9f628'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70016 and o.value_boolean=1;
@@ -770,8 +776,8 @@ o.concept_id=70016 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept and c.uuid='1741cdff-5df3-4d0b-8dca-1d0082e9f628' 
 GROUP BY openmrs.obs.person_id,encounter_id;
   select 64 as objn;
  /* name of the concept */
@@ -785,7 +791,7 @@ o.concept_id=70016 and o.value_boolean=1;
 /* Diabète */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='8bf6b860-463a-43f4-9719-5b97491ccc2e'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70008 and o.value_boolean=1;
@@ -793,8 +799,8 @@ o.concept_id=70008 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='8bf6b860-463a-43f4-9719-5b97491ccc2e' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -809,7 +815,7 @@ o.concept_id=70008 and o.value_boolean=1;
 /* Malnutrition */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='2d7111a8-095d-400a-af37-b9bffca66da4'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70270 and o.value_boolean=1;
@@ -817,8 +823,8 @@ o.concept_id=70270 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='2d7111a8-095d-400a-af37-b9bffca66da4' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -833,7 +839,7 @@ o.concept_id=70270 and o.value_boolean=1;
 /* Tuberculose */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='02d31d6e-7bd8-4acc-9c52-4ba8da14f17e'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70014 and o.value_boolean=1;
@@ -841,8 +847,8 @@ o.concept_id=70014 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='02d31d6e-7bd8-4acc-9c52-4ba8da14f17e' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -857,7 +863,7 @@ o.concept_id=70014 and o.value_boolean=1;
 /* MDR - Tuberculose */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='cc6cd6cc-436a-4d25-813c-52a6265b6ccc'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=71229 and o.value_boolean=1;
@@ -865,8 +871,8 @@ o.concept_id=71229 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='cc6cd6cc-436a-4d25-813c-52a6265b6ccc' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -881,7 +887,7 @@ o.concept_id=71229 and o.value_boolean=1;
 /* Troubles psychiatriques*/
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='219fde2a-421e-4c48-96a9-c0f4451cc11f'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=71008 and o.value_boolean=1;
@@ -889,8 +895,8 @@ o.concept_id=71008 and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='219fde2a-421e-4c48-96a9-c0f4451cc11f' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -902,47 +908,17 @@ o.concept_id=71008 and o.value_boolean=1;
 
 /* Precisez*/
  /* name of the concept */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160221,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71009 and o.value_text<>'';
+o.concept_id=71009 and o.value_text<>'') a set comments=value_text 
+where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
+and obs.encounter_id=a.encounter_id and obs.value_coded='151282';
 
 /* end of Troubles psychiatriques */
  select 70 as objn;
 
-/* Troubles psychiatriques*/
-  /* migration group */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1633,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
- FROM itech.encounter c, encounter e,itech.obs o
-where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
-o.concept_id=71008 and o.value_boolean=1;
 
-delete from itech.obs_concept_group where 1;		
-INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
-SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1633 
-GROUP BY openmrs.obs.person_id,encounter_id;
- 
- /* name of the concept */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,151282,1,e.date_created,UUID()
- FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
-where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71008 and o.value_boolean=1;
-
-/* Precisez*/
- /* name of the concept */
- INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160221,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
- FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
-where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71009 and o.value_text<>'';
-
-/* end of Troubles psychiatriques */
- select 71 as objn;
 /*Statut VIH */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1169,e.encounter_id,e.encounter_datetime,e.location_id,
@@ -1216,7 +1192,7 @@ select 3.2 Cesarienne;
 /*ATCD de Césarienne indication 1*/
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160714,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='8d4e82af-b278-4cc7-ad4a-f74865f63239'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70480 and o.value_numeric=1;
@@ -1224,8 +1200,8 @@ o.concept_id=70480 and o.value_numeric=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160714 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='8d4e82af-b278-4cc7-ad4a-f74865f63239' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -1254,7 +1230,7 @@ o.concept_id=70482 and o.value_datetime is not null;
 /*ATCD de Césarienne indication 2*/
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,160714,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='3904edb1-e1ba-46de-a2fd-da11076f29b5'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70480 and o.value_numeric=1 and exists (select * from itech.obs o1,itech.encounter c1 where c1.encounter_id=o1.encounter_id and  o1.concept_id='70483');
@@ -1262,8 +1238,8 @@ o.concept_id=70480 and o.value_numeric=1 and exists (select * from itech.obs o1,
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=160714 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='3904edb1-e1ba-46de-a2fd-da11076f29b5' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -1386,7 +1362,7 @@ select 3 as GYNECOLOGIQUE;
 /*Hépatite B*/
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1441,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='120157b7-a596-4623-8f7d-960fd686fb67'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70693,70694,70695,71077,71078);
@@ -1394,8 +1370,8 @@ o.concept_id in (70693,70694,70695,71077,71078);
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1441 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='120157b7-a596-4623-8f7d-960fd686fb67' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the imunisation */
@@ -1446,7 +1422,7 @@ o.concept_id=71078 and o.value_boolean>0;
 /* Tétanos Texoïde */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1441,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f9e79221-424c-44e9-a23d-3b507d326c32'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71079,71080,71081,71082,71083);
@@ -1454,8 +1430,8 @@ o.concept_id in (71079,71080,71081,71082,71083);
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1441 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f9e79221-424c-44e9-a23d-3b507d326c32' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the imunisation */
@@ -1570,7 +1546,7 @@ o.concept_id=71633 and o.value_boolean>0;
 /* Autre Vaccin */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1441,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='d2947119-fa79-4903-842d-4b38b9d2856f'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71094,71089,71090,71091,71092,71093);
@@ -1578,8 +1554,8 @@ o.concept_id in (71094,71089,71090,71091,71092,71093);
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1441 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='d2947119-fa79-4903-842d-4b38b9d2856f' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the imunisation */
@@ -2394,7 +2370,7 @@ select 5 as EXAMEN;
 /* IMPRESSIONS CLINIQUES/DIAGNOSTIQUES */	
   /* Agression sexuelle [T74.21XA] */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='98fc479a-9757-4931-bf54-9d32f395d39d'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70360,70361,70362) and o.value_boolean=1;
@@ -2402,8 +2378,8 @@ o.concept_id in (70360,70361,70362) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='98fc479a-9757-4931-bf54-9d32f395d39d' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2432,7 +2408,7 @@ o.concept_id in (70360,70361,70362) and o.value_boolean=1;
 
   /* Adénofibrome (ADF) du sein [N60.39] */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='d512157d-6bbb-4730-be0a-6e60105c0717'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70058,70106,70107) and o.value_boolean=1;
@@ -2440,8 +2416,8 @@ o.concept_id in (70058,70106,70107) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='d512157d-6bbb-4730-be0a-6e60105c0717' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2469,7 +2445,7 @@ o.concept_id in (70058,70106,70107) and o.value_boolean=1;
 
   /* Anémie */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='d9a7ed8a-678c-4c23-91cf-e8389bdf1f00'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70234,70235,70236) and o.value_boolean=1;
@@ -2477,8 +2453,8 @@ o.concept_id in (70234,70235,70236) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='d9a7ed8a-678c-4c23-91cf-e8389bdf1f00' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2506,7 +2482,7 @@ o.concept_id in (70234,70235,70236) and o.value_boolean=1;
 	
   /* Avortement */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='2fcd5b3b-3728-498c-8727-e371a0a0b58c'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70057,70104,70105) and o.value_boolean=1;
@@ -2514,8 +2490,8 @@ o.concept_id in (70057,70104,70105) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='2fcd5b3b-3728-498c-8727-e371a0a0b58c' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2531,7 +2507,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=50 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -2547,7 +2523,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=50;	
 	
 	
@@ -2571,7 +2547,7 @@ o.concept_id in (70057,70104,70105) and o.value_boolean=1;
 	
   /* Cancer de l’endomètre [C54.1] */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='75ed57ce-cbd8-41ed-9420-50bbbfb2b5b1'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70061,70108,70109) and o.value_boolean=1;
@@ -2579,8 +2555,8 @@ o.concept_id in (70061,70108,70109) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='75ed57ce-cbd8-41ed-9420-50bbbfb2b5b1' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2609,7 +2585,7 @@ o.concept_id in (70061,70108,70109) and o.value_boolean=1;
 	
   /* Cancer de l’ovaire [C56.9] */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f277707e-6288-4efe-9732-e89cfc7d62d2'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70060,70110,70111) and o.value_boolean=1;
@@ -2617,8 +2593,8 @@ o.concept_id in (70060,70110,70111) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f277707e-6288-4efe-9732-e89cfc7d62d2' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2646,7 +2622,7 @@ o.concept_id in (70060,70110,70111) and o.value_boolean=1;
 
  /* Cancer de sein [C50.919] */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1e684a1a-76fe-47f6-91b4-e5856556f24e'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70059,70112,70113) and o.value_boolean=1;
@@ -2654,8 +2630,8 @@ o.concept_id in (70059,70112,70113) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1e684a1a-76fe-47f6-91b4-e5856556f24e' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2672,7 +2648,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=133354 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -2688,7 +2664,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=133354;	
 
 	
@@ -2709,7 +2685,7 @@ o.concept_id in (70059,70112,70113) and o.value_boolean=1;
 
 /* Cardiopathie [I51.9] */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='6a54a0b5-7c1b-4079-8072-d9f4985d84e3'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70240,70241,70242) and o.value_boolean=1;
@@ -2717,9 +2693,9 @@ o.concept_id in (70240,70241,70242) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
-GROUP BY openmrs.obs.person_id,encounter_id; -- 163114, 122432, 119270
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='6a54a0b5-7c1b-4079-8072-d9f4985d84e3' 
+GROUP BY openmrs.obs.person_id,encounter_id; 
  
  /* name of the concept */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
@@ -2734,7 +2710,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=139071 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -2750,7 +2726,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=139071;	
 	
 /* Confirmé,Suspecté */	
@@ -2771,7 +2747,7 @@ o.concept_id in (70240,70241,70242) and o.value_boolean=1;
 
 /*Chorioamniotite [O41.129] */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='3d40e9cc-82b1-4658-b4c3-f7e1a74aefd5'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71253,71254,71255) and o.value_boolean=1;
@@ -2779,8 +2755,8 @@ o.concept_id in (71253,71254,71255) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='3d40e9cc-82b1-4658-b4c3-f7e1a74aefd5' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2809,7 +2785,7 @@ o.concept_id in (71253,71254,71255) and o.value_boolean=1;
 
 /*Diabète + grossesse [O99.810]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='6e639f6c-1b62-41c4-8cfd-fb76b3205313'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70086,70114,70115) and o.value_boolean=1;
@@ -2817,8 +2793,8 @@ o.concept_id in (70086,70114,70115) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='6e639f6c-1b62-41c4-8cfd-fb76b3205313' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2834,7 +2810,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=1449 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -2850,7 +2826,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=1449;	
 
 	
@@ -2872,7 +2848,7 @@ o.concept_id in (70086,70114,70115) and o.value_boolean=1;
 
 /*Dystrophie ovarienne [N83.8]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='34491714-aefc-4fc9-9fe5-b5853b3775cc'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70062,70116,70117) and o.value_boolean=1;
@@ -2880,8 +2856,8 @@ o.concept_id in (70062,70116,70117) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='34491714-aefc-4fc9-9fe5-b5853b3775cc' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2898,7 +2874,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=115178 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -2914,7 +2890,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=115178;
 	
 /* Confirmé,Suspecté */	
@@ -2936,7 +2912,7 @@ o.concept_id in (70062,70116,70117) and o.value_boolean=1;
 
 /*Eclampsie [O15.9]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='cb4d6c75-c218-4a26-9046-41e0939e55c4'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70084,70118,70119) and o.value_boolean=1;
@@ -2944,8 +2920,8 @@ o.concept_id in (70084,70118,70119) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='cb4d6c75-c218-4a26-9046-41e0939e55c4' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2973,7 +2949,7 @@ o.concept_id in (70084,70118,70119) and o.value_boolean=1;
 
 /*Endométriose [N80.9]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='55114e3d-35a7-4fb2-bd83-8c0f1bbcd341'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70064,70120,70121) and o.value_boolean=1;
@@ -2981,8 +2957,8 @@ o.concept_id in (70064,70120,70121) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='55114e3d-35a7-4fb2-bd83-8c0f1bbcd341' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -2998,7 +2974,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=118629 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -3014,7 +2990,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=118629;	
  
 /* Confirmé,Suspecté */	
@@ -3035,7 +3011,7 @@ o.concept_id in (70064,70120,70121) and o.value_boolean=1;
 
 /*Fibrome utérin [D26.9]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='68fb8efd-457f-4e80-88cb-b13febfbf5d4'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70065,70122,70124) and o.value_boolean=1;
@@ -3043,8 +3019,8 @@ o.concept_id in (70065,70122,70124) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='68fb8efd-457f-4e80-88cb-b13febfbf5d4' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3060,7 +3036,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=123455 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -3076,7 +3052,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=123455;	
 	
 /* Confirmé,Suspecté */	
@@ -3097,7 +3073,7 @@ o.concept_id in (70065,70122,70124) and o.value_boolean=1;
 
 /* Grossesse ectopique [O0.00] */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='3fea18d4-88f1-40c1-aadc-41dca3449f9d'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70066,70123,70125) and o.value_boolean=1;
@@ -3105,8 +3081,8 @@ o.concept_id in (70066,70123,70125) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='3fea18d4-88f1-40c1-aadc-41dca3449f9d' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3122,7 +3098,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=46 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -3138,7 +3114,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=46;
 
 
@@ -3161,7 +3137,7 @@ o.concept_id in (70066,70123,70125) and o.value_boolean=1;
 
 /*Grossesse intra utérine [Z33.1]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='361bd482-59a9-4ee8-80f0-e7e39b1d1827'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70067,70126,70128) and o.value_boolean=1;
@@ -3169,8 +3145,8 @@ o.concept_id in (70067,70126,70128) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='361bd482-59a9-4ee8-80f0-e7e39b1d1827' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3198,7 +3174,7 @@ o.concept_id in (70067,70126,70128) and o.value_boolean=1;
 
 /* HTA + grossesse [O16.9] */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='fd7987b1-d551-4451-b8e2-59a998adf1d5'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70087,71140,71141) and o.value_boolean=1;
@@ -3206,8 +3182,8 @@ o.concept_id in (70087,71140,71141) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='fd7987b1-d551-4451-b8e2-59a998adf1d5' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3234,7 +3210,7 @@ o.concept_id in (70087,71140,71141) and o.value_boolean=1;
 
 /* Hémorragie troisième trimestre [O46.90] */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='ee6c7fd3-6a2f-4af0-8978-e1c5e06a9a62'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70069,70132,70133) and o.value_boolean=1;
@@ -3242,8 +3218,8 @@ o.concept_id in (70069,70132,70133) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='ee6c7fd3-6a2f-4af0-8978-e1c5e06a9a62' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3259,7 +3235,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=163751 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -3275,7 +3251,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=163751;
 
 	
@@ -3297,7 +3273,7 @@ o.concept_id in (70069,70132,70133) and o.value_boolean=1;
 
 /*Hyperémèse gravidique [O21.0]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='22be1344-65f9-4310-9be3-1d300e57820b'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70068,70130,70131) and o.value_boolean=1;
@@ -3305,8 +3281,8 @@ o.concept_id in (70068,70130,70131) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='22be1344-65f9-4310-9be3-1d300e57820b' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3334,7 +3310,7 @@ o.concept_id in (70068,70130,70131) and o.value_boolean=1;
 
 /*Infection génito-urinaire (IGU) [N73.9]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='2e143919-ec49-4fd0-8531-2d1651d9ddfc'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70847,70848,70849) and o.value_boolean=1;
@@ -3342,8 +3318,8 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='2e143919-ec49-4fd0-8531-2d1651d9ddfc' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3371,7 +3347,7 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 
 /* IST */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='45a0cf27-6096-4b8d-9870-49c24d7bacc2'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70097,70136,70137) and o.value_boolean=1;
@@ -3379,8 +3355,8 @@ o.concept_id in (70097,70136,70137) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='45a0cf27-6096-4b8d-9870-49c24d7bacc2' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3396,7 +3372,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=112992 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -3412,7 +3388,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=112992;
 	
 /* Confirmé,Suspecté */	
@@ -3433,7 +3409,7 @@ o.concept_id in (70097,70136,70137) and o.value_boolean=1;
 
 /* Kyste de l’ovaire [N83.29] */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='802ec4ac-2b25-4222-b043-d758c30dc12c'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70077,70138,70139) and o.value_boolean=1;
@@ -3441,8 +3417,8 @@ o.concept_id in (70077,70138,70139) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='802ec4ac-2b25-4222-b043-d758c30dc12c' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3458,7 +3434,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=119702 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -3474,7 +3450,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=119702;
 
 	
@@ -3497,7 +3473,7 @@ o.concept_id in (70077,70138,70139) and o.value_boolean=1;
 
 /*Lésion cervicale [D26.0]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f2412438-203a-46ef-b9fd-017b985cae43'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70079,70140,70141) and o.value_boolean=1;
@@ -3505,8 +3481,8 @@ o.concept_id in (70079,70140,70141) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs, openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f2412438-203a-46ef-b9fd-017b985cae43' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3522,7 +3498,7 @@ TRUNCATE TABLE itech.precisez;
  SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,
  openmrs.obs.concept_id,openmrs.obs.encounter_id, openmrs.obs.location_id, openmrs.obs.value_coded
  FROM openmrs.obs
- WHERE openmrs.obs.concept_id=159614
+ WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=157480 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
@@ -3538,7 +3514,7 @@ TRUNCATE TABLE itech.precisez;
  AND ip.encounter_id=ob.encounter_id
  AND ip.location_id=ob.location_id
  AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
+ AND ip.concept_id=1284
  AND ip.value_coded=157480;
 	
 /* Confirmé,Suspecté */	
@@ -3559,7 +3535,7 @@ o.concept_id in (70079,70140,70141) and o.value_boolean=1;
 
 /*Maladie inflammatoire pelvienne [N73.9]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='c5265213-bc23-491f-b1a8-aba71fa7f123'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70080,70142,70143) and o.value_boolean=1;
@@ -3567,8 +3543,8 @@ o.concept_id in (70080,70142,70143) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='c5265213-bc23-491f-b1a8-aba71fa7f123' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3620,7 +3596,7 @@ o.concept_id in (70080,70142,70143) and o.value_boolean=1;
 
 /*Malaria (paludisme) [B52.9]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='12191641-452e-493f-b9a6-b91a34abfec6'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71148,71150,71152,70850,70851,70852) and o.value_boolean=1;
@@ -3628,8 +3604,8 @@ o.concept_id in (71148,71150,71152,70850,70851,70852) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='12191641-452e-493f-b9a6-b91a34abfec6' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3662,7 +3638,7 @@ o.concept_id in (71148,71150,71152,70850,70851,70852) and o.value_boolean=1;
 
 /* Menace d’accouchement prématurée [O42.00] */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1dfb560d-6627-441e-a8e2-d1517b51c8b4'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70078,70144,70145) and o.value_boolean=1;
@@ -3670,8 +3646,8 @@ o.concept_id in (70078,70144,70145) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1dfb560d-6627-441e-a8e2-d1517b51c8b4' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3698,7 +3674,7 @@ o.concept_id in (70078,70144,70145) and o.value_boolean=1;
 
 /* Mort fœtale [O36.4XX0] */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='36454c12-bc26-4f2c-b9af-73673d2af0d7'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70146,70147,71136) and o.value_boolean=1;
@@ -3706,8 +3682,8 @@ o.concept_id in (70146,70147,71136) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='36454c12-bc26-4f2c-b9af-73673d2af0d7' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3735,7 +3711,7 @@ o.concept_id in (70146,70147,71136) and o.value_boolean=1;
 
 /*Oligoamnios [O41.00X0]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='3a32ae34-4a72-486c-beaa-e2c0e8aecf5d'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71256,71257,71258) and o.value_boolean=1;
@@ -3743,8 +3719,8 @@ o.concept_id in (71256,71257,71258) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='3a32ae34-4a72-486c-beaa-e2c0e8aecf5d' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3773,7 +3749,7 @@ o.concept_id in (71256,71257,71258) and o.value_boolean=1;
 
 /*Pathologie rénale,*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='a80a56f6-614e-4945-a748-675297d5bbfe'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71259,71260,71261) and o.value_boolean=1;
@@ -3781,8 +3757,8 @@ o.concept_id in (71259,71260,71261) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs, openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='a80a56f6-614e-4945-a748-675297d5bbfe' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3834,7 +3810,7 @@ TRUNCATE TABLE itech.precisez;
 
 /* Pré éclampsie [O14.90], */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='73da2a29-a035-41b5-8891-717ba99a3081'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70103,70148,70149) and o.value_boolean=1;
@@ -3842,8 +3818,8 @@ o.concept_id in (70103,70148,70149) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='73da2a29-a035-41b5-8891-717ba99a3081' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3894,7 +3870,7 @@ TRUNCATE TABLE itech.precisez;
 
 /*Retard croissance Intrautérin [P05.9]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f9d52515-6c56-41b3-881a-1b40f355144c'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71262,71263,71264) and o.value_boolean=1;
@@ -3902,8 +3878,8 @@ o.concept_id in (71262,71263,71264) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f9d52515-6c56-41b3-881a-1b40f355144c' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3930,7 +3906,7 @@ o.concept_id in (71262,71263,71264) and o.value_boolean=1;
 
 /*Rupture prématurée des membranes [O42.00]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1dfb560d-6627-441e-a8e2-d1517b51c8b4'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70082,70150,70151) and o.value_boolean=1;
@@ -3938,8 +3914,8 @@ o.concept_id in (70082,70150,70151) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1dfb560d-6627-441e-a8e2-d1517b51c8b4' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -3966,7 +3942,7 @@ o.concept_id in (70082,70150,70151) and o.value_boolean=1;
 
 /*Saignement utérin anormal [N93.8]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='756f00e4-b1b6-40cd-b5ab-d5cce8a571fb'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70083,70152,70153) and o.value_boolean=1;
@@ -3974,8 +3950,8 @@ o.concept_id in (70083,70152,70153) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs , openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='756f00e4-b1b6-40cd-b5ab-d5cce8a571fb' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4002,7 +3978,7 @@ o.concept_id in (70083,70152,70153) and o.value_boolean=1;
 
 /*Syphilis [A53.9]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='36e9fab0-e56f-4ad7-a41d-86c94baf0053'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71021,71022,71023) and o.value_boolean=1;
@@ -4010,8 +3986,8 @@ o.concept_id in (71021,71022,71023) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='36e9fab0-e56f-4ad7-a41d-86c94baf0053' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4038,7 +4014,7 @@ o.concept_id in (71021,71022,71023) and o.value_boolean=1;
 
 /*Thrombopénie [D69.6]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='b4fbafaa-3119-4a0a-b800-9d6a33a12daa'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71265,71266,71267) and o.value_boolean=1;
@@ -4046,8 +4022,8 @@ o.concept_id in (71265,71266,71267) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='b4fbafaa-3119-4a0a-b800-9d6a33a12daa' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4074,7 +4050,7 @@ o.concept_id in (71265,71266,71267) and o.value_boolean=1;
 
 /*Thromboses */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='47903948-4ba6-46de-8ca3-0670deb27b6b'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71268,71269,71270) and o.value_boolean=1;
@@ -4082,8 +4058,8 @@ o.concept_id in (71268,71269,71270) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='47903948-4ba6-46de-8ca3-0670deb27b6b' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4110,7 +4086,7 @@ o.concept_id in (71268,71269,71270) and o.value_boolean=1;
 
 /*Tuberculose [A15.0] remplir la section Tuberculose ci-dessous*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='30d2b9eb-0a2f-4b0a-9ae9-31476ec13ed6'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71403,71404,71405) and o.value_boolean=1;
@@ -4118,8 +4094,8 @@ o.concept_id in (71403,71404,71405) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='30d2b9eb-0a2f-4b0a-9ae9-31476ec13ed6' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4146,7 +4122,7 @@ o.concept_id in (71403,71404,71405) and o.value_boolean=1;
 
 /*MDR TB remplir la section Tuberculose ci-dessous [Z16.24]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='b148cd09-496d-4a97-8cd5-75500f2d684f'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71271,71272,71273) and o.value_boolean=1;
@@ -4154,8 +4130,8 @@ o.concept_id in (71271,71272,71273) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs, openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='b148cd09-496d-4a97-8cd5-75500f2d684f' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4182,7 +4158,7 @@ o.concept_id in (71271,71272,71273) and o.value_boolean=1;
 
 /*Travail, Latent*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='80b0b6b9-621e-4ef2-9c5a-abe0650af829'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71421,71422,71423) and o.value_boolean=1;
@@ -4190,8 +4166,8 @@ o.concept_id in (71421,71422,71423) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c 
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='80b0b6b9-621e-4ef2-9c5a-abe0650af829' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4218,7 +4194,7 @@ o.concept_id in (71421,71422,71423) and o.value_boolean=1;
 
 /*Travail, Actif*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='3e459cbc-d49d-4976-accd-88f8b79de796'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71418,71419,71420) and o.value_boolean=1;
@@ -4226,8 +4202,8 @@ o.concept_id in (71418,71419,71420) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='3e459cbc-d49d-4976-accd-88f8b79de796' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4254,7 +4230,7 @@ o.concept_id in (71418,71419,71420) and o.value_boolean=1;
 
 /*VIH/SIDA [B20]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f2557bca-6f44-4625-800b-b3e02da52009'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70858,71138,71139) and o.value_boolean=1 and c.encounterType in (24,25);
@@ -4262,8 +4238,8 @@ o.concept_id in (70858,71138,71139) and o.value_boolean=1 and c.encounterType in
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f2557bca-6f44-4625-800b-b3e02da52009' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4290,7 +4266,7 @@ o.concept_id in (70858,71138,71139) and o.value_boolean=1 and c.encounterType in
 
 /*Vulvo vaginite [N76.0]*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159947,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='66896071-fa70-410a-80e4-2ca8904ad67b'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70154,70155) and o.value_boolean=1;
@@ -4298,8 +4274,8 @@ o.concept_id in (70154,70155) and o.value_boolean=1;
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159947 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='66896071-fa70-410a-80e4-2ca8904ad67b' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* name of the concept */
@@ -4782,7 +4758,7 @@ o.concept_id=71411 and o.value_numeric=1;
 
 /* mois 0 */ 
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159960,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='c2c7db51-d427-4c21-9655-ae9ee604c81c'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71158,71159,71160) and (o.value_datetime is not null or digits(o.value_numeric)>0);
@@ -4790,8 +4766,8 @@ o.concept_id in (71158,71159,71160) and (o.value_datetime is not null or digits(
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159960 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='c2c7db51-d427-4c21-9655-ae9ee604c81c' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* the month  */
@@ -4829,7 +4805,7 @@ o.concept_id=71160 and FindNumericValue(o.value_numeric)>0;
 
 /* mois 2 */ 
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159960,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='be7a27bb-2dcd-4bff-b696-ccdbbd2d3192'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71161,71162,71163) and (o.value_datetime is not null or o.value_numeric>0);
@@ -4837,8 +4813,8 @@ o.concept_id in (71161,71162,71163) and (o.value_datetime is not null or o.value
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159960 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='be7a27bb-2dcd-4bff-b696-ccdbbd2d3192' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* the month  */
@@ -4876,7 +4852,7 @@ o.concept_id=71163 and FindNumericValue(o.value_numeric)>0;
 
 /* mois 3 */ 
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159960,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='fdd9d953-004a-4e9a-ab93-9afaa0e090fa'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71164,71165,71166) and (o.value_datetime is not null or o.value_numeric>0);
@@ -4884,8 +4860,8 @@ o.concept_id in (71164,71165,71166) and (o.value_datetime is not null or o.value
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159960 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='fdd9d953-004a-4e9a-ab93-9afaa0e090fa' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* the month  */
@@ -4924,7 +4900,7 @@ o.concept_id=71166 and FindNumericValue(o.value_numeric)>0;
 
 /* mois 5 */  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159960,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='224546bb-03da-4793-9ef6-3d42adc5b353'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71167,71168,71169) and (o.value_datetime is not null or o.value_numeric>0);
@@ -4932,8 +4908,8 @@ o.concept_id in (71167,71168,71169) and (o.value_datetime is not null or o.value
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159960 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='224546bb-03da-4793-9ef6-3d42adc5b353' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* the month  */
@@ -4971,7 +4947,7 @@ o.concept_id=71169 and FindNumericValue(o.value_numeric)>0;
 
 /* mois Fin de rx */ 
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,159960,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='7ae17faf-5935-46f2-a1fb-88e51b65480e'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (71170,71171,71172) and (o.value_datetime is not null or o.value_numeric>0);
@@ -4979,8 +4955,8 @@ o.concept_id in (71170,71171,71172) and (o.value_datetime is not null or o.value
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=159960 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='7ae17faf-5935-46f2-a1fb-88e51b65480e' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* the month  */
@@ -5165,7 +5141,7 @@ o.concept_id=70721 and o.value_text<>'';
 
 /* Vaccination */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1421,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1c4998b1-b6db-4fda-aa8c-7c0f0de25135'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70411,70414) and (o.value_boolean=1 or o.value_text<>'');
@@ -5173,8 +5149,8 @@ o.concept_id in (70411,70414) and (o.value_boolean=1 or o.value_text<>'');
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1421 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1c4998b1-b6db-4fda-aa8c-7c0f0de25135' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
  /* DT/Tétanos toxoïde  */
@@ -5195,7 +5171,7 @@ o.concept_id=70414 and o.value_text<>'';
 /* Medicaments prescrits / Posologie */
  /* 1  */
   INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1442,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='68c79da3-7261-4e32-9a8b-85288fbef43b'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70416) and (o.value_boolean=1 or o.value_text<>'');
@@ -5203,8 +5179,8 @@ o.concept_id in (70416) and (o.value_boolean=1 or o.value_text<>'');
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1442 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='68c79da3-7261-4e32-9a8b-85288fbef43b' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,comments,creator,date_created,uuid)
@@ -5215,7 +5191,7 @@ o.concept_id=70416 and o.value_text<>'';
 	
  /* 2  */ 
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1442,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='0092abda-de8d-4564-9d16-7bda84b78bc5'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70417) and (o.value_boolean=1 or o.value_text<>'');
@@ -5223,8 +5199,8 @@ o.concept_id in (70417) and (o.value_boolean=1 or o.value_text<>'');
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1442 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='0092abda-de8d-4564-9d16-7bda84b78bc5' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,comments,creator,date_created,uuid)
@@ -5235,7 +5211,7 @@ o.concept_id=70417 and o.value_text<>'';
 
  /* 3  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1442,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='d4231f0f-92aa-4f28-9534-0d726d436b98'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70418) and (o.value_boolean=1 or o.value_text<>'');
@@ -5243,8 +5219,8 @@ o.concept_id in (70418) and (o.value_boolean=1 or o.value_text<>'');
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1442 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='d4231f0f-92aa-4f28-9534-0d726d436b98' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,comments,creator,date_created,uuid)
@@ -5255,7 +5231,7 @@ o.concept_id=70418 and o.value_text<>'';
 
  /* 4  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1442,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='99f42a2a-cba7-4baf-822f-1be8ece88705'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70419) and (o.value_boolean=1 or o.value_text<>'');
@@ -5263,8 +5239,8 @@ o.concept_id in (70419) and (o.value_boolean=1 or o.value_text<>'');
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1442 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='99f42a2a-cba7-4baf-822f-1be8ece88705' 
 GROUP BY openmrs.obs.person_id,encounter_id;
  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,comments,creator,date_created,uuid)
@@ -5275,7 +5251,7 @@ o.concept_id=70419 and o.value_text<>'';
 
  /* 5  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1442,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='46cd375f-4324-4fde-b01f-1ec2342f29ca'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id in (70420) and (o.value_boolean=1 or o.value_text<>'');
@@ -5283,8 +5259,8 @@ o.concept_id in (70420) and (o.value_boolean=1 or o.value_text<>'');
 delete from itech.obs_concept_group where 1;		
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
-FROM openmrs.obs
-WHERE openmrs.obs.concept_id=1442 
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='46cd375f-4324-4fde-b01f-1ec2342f29ca' 
 GROUP BY openmrs.obs.person_id,encounter_id;
 
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,comments,creator,date_created,uuid)

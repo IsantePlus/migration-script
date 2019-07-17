@@ -234,7 +234,17 @@ create table if not exists migration_log(id int(11) primary key auto_increment,p
    select 10 as adherence;
    update migration_log set endtime=now() where prcodedure = 'adherence';
    
-   
+  
+   delete from migration_log where prcodedure in ('homeVisit');
+   insert into migration_log(prcodedure,starttime) values('homeVisit',now());   
+/* homeVisit */
+   call  homeVisitMigration();
+   SET SQL_SAFE_UPDATES = 0;
+   select 10 as homeVisit;
+   update migration_log set endtime=now() where prcodedure = 'homeVisit';
+
+
+  
   delete from migration_log where prcodedure in ('obgyn');
   insert into migration_log(prcodedure,starttime) values('obgyn',now());    
 /* OBGYN */   

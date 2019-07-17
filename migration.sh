@@ -58,6 +58,9 @@ echo "procedure travail_et_accouchement_migration created"  >> $HOME/migration/m
 createProcedure obgynMigration.sql
 echo "procedure obgynMigration created"  >> $HOME/migration/migrationLog.txt 
 
+createProcedure home_visit_migration.sql
+echo "procedure homeVisitMigration created"  >> $HOME/migration/migrationLog.txt 
+
 createProcedure migrationIsante.sql
 echo "procedure migrationIsante created"  >> $HOME/migration/migrationLog.txt 
 
