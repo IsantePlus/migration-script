@@ -147,6 +147,20 @@ location_id=VALUES(location_id),
 creator=VALUES(creator), 
 date_created=VALUES(date_created);
 
+/* Numero de code PC */
+INSERT INTO patient_identifier(patient_id,  identifier, identifier_type, preferred, location_id, creator, date_created, uuid)
+SELECT p.person_id, 
+o.value_text, t.patient_identifier_type_id, 1, l.location_id, 1, p.date_created,UUID()
+FROM person p, itech.patient j, patient_identifier_type t , itech.location_mapping l,itech.obs o
+WHERE p.uuid = j.patGuid and j.patStatus<255 AND o.concept_id='70039' and o.person_id=j.person_id and l.siteCode=j.location_id AND (t.name = 'Code PC') ON DUPLICATE KEY UPDATE
+identifier=VALUES(identifier),
+identifier_type=VALUES(identifier_type), 
+preferred=VALUES(preferred), 
+location_id=VALUES(location_id), 
+creator=VALUES(creator), 
+date_created=VALUES(date_created);
+
+
 /* Numero TB*/
 INSERT INTO patient_identifier(patient_id,  identifier, identifier_type, preferred, location_id, creator, date_created, uuid)
 SELECT p.person_id, 

@@ -10951,7 +10951,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd) = 
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
-	AND l.labID  in (1568,1223,1224,1225,1567,1566);
+	AND l.labID  in (1568,1223,1224,1225,1567,1566)
 	AND ((l.result <> "" AND l.result is not null)
 		OR (l.result2 <> "" AND l.result2 is not null)
 		OR (l.result3 <> "" AND l.result3 is not null)
