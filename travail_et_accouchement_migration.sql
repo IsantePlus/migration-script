@@ -14,6 +14,8 @@ BEGIN
 	 );
 	  SET SQL_SAFE_UPDATES = 1;
 	  SET FOREIGN_KEY_CHECKS=1;
+
+SET SQL_SAFE_UPDATES = 0;
   /*End of delete all inserted discontinuations data*/
    /*Start migration for Travailleur Accouchement Form*/
 		/*Start migration for Grossesse suivie:*/
