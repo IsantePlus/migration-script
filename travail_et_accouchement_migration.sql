@@ -1392,7 +1392,7 @@ BEGIN
 	
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
 	obs_group_id,value_numeric,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5916,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id
+	SELECT DISTINCT c.patient_id,5916,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
 	ELSE (FindNumericValue(ito.value_text) * 0.45)
 	END,1,e.createDate, UUID()
@@ -1541,7 +1541,7 @@ BEGIN
 	
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
 	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,1587,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id
+	SELECT DISTINCT c.patient_id,1587,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1534
 	     WHEN ito.value_numeric=2 THEN 1535
 	END,1,e.createDate, UUID()
@@ -1575,7 +1575,7 @@ BEGIN
 	
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
 	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,1587,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id
+	SELECT DISTINCT c.patient_id,1587,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1534
 	     WHEN ito.value_numeric=2 THEN 1535
 	END,1,e.createDate, UUID()
@@ -2111,12 +2111,12 @@ WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='bd768366-2a46-4578-96fb-f2
 GROUP BY openmrs.obs.person_id,encounter_id;
  
 /*Start migration for Date et Heure*/
-INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,obs_group_id,creator,date_created,uuid)
-SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.location_id,ito.value_datetime,og.obs_id,1,e.createDate, UUID()
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,ito.value_datetime,1,e.createDate, UUID()
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-AND ito.concept_id IN (70555);--70556,70557,70558,70559
+AND ito.concept_id IN (70555);
 
 /*Start migration for TA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2126,8 +2126,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=7856 -- 70536,70537,70538,70539
-	AND itob.concept_id=7857 -- 70544,70545,70546,70547
+	AND ito.concept_id=7856 
+	AND itob.concept_id=7857 
 	AND FindNumericValue(ito.value_text) > 0;
 	
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2137,7 +2137,7 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=7799 -- 70540,70541,70542,70543
+	AND ito.concept_id=7799 
 	AND itob.concept_id=7857
 	AND FindNumericValue(ito.value_text) > 0;	
 	
@@ -2147,7 +2147,7 @@ SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(7854) -- 70560,70561,70562,70563
+	AND ito.concept_id IN(7854) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for FR*/
@@ -2156,7 +2156,7 @@ SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(7855) -- 70564,70565,70566,70567
+	AND ito.concept_id IN(7855) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for Température*/
@@ -2169,8 +2169,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_con
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=7852 -- 70568,70569,70570,70571
-	AND itob.concept_id=7853 -- 70572,70573,70574,70575
+	AND ito.concept_id=7852 
+	AND itob.concept_id=7853
 	AND FindNumericValue(ito.value_text) > 0;
 
 /*Start migration for Conscience*/
@@ -2179,7 +2179,7 @@ SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.locati
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70549);	-- 70550,70551,70552,70553
+	AND ito.concept_id IN(70549);	
 	
 /*Start migration for Globe Sec.*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
@@ -2187,7 +2187,7 @@ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value
 	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(71292); -- 71293,71294,71295,71296	
+	AND ito.concept_id IN(71292); 	
 
 /*END OF migration groupe 2 */
 
@@ -2213,7 +2213,7 @@ SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.locati
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-AND ito.concept_id IN (70556);--,70557,70558,70559
+AND ito.concept_id IN (70556);
 
 /*Start migration for TA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2223,8 +2223,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70536 -- ,70537,70538,70539
-	AND itob.concept_id=70544 -- ,70545,70546,70547
+	AND ito.concept_id=70536 
+	AND itob.concept_id=70544 
 	AND FindNumericValue(ito.value_text) > 0;
 	
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2234,7 +2234,7 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70540 -- ,70541,70542,70543
+	AND ito.concept_id=70540 
 	AND itob.concept_id=70544
 	AND FindNumericValue(ito.value_text) > 0;	
 	
@@ -2244,7 +2244,7 @@ SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70560) -- ,70561,70562,70563
+	AND ito.concept_id IN(70560) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for FR*/
@@ -2253,7 +2253,7 @@ SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70564) -- ,70565,70566,70567
+	AND ito.concept_id IN(70564) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for Température*/
@@ -2266,8 +2266,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_con
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70568 -- ,70569,70570,70571
-	AND itob.concept_id=70572 -- ,70573,70574,70575
+	AND ito.concept_id=70568 
+	AND itob.concept_id=70572 
 	AND FindNumericValue(ito.value_text) > 0;
 
 /*Start migration for Conscience*/
@@ -2276,7 +2276,7 @@ SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.locati
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70550);	-- ,70551,70552,70553
+	AND ito.concept_id IN(70550);	
 	
 /*Start migration for Globe Sec.*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
@@ -2284,7 +2284,7 @@ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value
 	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(71293); -- ,71294,71295,71296	
+	AND ito.concept_id IN(71293); 	
 
 /*END OF migration groupe 3 */
 
@@ -2309,7 +2309,7 @@ SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.locati
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-AND ito.concept_id IN (70557);--,,70558,70559
+AND ito.concept_id IN (70557);
 
 /*Start migration for TA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2319,8 +2319,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70537 -- ,,70538,70539
-	AND itob.concept_id=70545 -- ,,70546,70547
+	AND ito.concept_id=70537 
+	AND itob.concept_id=70545 
 	AND FindNumericValue(ito.value_text) > 0;
 	
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2330,7 +2330,7 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70541 -- ,,70542,70543
+	AND ito.concept_id=70541 
 	AND itob.concept_id=70545
 	AND FindNumericValue(ito.value_text) > 0;	
 	
@@ -2340,7 +2340,7 @@ SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70561) -- ,,70562,70563
+	AND ito.concept_id IN(70561) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for FR*/
@@ -2349,7 +2349,7 @@ SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70565) -- ,,70566,70567
+	AND ito.concept_id IN(70565) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for Température*/
@@ -2362,8 +2362,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_con
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70569 -- ,,70570,70571
-	AND itob.concept_id=70573 -- ,,70574,70575
+	AND ito.concept_id=70569 
+	AND itob.concept_id=70573 
 	AND FindNumericValue(ito.value_text) > 0;
 
 /*Start migration for Conscience*/
@@ -2372,7 +2372,7 @@ SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.locati
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70551);	-- ,,70552,70553
+	AND ito.concept_id IN(70551);	
 	
 /*Start migration for Globe Sec.*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
@@ -2380,7 +2380,7 @@ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value
 	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(71294); -- ,,71295,71296	
+	AND ito.concept_id IN(71294); 
 
 /*END OF migration groupe 4 */
 
@@ -2406,7 +2406,7 @@ SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.locati
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-AND ito.concept_id IN (70558);--,,,70559
+AND ito.concept_id IN (70558);
 
 /*Start migration for TA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2416,8 +2416,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70538 -- ,,,70539
-	AND itob.concept_id=70546 -- ,,,70547
+	AND ito.concept_id=70538 
+	AND itob.concept_id=70546 
 	AND FindNumericValue(ito.value_text) > 0;
 	
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2427,7 +2427,7 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70542 -- ,,,70543
+	AND ito.concept_id=70542 
 	AND itob.concept_id=70546
 	AND FindNumericValue(ito.value_text) > 0;	
 	
@@ -2437,7 +2437,7 @@ SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70562) -- ,,,70563
+	AND ito.concept_id IN(70562) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for FR*/
@@ -2446,7 +2446,7 @@ SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70566) -- ,,,70567
+	AND ito.concept_id IN(70566) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for Température*/
@@ -2459,8 +2459,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_con
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70570 -- ,,,70571
-	AND itob.concept_id=70574 -- ,,,70575
+	AND ito.concept_id=70570 
+	AND itob.concept_id=70574 
 	AND FindNumericValue(ito.value_text) > 0;
 
 /*Start migration for Conscience*/
@@ -2469,7 +2469,7 @@ SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.locati
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70552);	-- ,,,70553
+	AND ito.concept_id IN(70552);	
 	
 /*Start migration for Globe Sec.*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
@@ -2477,7 +2477,7 @@ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value
 	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(71295); -- ,,,71296	
+	AND ito.concept_id IN(71295); 	
 
 /*END OF migration groupe 5 */
 
@@ -2502,7 +2502,7 @@ SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.locati
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-AND ito.concept_id IN (70559);--,,,
+AND ito.concept_id IN (70559);
 
 /*Start migration for TA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2512,8 +2512,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70539 -- ,,,
-	AND itob.concept_id=70547 -- ,,,
+	AND ito.concept_id=70539 
+	AND itob.concept_id=70547 
 	AND FindNumericValue(ito.value_text) > 0;
 	
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
@@ -2523,7 +2523,7 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_co
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70543 -- ,,,
+	AND ito.concept_id=70543 
 	AND itob.concept_id=70547
 	AND FindNumericValue(ito.value_text) > 0;	
 	
@@ -2533,7 +2533,7 @@ SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70563) -- ,,,
+	AND ito.concept_id IN(70563) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for FR*/
@@ -2542,7 +2542,7 @@ SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70567) -- ,,,
+	AND ito.concept_id IN(70567) 
 	AND FindNumericValue(ito.value_text) > 0;	
 
 /*Start migration for Température*/
@@ -2555,8 +2555,8 @@ from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_con
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
 	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id=70571 -- ,,,
-	AND itob.concept_id=70575 -- ,,,
+	AND ito.concept_id=70571 
+	AND itob.concept_id=70575 
 	AND FindNumericValue(ito.value_text) > 0;
 
 /*Start migration for Conscience*/
@@ -2565,7 +2565,7 @@ SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.locati
 from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(70553);	-- ,,,
+	AND ito.concept_id IN(70553);	
 	
 /*Start migration for Globe Sec.*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
@@ -2573,7 +2573,7 @@ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value
 	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
-	AND ito.concept_id IN(71296); -- ,,,	
+	AND ito.concept_id IN(71296); 	
 
 /*END OF migration groupe 6 */
 
