@@ -2134,7 +2134,7 @@ v.immunizationID =1;
  /* test rapide 1*/
  /* migration group*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,(select concept_id from comcept where uuid='28e8ffc8-1b65-484c-baa1-929f0b8901a6'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='28e8ffc8-1b65-484c-baa1-929f0b8901a6'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e,  itech.pedLabs v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -2371,7 +2371,7 @@ v.pedLabsSlot=1 and pedLabsID=2;
 
 /* Resultat de depistage*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163722,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+SELECT DISTINCT e.patient_id,1042,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
 case when v.pedLabsResult=1 then 703
      when v.pedLabsResult=2 then 664
 	 when v.pedLabsResult=4 then 1138
@@ -2434,7 +2434,7 @@ v.pedLabsSlot=2 and pedLabsID=2;
 
 /* Resultat de depistage*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163722,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+SELECT DISTINCT e.patient_id,1042,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
 case when v.pedLabsResult=1 then 703
      when v.pedLabsResult=2 then 664
 	 when v.pedLabsResult=4 then 1138
@@ -2498,7 +2498,7 @@ v.pedLabsSlot=3 and pedLabsID=2;
 
 /* Resultat de depistage*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163722,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+SELECT DISTINCT e.patient_id,1042,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
 case when v.pedLabsResult=1 then 703
      when v.pedLabsResult=2 then 664
 	 when v.pedLabsResult=4 then 1138
@@ -2562,7 +2562,7 @@ v.pedLabsSlot=1 and pedLabsID=3;
 
 /* Resultat de depistage*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163722,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+SELECT DISTINCT e.patient_id,1030,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
 case when v.pedLabsResult=1 then 703
      when v.pedLabsResult=2 then 664
 	 when v.pedLabsResult=4 then 1138
@@ -2625,7 +2625,7 @@ v.pedLabsSlot=2 and pedLabsID=3;
 
 /* Resultat de depistage*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163722,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+SELECT DISTINCT e.patient_id,1030,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
 case when v.pedLabsResult=1 then 703
      when v.pedLabsResult=2 then 664
 	 when v.pedLabsResult=4 then 1138
@@ -2689,7 +2689,7 @@ v.pedLabsSlot=3 and pedLabsID=3;
 
 /* Resultat de depistage*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163722,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+SELECT DISTINCT e.patient_id,1030,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
 case when v.pedLabsResult=1 then 703
      when v.pedLabsResult=2 then 664
 	 when v.pedLabsResult=4 then 1138
@@ -2758,7 +2758,7 @@ v.pedLabsSlot=1 and pedLabsID=4;
 
 /* Resultat de depistage*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163722,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+SELECT DISTINCT e.patient_id,163342,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
 case when v.pedLabsResult=1 then 703
      when v.pedLabsResult=2 then 664
 	 when v.pedLabsResult=4 then 1138
@@ -2821,7 +2821,7 @@ v.pedLabsSlot=2 and pedLabsID=4;
 
 /* Resultat de depistage*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163722,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+SELECT DISTINCT e.patient_id,163342,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
 case when v.pedLabsResult=1 then 703
      when v.pedLabsResult=2 then 664
 	 when v.pedLabsResult=4 then 1138
@@ -2885,7 +2885,7 @@ v.pedLabsSlot=3 and pedLabsID=4;
 
 /* Resultat de depistage*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,163722,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
+SELECT DISTINCT e.patient_id,163342,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
 case when v.pedLabsResult=1 then 703
      when v.pedLabsResult=2 then 664
 	 when v.pedLabsResult=4 then 1138
