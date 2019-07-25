@@ -89,7 +89,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=1;
+v.drugID=1 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -232,7 +232,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=8;
+v.drugID=8 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -374,7 +374,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=10;
+v.drugID=10 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -516,7 +516,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=12;
+v.drugID=12 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -659,7 +659,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=20;
+v.drugID=20 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -804,7 +804,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=29;
+v.drugID=29 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -950,7 +950,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=31 and v.stdDosage=1;
+v.drugID=31 and and v.stdDosage in (1,2);
 
 select 72 as test72;
  /* dosage alternative */
@@ -1102,7 +1102,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=33;
+v.drugID=33 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1246,7 +1246,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=34;
+v.drugID=34 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1390,7 +1390,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=11;
+v.drugID=11 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1535,7 +1535,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=23;
+v.drugID=23 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1680,7 +1680,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=5;
+v.drugID=5 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1825,7 +1825,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=6;
+v.drugID=6 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1968,7 +1968,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=16;
+v.drugID=16 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2114,7 +2114,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=21;
+v.drugID=21 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2260,7 +2260,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=88;
+v.drugID=88 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2405,7 +2405,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=87;
+v.drugID=87 and v.stdDosage in (1,2);
 
  /* dosage alternative */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)

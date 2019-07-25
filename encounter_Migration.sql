@@ -124,7 +124,7 @@ INSERT INTO itech.typeToForm (encounterType, uuid) VALUES
 ( 28 , '3c7f88b0-b844-47ba-b4da-4b5dee2b8b0a' ),
 ( 2  , 'df621bc1-6f2e-46bf-9fe9-184f1fdd41f2' ),
 ( 17 , 'f55d3760-1bf1-4e42-a7f9-0a901fa49cf0' ),
-( 7 , '55070987-51e1-45e1-ba5a-c37848450978' ),
+( 7  , '55070987-51e1-45e1-ba5a-c37848450978' ),
 ( 32 , '42ad13ab-db20-4aed-b8d5-fa4ca15317ee' );
  
 UPDATE itech.typeToForm i, form t SET i.form_id = t.form_id,i.encounterTypeOpenmrs=t.encounter_type where i.uuid = t.uuid; 

@@ -1035,620 +1035,929 @@ BEGIN
 		
 	/*End migration for SIGNES VITAUX A L'ADMISSION Part*/
 	/*Start migration for SIGNES VITAUX POST PARTUM ET ETAT DE CONSCIENCE PART*/
-		/*Start migration for Date et Heure*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.location_id,ito.value_datetime,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id IN (70554,70555,70556,70557,70558,70559);
-		/*End migration for Date et Heure*/
-		/*Start migration for TA*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	
+	/*migration groupe 1 */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='3e76627c-22d9-4cd9-8c7f-d029cd25d7c9'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (70554,7848,7846,7847,7844,70548,71291) and (o.value_boolean=1 or o.value_text<>'');
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='3e76627c-22d9-4cd9-8c7f-d029cd25d7c9' 
+GROUP BY openmrs.obs.person_id,encounter_id;
+ 
+/*Start migration for Date et Heure*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.location_id,ito.value_datetime,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+AND ito.concept_id IN (70554);
+
+/*Start migration for TA*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
+      CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text) ELSE (FindNumericValue(ito.value_text) * 0.09) END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
 	AND ito.concept_id=7848
 	AND itob.concept_id=7849
 	AND FindNumericValue(ito.value_text) > 0;
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
+	ELSE (FindNumericValue(ito.value_text) * 0.09) 	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
 	AND ito.concept_id=7798
 	AND itob.concept_id=7849
-	AND FindNumericValue(ito.value_text) > 0;
-	/*============================================================================*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=7856
-	AND itob.concept_id=7857
-	AND FindNumericValue(ito.value_text) > 0;
+	AND FindNumericValue(ito.value_text) > 0;	
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=7799
-	AND itob.concept_id=7857
-	AND FindNumericValue(ito.value_text) > 0;
-	/*========================================================================================*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70536
-	AND itob.concept_id=70544
-	AND FindNumericValue(ito.value_text) > 0;
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,
+/*Start migration for Pouls*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(7846)
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for FR*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(7847)
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for Température*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	     WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70540
-	AND itob.concept_id=70544
-	AND FindNumericValue(ito.value_text) > 0;
-	/*=========================================================================================*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70537
-	AND itob.concept_id=70545
-	AND FindNumericValue(ito.value_text) > 0;
-	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70541
-	AND itob.concept_id=70545
-	AND FindNumericValue(ito.value_text) > 0;
-	/*==========================================================================================*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70538
-	AND itob.concept_id=70546
-	AND FindNumericValue(ito.value_text) > 0;
-	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70542
-	AND itob.concept_id=70546
-	AND FindNumericValue(ito.value_text) > 0;
-	/*=====================================================================================*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70539
-	AND itob.concept_id=70547
-	AND FindNumericValue(ito.value_text) > 0;
-	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	ELSE (FindNumericValue(ito.value_text) * 0.09)
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70543
-	AND itob.concept_id=70547
-	AND FindNumericValue(ito.value_text) > 0;
-		/*End migration for TA*/
-		/*Start migration for Pouls*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.concept_id IN(7846,7854,70560,70561,70562,70563)
-	AND FindNumericValue(ito.value_text) > 0;
-		/*End migration for Pouls*/
-		/*Start migration for FR*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.concept_id IN(7847,7855,70564,70565,70566,70567)
-	AND FindNumericValue(ito.value_text) > 0;
-		/*End migration for FR*/
-		/*Start migration for Température*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
 	AND ito.concept_id=7844
 	AND itob.concept_id=7845
 	AND FindNumericValue(ito.value_text) > 0;
+
+/*Start migration for Conscience*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.location_id,160282,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70548);	
 	
-	/*=========================================*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
+/*Start migration for Globe Sec.*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+	SELECT DISTINCT c.patient_id,1284,c.encounter_id,c.encounter_datetime,c.location_id,132846,ito.value_text,og.obs_id,1,e.createDate, UUID()
+	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(71291);	
+
+/*END OF migration groupe 1 */
+
+
+	/*migration groupe 2 */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='bd768366-2a46-4578-96fb-f26a838b3b83'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (70555,7856,7799,7854,7855,7852,70549,71292) and (o.value_boolean=1 or o.value_text<>'');
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='bd768366-2a46-4578-96fb-f26a838b3b83' 
+GROUP BY openmrs.obs.person_id,encounter_id;
+ 
+/*Start migration for Date et Heure*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.location_id,ito.value_datetime,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+AND ito.concept_id IN (70555);--70556,70557,70558,70559
+
+/*Start migration for TA*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
+      CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text) ELSE (FindNumericValue(ito.value_text) * 0.09) END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=7852
-	AND itob.concept_id=7853
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=7856 -- 70536,70537,70538,70539
+	AND itob.concept_id=7857 -- 70544,70545,70546,70547
 	AND FindNumericValue(ito.value_text) > 0;
-	/*=============================================================*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
+	ELSE (FindNumericValue(ito.value_text) * 0.09) 	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70568
-	AND itob.concept_id=70572
-	AND FindNumericValue(ito.value_text) > 0;
-	/*==================================================*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=7799 -- 70540,70541,70542,70543
+	AND itob.concept_id=7857
+	AND FindNumericValue(ito.value_text) > 0;	
+	
+/*Start migration for Pouls*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(7854) -- 70560,70561,70562,70563
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for FR*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(7855) -- 70564,70565,70566,70567
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for Température*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	     WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70569
-	AND itob.concept_id=70573
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=7852 -- 70568,70569,70570,70571
+	AND itob.concept_id=7853 -- 70572,70573,70574,70575
 	AND FindNumericValue(ito.value_text) > 0;
-	/*===============================================*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
+
+/*Start migration for Conscience*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.location_id,160282,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70549);	-- 70550,70551,70552,70553
+	
+/*Start migration for Globe Sec.*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+	SELECT DISTINCT c.patient_id,1284,c.encounter_id,c.encounter_datetime,c.location_id,132846,ito.value_text,og.obs_id,1,e.createDate, UUID()
+	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(71292); -- 71293,71294,71295,71296	
+
+/*END OF migration groupe 2 */
+
+
+
+	/*migration groupe 3 */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='0658be52-5404-4386-8b7c-d6e68dbee9e8'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (70556,70536,70540,70560,70564,70568,70550,71293) and (o.value_boolean=1 or o.value_text<>'');
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='0658be52-5404-4386-8b7c-d6e68dbee9e8' 
+GROUP BY openmrs.obs.person_id,encounter_id;
+ 
+/*Start migration for Date et Heure*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.location_id,ito.value_datetime,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+AND ito.concept_id IN (70556);--,70557,70558,70559
+
+/*Start migration for TA*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
+      CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text) ELSE (FindNumericValue(ito.value_text) * 0.09) END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70536 -- ,70537,70538,70539
+	AND itob.concept_id=70544 -- ,70545,70546,70547
+	AND FindNumericValue(ito.value_text) > 0;
+	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
+	ELSE (FindNumericValue(ito.value_text) * 0.09) 	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70540 -- ,70541,70542,70543
+	AND itob.concept_id=70544
+	AND FindNumericValue(ito.value_text) > 0;	
+	
+/*Start migration for Pouls*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70560) -- ,70561,70562,70563
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for FR*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70564) -- ,70565,70566,70567
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for Température*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	     WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70570
-	AND itob.concept_id=70574
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70568 -- ,70569,70570,70571
+	AND itob.concept_id=70572 -- ,70573,70574,70575
 	AND FindNumericValue(ito.value_text) > 0;
-	/*==============================================================*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
+
+/*Start migration for Conscience*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.location_id,160282,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70550);	-- ,70551,70552,70553
+	
+/*Start migration for Globe Sec.*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+	SELECT DISTINCT c.patient_id,1284,c.encounter_id,c.encounter_datetime,c.location_id,132846,ito.value_text,og.obs_id,1,e.createDate, UUID()
+	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(71293); -- ,71294,71295,71296	
+
+/*END OF migration groupe 3 */
+
+
+	/*migration groupe 4 */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='dff9501f-4aa2-4613-b4b2-6a219edbf3e3'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (70557,70537,70541,70561,70565,70569,70551,71294) and (o.value_boolean=1 or o.value_text<>'');
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='dff9501f-4aa2-4613-b4b2-6a219edbf3e3' 
+GROUP BY openmrs.obs.person_id,encounter_id;
+ 
+/*Start migration for Date et Heure*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.location_id,ito.value_datetime,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+AND ito.concept_id IN (70557);--,,70558,70559
+
+/*Start migration for TA*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
+      CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text) ELSE (FindNumericValue(ito.value_text) * 0.09) END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70537 -- ,,70538,70539
+	AND itob.concept_id=70545 -- ,,70546,70547
+	AND FindNumericValue(ito.value_text) > 0;
+	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
+	ELSE (FindNumericValue(ito.value_text) * 0.09) 	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70541 -- ,,70542,70543
+	AND itob.concept_id=70545
+	AND FindNumericValue(ito.value_text) > 0;	
+	
+/*Start migration for Pouls*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70561) -- ,,70562,70563
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for FR*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70565) -- ,,70566,70567
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for Température*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
-	WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito, itech.obs itob
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	     WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id
-	AND ito.concept_id=70571
-	AND itob.concept_id=70575
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70569 -- ,,70570,70571
+	AND itob.concept_id=70573 -- ,,70574,70575
 	AND FindNumericValue(ito.value_text) > 0;
-		/*End migration for Température*/
-		/*Start migration for Conscience*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-		comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.location_id,160282,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
+
+/*Start migration for Conscience*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.location_id,160282,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70551);	-- ,,70552,70553
+	
+/*Start migration for Globe Sec.*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+	SELECT DISTINCT c.patient_id,1284,c.encounter_id,c.encounter_datetime,c.location_id,132846,ito.value_text,og.obs_id,1,e.createDate, UUID()
+	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id IN(70548,70549,70550,70551,70552,70553);
-		/*End migration for Conscience*/
-		/*Start migration for Globe Sec.*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-		comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,1284,c.encounter_id,c.encounter_datetime,c.location_id,132846,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(71294); -- ,,71295,71296	
+
+/*END OF migration groupe 4 */
+
+
+
+	/*migration groupe 5 */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='43d440f5-098a-4c8e-9f77-70bb15b51282'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (70558,70538,70542,70562,70566,70570,70552,71295) and (o.value_boolean=1 or o.value_text<>'');
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='43d440f5-098a-4c8e-9f77-70bb15b51282' 
+GROUP BY openmrs.obs.person_id,encounter_id;
+ 
+/*Start migration for Date et Heure*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.location_id,ito.value_datetime,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+AND ito.concept_id IN (70558);--,,,70559
+
+/*Start migration for TA*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
+      CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text) ELSE (FindNumericValue(ito.value_text) * 0.09) END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70538 -- ,,,70539
+	AND itob.concept_id=70546 -- ,,,70547
+	AND FindNumericValue(ito.value_text) > 0;
+	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
+	ELSE (FindNumericValue(ito.value_text) * 0.09) 	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70542 -- ,,,70543
+	AND itob.concept_id=70546
+	AND FindNumericValue(ito.value_text) > 0;	
+	
+/*Start migration for Pouls*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70562) -- ,,,70563
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for FR*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70566) -- ,,,70567
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for Température*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
+	     WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70570 -- ,,,70571
+	AND itob.concept_id=70574 -- ,,,70575
+	AND FindNumericValue(ito.value_text) > 0;
+
+/*Start migration for Conscience*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.location_id,160282,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70552);	-- ,,,70553
+	
+/*Start migration for Globe Sec.*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+	SELECT DISTINCT c.patient_id,1284,c.encounter_id,c.encounter_datetime,c.location_id,132846,ito.value_text,og.obs_id,1,e.createDate, UUID()
+	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id IN(71291,71292,71293,71294,71295,71296);
-		/*End migration for Globe Sec.*/
-	/*End migration for SIGNES VITAUX POST PARTUM ET ETAT DE CONSCIENCE PART*/
-	/*Start migration for EVOLUTION MERE Part*/
-		/*Start migration for Référée en suites de couche*/
-		/*AND Start migration for Référée en pathologie pour:*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,161630,c.encounter_id,c.encounter_datetime,c.location_id,
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(71295); -- ,,,71296	
+
+/*END OF migration groupe 5 */
+
+
+	/*migration groupe 6 */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1079b67e-3b53-41aa-a39a-42c1afd7f13f'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (70559,70539,70543,70563,70567,70571,70553,71296) and (o.value_boolean=1 or o.value_text<>'');
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1079b67e-3b53-41aa-a39a-42c1afd7f13f' 
+GROUP BY openmrs.obs.person_id,encounter_id;
+ 
+/*Start migration for Date et Heure*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162869,c.encounter_id,c.encounter_datetime,c.location_id,ito.value_datetime,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+AND ito.concept_id IN (70559);--,,,
+
+/*Start migration for TA*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
+      CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text) ELSE (FindNumericValue(ito.value_text) * 0.09) END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70539 -- ,,,
+	AND itob.concept_id=70547 -- ,,,
+	AND FindNumericValue(ito.value_text) > 0;
+	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
+	ELSE (FindNumericValue(ito.value_text) * 0.09) 	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70543 -- ,,,
+	AND itob.concept_id=70547
+	AND FindNumericValue(ito.value_text) > 0;	
+	
+/*Start migration for Pouls*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70563) -- ,,,
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for FR*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70567) -- ,,,
+	AND FindNumericValue(ito.value_text) > 0;	
+
+/*Start migration for Température*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
+	     WHEN itob.value_numeric=2 THEN ((5/9) * (FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito, itech.obs itob,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id
+	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=70571 -- ,,,
+	AND itob.concept_id=70575 -- ,,,
+	AND FindNumericValue(ito.value_text) > 0;
+
+/*Start migration for Conscience*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,162643,c.encounter_id,c.encounter_datetime,c.location_id,160282,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(70553);	-- ,,,
+	
+/*Start migration for Globe Sec.*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+	SELECT DISTINCT c.patient_id,1284,c.encounter_id,c.encounter_datetime,c.location_id,132846,ito.value_text,og.obs_id,1,e.createDate, UUID()
+	from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id IN(71296); -- ,,,	
+
+/*END OF migration groupe 6 */
+
+/*End migration for SIGNES VITAUX POST PARTUM ET ETAT DE CONSCIENCE PART*/
+	
+	
+/*Start migration for EVOLUTION MERE Part*/
+
+/*Start migration for Référée en suites de couche*/
+/*AND Start migration for Référée en pathologie pour:*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,161630,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN ito.value_numeric=1 THEN 1623
-	WHEN ito.value_numeric=2 THEN 161625
+	     WHEN ito.value_numeric=2 THEN 161625
 	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+from encounter c, itech.encounter e, itech.obs ito
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id
 	AND ito.concept_id=70521
 	AND (ito.value_numeric=1 OR ito.value_numeric=2);
-		/*End migration for Référée en suites de couche*/
-		/*AND End migration for Référée en pathologie pour:*/
-		/*Start migration for HTA,Hémorragie,Infection,Post op,Cardiomyopathie,Autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,
+/*End migration for Référée en suites de couche*/
+/*AND End migration for Référée en pathologie pour:*/
+		
+/*Start migration for HTA,Hémorragie,Infection,Post op,Cardiomyopathie,Autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN ito.value_numeric=1 THEN 117399
-	WHEN ito.value_numeric=2 THEN 230
-	WHEN ito.value_numeric=4 THEN 121262
-	WHEN ito.value_numeric=8 THEN 159007
-	WHEN ito.value_numeric=16 THEN 5016
+	     WHEN ito.value_numeric=2 THEN 230
+	     WHEN ito.value_numeric=4 THEN 121262
+	     WHEN ito.value_numeric=8 THEN 159007
+	     WHEN ito.value_numeric=16 THEN 5016
 	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+from encounter c, itech.encounter e, itech.obs ito
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id
 	AND ito.concept_id=71297;
-		/*End migration for HTA,Hémorragie,Infection,Post op,Cardiomyopathie,Autre*/
-		/*Start migration for autre*/
-			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+/*End migration for HTA,Hémorragie,Infection,Post op,Cardiomyopathie,Autre*/
+		
+/*Start migration for autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id
 	AND ito.concept_id=71298;
-		/*End migration for autre*/
-		/*Start migration for Exéatée,Décédée,Autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,
+/*End migration for autre*/
+		
+/*Start migration for Exéatée,Décédée,Autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN ito.value_numeric=4 THEN 1692
-	WHEN ito.value_numeric=8 THEN 159
+	     WHEN ito.value_numeric=8 THEN 159
 	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+from encounter c, itech.encounter e, itech.obs ito
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id
 	AND ito.concept_id=70521
 	AND (ito.value_numeric=4 OR ito.value_numeric=8);
-		/*END migration for Exéatée,Décédée,Autre*/
-		/*Start migration for autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+/*END migration for Exéatée,Décédée,Autre*/
+
+/*Start migration for autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id
 	AND ito.concept_id=70522
 	AND (ito.value_text<>"" AND ito.value_text is not null);
-		/*End migration for autre*/
-		/*Start migration for Choix d'une méthode contraceptive?*/
-			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,374,c.encounter_id,c.encounter_datetime,c.location_id,
+/*End migration for autre*/
+		
+/*Start migration for Choix d'une méthode contraceptive?*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,	comments,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,374,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN ito.value_numeric=1 THEN 162332
 	     WHEN ito.value_numeric=2 THEN 1175
 	END,
-	CASE WHEN (ito.value_numeric=1 AND itob.concept_id=71300) THEN itob.value_text
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito LEFT OUTER JOIN itech.obs itob
-	ON ito.encounter_id=itob.encounter_id
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	CASE WHEN (ito.value_numeric=1 AND itob.concept_id=71300) THEN itob.value_text END,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito LEFT OUTER JOIN itech.obs itob ON ito.encounter_id=itob.encounter_id
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	and e.encounter_id = ito.encounter_id
 	AND ito.concept_id=71299
 	AND (ito.value_numeric=1 OR ito.value_numeric=2);
 		/*End migration for Choix d'une méthode contraceptive?*/
 	/*End migration for EVOLUTION MERE Part*/
-	/*Start migration for EVOLUTION NOUVEAU NE 1 PART*/
-		/*Start migration Référée à la pouponnière ou en suites de couche avec sa maman/
-		Référée en pédiatrie pour: */
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,161630,c.encounter_id,c.encounter_datetime,c.location_id,
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+/*Start migration for EVOLUTION NOUVEAU NE 1 PART*/
+	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='2c5abadc-7b74-4d9c-8e6a-2179062ce4f7'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (71301,71303,71304,71302,71305) and (o.value_boolean=1 or o.value_text<>'');
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='2c5abadc-7b74-4d9c-8e6a-2179062ce4f7' 
+GROUP BY openmrs.obs.person_id,encounter_id;
+	
+/*Start migration Référée à la pouponnière ou en suites de couche avec sa maman Référée en pédiatrie pour: */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,161630,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN ito.value_numeric=1 THEN 1623
 	     WHEN ito.value_numeric=2 THEN 160537
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
 	AND ito.concept_id=71301
 	AND (ito.value_numeric=1 OR ito.value_numeric=2);
-		/*End migration for Référée à la pouponnière ou en suites de couche avec sa maman*/
-		/*AND Référée en pédiatrie pour: */
-	    /*Start migration for Détresse respiratoire,Suspicion d'infection materno-foetale,Prématurité,Autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-		creator,date_created,uuid)
-		SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,
-		CASE WHEN ito.value_numeric=1 THEN 130497
-		     WHEN ito.value_numeric=2 THEN 140343
-		     WHEN ito.value_numeric=8 THEN 159908
-		END,1,e.createDate, UUID()
-		from encounter c, itech.encounter e, itech.obs ito
-		WHERE c.uuid = e.encGuid and 
-		e.patientID = ito.person_id and e.siteCode = ito.location_id 
-		and e.encounter_id = ito.encounter_id
-		AND ito.concept_id=71303;
-		/*End migration for Détresse respiratoire,Suspicion d'infection materno-foetale,Prématurité,Autre*/
-		/*Start migration for autre*/
-			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
+	
+/*Start migration for Détresse respiratoire,Suspicion d'infection materno-foetale,Prématurité,Autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN ito.value_numeric=1 THEN 130497
+		 WHEN ito.value_numeric=2 THEN 140343
+		 WHEN ito.value_numeric=8 THEN 159908
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid and e.patientID = ito.person_id and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71303;
+	
+/*Start migration for autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
 	AND ito.concept_id=71304;
-		/*End migration for autre*/
 		
-		/*Start migration for Exéatée,Décédée,Autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN ito.value_numeric=4 THEN 1692
-	WHEN ito.value_numeric=8 THEN 159
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id=71301
-	AND (ito.value_numeric=4 OR ito.value_numeric=8);
-		/*ENd migration for Exéatée,Décédée,Autre*/
-		/*Start migration for autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id=71302
-	AND (ito.value_text<>"" AND ito.value_text is not null);
-		/*End migration for autre*/
-	   /*Start migration for Méthode d'alimentation choisie à la sortie :*/
-		   INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-		creator,date_created,uuid)
-		SELECT DISTINCT c.patient_id,1151,c.encounter_id,c.encounter_datetime,c.location_id,
-		CASE WHEN ito.value_numeric=1 THEN 5526
-		WHEN ito.value_numeric=2 THEN 5254
-		WHEN ito.value_numeric=4 THEN 6046
-		END,1,e.createDate, UUID()
-		from encounter c, itech.encounter e, itech.obs ito
-		WHERE c.uuid = e.encGuid 
-		AND e.siteCode = ito.location_id 
-		AND e.encounter_id = ito.encounter_id
-		AND ito.concept_id=71305
-		AND (ito.value_numeric=1 OR ito.value_numeric=2 OR ito.value_numeric=4);
-	   /*End migration for Méthode d'alimentation choisie à la sortie :*/
-	/*End migration for EVOLUTION NOUVEAU NE 1 Part*/
-	/*Start migration for EVOLUTION NOUVEAU NE 2 Part*/
-		/*Start migration for Référée à la pouponnière ou en suites de couche avec sa maman*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,161630,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN ito.value_numeric=1 THEN 1623
-	WHEN ito.value_numeric=2 THEN 160537
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id=71306
-	AND (ito.value_numeric=1 OR ito.value_numeric=2);
-		/*End migration for Référée à la pouponnière ou en suites de couche avec sa maman*/
-		/*AND Référée en pédiatrie pour: */
-	    /*Start migration for Détresse respiratoire,Suspicion d'infection materno-foetale,Prématurité,Autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-		creator,date_created,uuid)
-		SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,
-		CASE WHEN ito.value_numeric=1 THEN 130497
-		WHEN ito.value_numeric=2 THEN 140343
-		WHEN ito.value_numeric=8 THEN 159908
-		END,1,e.createDate, UUID()
-		from encounter c, itech.encounter e, itech.obs ito
-		WHERE c.uuid = e.encGuid and 
-		e.patientID = ito.person_id and e.siteCode = ito.location_id 
-		and e.encounter_id = ito.encounter_id
-		AND ito.concept_id=71308;
-		/*End migration for Détresse respiratoire,Suspicion d'infection materno-foetale,Prématurité,Autre*/
-		/*Start migration for autre*/
-			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id=71309;
-		/*End migration for autre*/
-		
-		/*Start migration for Exéatée,Décédée,Autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN ito.value_numeric=4 THEN 1692
-	WHEN ito.value_numeric=8 THEN 159
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id=71306
-	AND (ito.value_numeric=4 OR ito.value_numeric=8);
-		/*ENd migration for Exéatée,Décédée,Autre*/
-		/*Start migration for autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id=71307
-	AND (ito.value_text<>"" AND ito.value_text is not null);
-		/*End migration for autre*/
-	   /*Start migration for Méthode d'alimentation choisie à la sortie :*/
-		   INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-		creator,date_created,uuid)
-		SELECT DISTINCT c.patient_id,1151,c.encounter_id,c.encounter_datetime,c.location_id,
-		CASE WHEN ito.value_numeric=1 THEN 5526
-		     WHEN ito.value_numeric=2 THEN 5254
-		     WHEN ito.value_numeric=4 THEN 6046
-		END,1,e.createDate, UUID()
-		from encounter c, itech.encounter e, itech.obs ito
-		WHERE c.uuid = e.encGuid 
-		AND e.siteCode = ito.location_id 
-		AND e.encounter_id = ito.encounter_id
-		AND ito.concept_id=71310
-		AND (ito.value_numeric=1 OR ito.value_numeric=2 OR ito.value_numeric=4);
-	/*End migration for EVOLUTION NOUVEAU NE 2 Part*/
-	/*Start migration for EVOLUTION NOUVEAU NE 3 PART*/
-		/*Start migration for Référée à la pouponnière ou en suites de couche avec sa maman*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,161630,c.encounter_id,c.encounter_datetime,c.location_id,
-	CASE WHEN ito.value_numeric=1 THEN 1623
-	     WHEN ito.value_numeric=2 THEN 160537
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id=71311
-	AND (ito.value_numeric=1 OR ito.value_numeric=2);
-		/*End migration for Référée à la pouponnière ou en suites de couche avec sa maman*/
-		/*AND Référée en pédiatrie pour: */
-	    /*Start migration for Détresse respiratoire,Suspicion d'infection materno-foetale,Prématurité,Autre*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-		creator,date_created,uuid)
-		SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,
-		CASE WHEN ito.value_numeric=1 THEN 130497
-		     WHEN ito.value_numeric=2 THEN 140343
-		     WHEN ito.value_numeric=8 THEN 159908
-		END,1,e.createDate, UUID()
-		from encounter c, itech.encounter e, itech.obs ito
-		WHERE c.uuid = e.encGuid and 
-		e.patientID = ito.person_id and e.siteCode = ito.location_id 
-		and e.encounter_id = ito.encounter_id
-		AND ito.concept_id=71313;
-		/*End migration for Détresse respiratoire,Suspicion d'infection materno-foetale,Prématurité,Autre*/
-		/*Start migration for autre*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
-	AND ito.concept_id=71314;
-		/*End migration for autre*/
-		
-		/*Start migration for Exéatée,Décédée,Autre*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
-	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,
+/*Start migration for Exéatée,Décédée,Autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN ito.value_numeric=4 THEN 1692
 	     WHEN ito.value_numeric=8 THEN 159
-	END,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71301
+	AND (ito.value_numeric=4 OR ito.value_numeric=8);
+	
+/*Start migration for autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71302
+	AND (ito.value_text<>"" AND ito.value_text is not null);
+
+/*Start migration for Méthode d'alimentation choisie à la sortie :*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1151,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN ito.value_numeric=1 THEN 5526
+		 WHEN ito.value_numeric=2 THEN 5254
+		 WHEN ito.value_numeric=4 THEN 6046
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid 
+	AND e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71305
+	AND (ito.value_numeric=1 OR ito.value_numeric=2 OR ito.value_numeric=4);
+
+/*End migration for EVOLUTION NOUVEAU NE 1 Part*/
+	
+/*Start migration for EVOLUTION NOUVEAU NE 2 Part*/	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='5e0fdc34-9207-4adb-9f1e-dab4ac41b31d'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (71306,71308,71309,71307,71310) and (o.value_boolean=1 or o.value_text<>'');
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='5e0fdc34-9207-4adb-9f1e-dab4ac41b31d' 
+GROUP BY openmrs.obs.person_id,encounter_id;
+	
+/*Start migration for Référée à la pouponnière ou en suites de couche avec sa maman*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,161630,c.encounter_id,c.encounter_datetime,c.location_id,
+    CASE WHEN ito.value_numeric=1 THEN 1623
+	     WHEN ito.value_numeric=2 THEN 160537
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito ,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71306
+	AND (ito.value_numeric=1 OR ito.value_numeric=2);
+	
+/*Start migration for Détresse respiratoire,Suspicion d'infection materno-foetale,Prématurité,Autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN ito.value_numeric=1 THEN 130497
+		 WHEN ito.value_numeric=2 THEN 140343
+		 WHEN ito.value_numeric=8 THEN 159908
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid and e.patientID = ito.person_id and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71308;
+	
+/*Start migration for autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71309;
+		
+/*Start migration for Exéatée,Décédée,Autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN ito.value_numeric=4 THEN 1692
+	     WHEN ito.value_numeric=8 THEN 159
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71306
+	AND (ito.value_numeric=4 OR ito.value_numeric=8);
+
+/*Start migration for autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71307
+	AND (ito.value_text<>"" AND ito.value_text is not null);
+
+/*Start migration for Méthode d'alimentation choisie à la sortie :*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1151,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN ito.value_numeric=1 THEN 5526
+		 WHEN ito.value_numeric=2 THEN 5254
+		 WHEN ito.value_numeric=4 THEN 6046
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid 
+	AND e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71310
+	AND (ito.value_numeric=1 OR ito.value_numeric=2 OR ito.value_numeric=4);
+	/*End migration for EVOLUTION NOUVEAU NE 2 Part*/
+	
+	
+	
+/*Start migration for EVOLUTION NOUVEAU NE 3 PART*/
+	
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='6e32f438-a515-42d9-a896-ed2974b099fe'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (71311,71313,71314,71312,71315) and (o.value_boolean=1 or o.value_text<>'');
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='6e32f438-a515-42d9-a896-ed2974b099fe' 
+GROUP BY openmrs.obs.person_id,encounter_id;	
+	
+/*Start migration for Référée à la pouponnière ou en suites de couche avec sa maman*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,161630,c.encounter_id,c.encounter_datetime,c.location_id,
+    CASE WHEN ito.value_numeric=1 THEN 1623
+	     WHEN ito.value_numeric=2 THEN 160537
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71311
+	AND (ito.value_numeric=1 OR ito.value_numeric=2);
+	
+/*Start migration for Détresse respiratoire,Suspicion d'infection materno-foetale,Prématurité,Autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN ito.value_numeric=1 THEN 130497
+		 WHEN ito.value_numeric=2 THEN 140343
+		 WHEN ito.value_numeric=8 THEN 159908
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid and e.patientID = ito.person_id and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71313;
+
+/*Start migration for autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1887,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71314;
+		
+/*Start migration for Exéatée,Décédée,Autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN ito.value_numeric=4 THEN 1692
+	     WHEN ito.value_numeric=8 THEN 159
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
 	AND ito.concept_id=71311
 	AND (ito.value_numeric=4 OR ito.value_numeric=8);
-		/*ENd migration for Exéatée,Décédée,Autre*/
-		/*Start migration for autre*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,1,e.createDate, UUID()
-	from encounter c, itech.encounter e, itech.obs ito
-	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
-	and e.encounter_id = ito.encounter_id
+
+/*Start migration for autre*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,	comments,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,160433,c.encounter_id,c.encounter_datetime,c.location_id,5622,ito.value_text,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
+	and e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
 	AND ito.concept_id=71312
 	AND (ito.value_text<>"" AND ito.value_text is not null);
-		/*End migration for autre*/
-	   /*Start migration for Méthode d'alimentation choisie à la sortie :*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
-		SELECT DISTINCT c.patient_id,1151,c.encounter_id,c.encounter_datetime,c.location_id,
-		CASE WHEN ito.value_numeric=1 THEN 5526
-		     WHEN ito.value_numeric=2 THEN 5254
-		     WHEN ito.value_numeric=4 THEN 6046
-		END,1,e.createDate, UUID()
-		from encounter c, itech.encounter e, itech.obs ito
-		WHERE c.uuid = e.encGuid 
-		AND e.siteCode = ito.location_id 
-		AND e.encounter_id = ito.encounter_id
-		AND ito.concept_id=71315
-		AND (ito.value_numeric=1 OR ito.value_numeric=2 OR ito.value_numeric=4);
+
+/*Start migration for Méthode d'alimentation choisie à la sortie :*/
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,obs_group_id,creator,date_created,uuid)
+SELECT DISTINCT c.patient_id,1151,c.encounter_id,c.encounter_datetime,c.location_id,
+	CASE WHEN ito.value_numeric=1 THEN 5526
+		 WHEN ito.value_numeric=2 THEN 5254
+		 WHEN ito.value_numeric=4 THEN 6046
+	END,og.obs_id,1,e.createDate, UUID()
+from encounter c, itech.encounter e, itech.obs ito,itech.obs_concept_group og
+WHERE c.uuid = e.encGuid 
+	AND e.siteCode = ito.location_id 
+	AND e.encounter_id = ito.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.concept_id=71315
+	AND (ito.value_numeric=1 OR ito.value_numeric=2 OR ito.value_numeric=4);
 	/*End migration for EVOLUTION NOUVEAU NE 3 PART*/
+	
+	
 	/*Start migration for dernier commentaire*/
 	   INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,161011,c.encounter_id,c.encounter_datetime,c.location_id,e.encComments,1,e.createDate, UUID()

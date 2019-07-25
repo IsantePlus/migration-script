@@ -3,12 +3,13 @@ DROP PROCEDURE IF EXISTS homeVisitMigration$$
 CREATE PROCEDURE homeVisitMigration()
 BEGIN
 	 /*Delete all inserted discontinuations data if the script fail*/
+ DECLARE done INT DEFAULT FALSE;	 
 DECLARE oCreateDate,OEncounter_datetime datetime;
 DECLARE oPatientID,oConcept_id,oEncounter_id,oLocation_id,oContactDuringVisit,oCreator,oIllnessDescription,oServiceDelivery INT;
-DECLARE oIllnessDescriptionOther varchar(100);
+DECLARE oIllnessDescriptionOther,oServiceDeliveryOther varchar(100);
 	 
 DECLARE observation CURSOR  for 
-SELECT DISTINCT c.patient_id,160288 as concept_id,c.encounter_id,c.encounter_datetime,c.location_id,ac.contactDuringVisit,1,e.createDate, UUID()
+SELECT DISTINCT c.patient_id,160288 as concept_id,c.encounter_id,c.encounter_datetime,c.location_id,ac.contactDuringVisit,1,e.createDate
 		from encounter c, itech.encounter e, itech.homeCareVisits ac
 		WHERE c.uuid = e.encGuid 
 		AND e.siteCode = ac.siteCode
@@ -17,7 +18,7 @@ SELECT DISTINCT c.patient_id,160288 as concept_id,c.encounter_id,c.encounter_dat
 		AND ac.contactDuringVisit>0;	 
 
 DECLARE maladie CURSOR  for 
-SELECT DISTINCT c.patient_id,c.encounter_id,c.encounter_datetime,c.location_id,ac.illnessDescription,illnessDescriptionOther,1,e.createDate, UUID()
+SELECT DISTINCT c.patient_id,c.encounter_id,c.encounter_datetime,c.location_id,ac.illnessDescription,illnessDescriptionOther,1,e.createDate
 from encounter c, itech.encounter e, itech.homeCareVisits ac
 WHERE c.uuid = e.encGuid 
 AND e.siteCode = ac.siteCode
@@ -27,7 +28,7 @@ AND ac.illnessDescription>0;
 		
 
 DECLARE serviceDelivery CURSOR  for 
-SELECT DISTINCT c.patient_id,c.encounter_id,c.encounter_datetime,c.location_id,ac.serviceDelivery,serviceDeliveryOther,1,e.createDate, UUID()
+SELECT DISTINCT c.patient_id,c.encounter_id,c.encounter_datetime,c.location_id,ac.serviceDelivery,serviceDeliveryOther,1,e.createDate
 from encounter c, itech.encounter e, itech.homeCareVisits ac
 WHERE c.uuid = e.encGuid 
 AND e.siteCode = ac.siteCode
@@ -80,23 +81,23 @@ OPEN observation;
     select 6 as homeVisit;
     /* migration of Patient présent */
 	if(oContactDuringVisit=1||oContactDuringVisit=5||oContactDuringVisit=9) then 
-	 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
+	 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 	values (oPatientID,1899,oEncounter_id,OEncounter_datetime,oLocation_id,1065,oCreator,oCreateDate,uuid());
 	end if;
     /* migration of Patient absent */
 	if(oContactDuringVisit=2||oContactDuringVisit=6||oContactDuringVisit=10) then 
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 	values (oPatientID,1899,oEncounter_id,OEncounter_datetime,oLocation_id,1066,oCreator,oCreateDate,uuid());
 	end if;
 	
     /* migration of Accompagnateur présent */
 	if(oContactDuringVisit=4||oContactDuringVisit=5||oContactDuringVisit=6) then 
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 	values (oPatientID,160112,oEncounter_id,OEncounter_datetime,oLocation_id,163748,oCreator,oCreateDate,uuid());
 	end if;
 	/* migration Accompagnateur absent */
 	if(oContactDuringVisit=8||oContactDuringVisit=10||oContactDuringVisit=9) then 
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 	values (oPatientID,160112,oEncounter_id,OEncounter_datetime,oLocation_id,163747,oCreator,oCreateDate,uuid());
 	end if;
 
@@ -127,12 +128,10 @@ OPEN observation;
 /* Est-ce que le patient a manqué une visite ? */		
         INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,(select concept_id from concept where uuid='19ec4c07-484d-4f0a-adb5-2b79245b3605') ,c.encounter_id,c.encounter_datetime,c.location_id,
-		case when ac.freqSupportBuddy=1 then 1065
-		     when ac.freqSupportBuddy=2 then 1065
-		end,1,e.createDate, UUID()
-		from encounter c, itech.encounter e, itech.homeCareVisits ac
-		WHERE c.uuid = e.encGuid 
-		AND e.siteCode = ac.siteCode
+		case when ac.missedAppointment=1 then 1065
+		     when ac.missedAppointment=2 then 1065
+		end,1,e.createDate, UUID() from encounter c, itech.encounter e, itech.homeCareVisits ac
+		WHERE c.uuid = e.encGuid AND e.siteCode = ac.siteCode
 		AND e.patientID = ac.patientID
 		AND concat(e.visitDateYy,"-",e.visitDateMm,"-",e.visitDateDd) =concat(ac.visitDateYy,"-",ac.visitDateMm,"-",ac.visitDateDd)
 		AND ac.missedAppointment in (1,2);		

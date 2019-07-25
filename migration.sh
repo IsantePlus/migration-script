@@ -5,7 +5,7 @@
 cd $HOME/migration
 
 
-function createProcedure() {
+createProcedure() {
   echo create procedure  $1
   if [ -f $HOME/migration/$1 ]
     then

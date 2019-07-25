@@ -996,7 +996,7 @@ SET SQL_SAFE_UPDATES = 0;
 	/*Start migration for Diabète Type 2 [E11.9]*/
 	/*Insert obs_group_id*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,(select concept_id from concept qhere uuid='baa21585-f808-4d40-96a7-b2c8da1d6616'),c.encounter_id,c.encounter_datetime,c.location_id,1,c.date_created,UUID()
+	SELECT DISTINCT c.patient_id,(select concept_id from concept where uuid='baa21585-f808-4d40-96a7-b2c8da1d6616'),c.encounter_id,c.encounter_datetime,c.location_id,1,c.date_created,UUID()
 	FROM itech.encounter e, encounter c, itech.obs ito
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
@@ -1110,7 +1110,7 @@ SET SQL_SAFE_UPDATES = 0;
 	TRUNCATE TABLE itech.obs_concept_group;
 	INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 	SELECT MAX(o.obs_id) as obs_id,o.person_id,o.concept_id,o.encounter_id
-	FROM openmrs.obs o,openmrs.concept
+	FROM openmrs.obs o,openmrs.concept c
 	WHERE o.concept_id=c.concept_id and c.uuid='35f402b6-64e8-4980-8ad4-0eec26142c53' 
 	GROUP BY o.person_id,o.encounter_id;
 	/*Concept*/
@@ -2205,7 +2205,39 @@ SET SQL_SAFE_UPDATES = 0;
 	/*End migration for Infection respiratoire aiguë [J06.9]*/
 	
 	/*Start migration for Infection génito-urinaire*/
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='80a8dee4-191a-496a-8842-8bb91706e24b'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
+o.concept_id in (70847,70848,70849) and o.value_boolean=1;
+
+delete from itech.obs_concept_group where 1;		
+INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
+SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
+FROM openmrs.obs,openmrs.concept c
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='80a8dee4-191a-496a-8842-8bb91706e24b' 
+GROUP BY openmrs.obs.person_id,encounter_id;
+ 
+ /* name of the concept */
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,1284,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,111633,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	
+/* Confirmé,Suspecté */	
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,159394,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,159392,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+o.concept_id in (70847,70848,70849) and o.value_boolean=1;
+
+/* Primaire,Secondaire */	
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,159946,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,159943,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
+o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	/*End migration for Infection génito-urinaire*/
 	
 	/*Start migration for Infection des tissus mous*/

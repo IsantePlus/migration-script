@@ -451,10 +451,10 @@ o.concept_id=70002 and o.value_boolean=1;
 select 35 as objn;
 /* Precisez*/
  /* name of the concept */
- update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628 as concept_id,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71002 and o.value_text<>'') a set comments=value_text 
+o.concept_id=71002 and o.value_text<>'') a set comments=a.value_text 
 where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
 and obs.encounter_id=a.encounter_id and obs.value_coded='110247';
 /* end of Allergies */
@@ -506,10 +506,10 @@ o.concept_id=70006 and o.value_boolean=1;
 select 40 as objn;
 /* Precisez*/
  /* name of the concept */
- update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628 as concept_id,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71003 and o.value_text<>'') a set comments=value_text 
+o.concept_id=71003 and o.value_text<>'') a set comments=a.value_text 
 where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
 and obs.encounter_id=a.encounter_id and obs.value_coded='151286';
 select 41 as objn;
@@ -539,10 +539,10 @@ o.concept_id=70012 and o.value_boolean=1;
 select 43 as objn;
 /* Precisez*/
  /* name of the concept */
- update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628 as concept_id,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71016 and o.value_text<>'') a set comments=value_text 
+o.concept_id=71016 and o.value_text<>'') a set comments=a.value_text 
 where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
 and obs.encounter_id=a.encounter_id and obs.value_coded='156660';
 select 44 as objn;
@@ -595,10 +595,10 @@ o.concept_id=70736 and o.value_boolean=1;
 select 48 as objn;
 /* Precisez*/
  /* name of the concept */
- update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628 as concept_id,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=70737 and o.value_text<>'') a set comments=value_text 
+o.concept_id=70737 and o.value_text<>'') a set comments=a.value_text 
 where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
 and obs.encounter_id=a.encounter_id and obs.value_coded='163521';
 select 49 as objn;
@@ -651,10 +651,10 @@ o.concept_id=70452 and o.value_boolean=1;
  select 53 as objn;
 /* Precisez*/
  /* name of the concept */
- update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628 as concept_id,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=70739 and o.value_text<>'') a set comments=value_text 
+o.concept_id=70739 and o.value_text<>'') a set comments=a.value_text 
 where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
 and obs.encounter_id=a.encounter_id and obs.value_coded='163583';
  select 54 as objn;
@@ -663,7 +663,7 @@ and obs.encounter_id=a.encounter_id and obs.value_coded='163583';
 /* HTA */
   /* migration group */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='f0748bfb-1465-4d6c-89f1-c631f46c1510'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='1c5c74d9-f6cd-4050-a065-e4c53734cdb0'),e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and 
 o.concept_id=70011 and o.value_boolean=1;
@@ -672,7 +672,7 @@ delete from itech.obs_concept_group where 1;
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
 FROM openmrs.obs,openmrs.concept c
-WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='f0748bfb-1465-4d6c-89f1-c631f46c1510' 
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1c5c74d9-f6cd-4050-a065-e4c53734cdb0' 
 GROUP BY openmrs.obs.person_id,encounter_id;
   select 55 as objn;
  /* name of the concept */
@@ -755,10 +755,10 @@ o.concept_id=71010 and o.value_boolean=1;
  select 62 as objn;
 /* Precisez*/
  /* name of the concept */
- update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628 as concept_id,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71011 and o.value_text<>'') a set comments=value_text 
+o.concept_id=71011 and o.value_text<>'') a set comments=a.value_text 
 where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
 and obs.encounter_id=a.encounter_id and obs.value_coded='162556';
 
@@ -777,7 +777,7 @@ delete from itech.obs_concept_group where 1;
 INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
 FROM openmrs.obs,openmrs.concept c
-WHERE openmrs.obs.concept_id=c.concept and c.uuid='1741cdff-5df3-4d0b-8dca-1d0082e9f628' 
+WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='1741cdff-5df3-4d0b-8dca-1d0082e9f628' 
 GROUP BY openmrs.obs.person_id,encounter_id;
   select 64 as objn;
  /* name of the concept */
@@ -908,10 +908,10 @@ o.concept_id=71008 and o.value_boolean=1;
 
 /* Precisez*/
  /* name of the concept */
- update obs,(SELECT DISTINCT e.patient_id,1628,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
+ update obs,(SELECT DISTINCT e.patient_id,1628 as concept_id,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,o.value_text,1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
-o.concept_id=71009 and o.value_text<>'') a set comments=value_text 
+o.concept_id=71009 and o.value_text<>'') a set comments=a.value_text 
 where obs.person_id=a.patient_id and obs.concept_id=a.concept_id 
 and obs.encounter_id=a.encounter_id and obs.value_coded='151282';
 
@@ -2004,6 +2004,16 @@ case when o.concept_id=70174 and o.value_boolean>0 then 832 else null end,1,e.da
  FROM itech.encounter c, encounter e,itech.obs o 
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and
 o.concept_id=70174 and o.value_boolean>0;
+
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,161011,e.encounter_id,e.encounter_datetime,e.location_id,
+substring(o.value_text,1,1000),1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o 
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and
+o.concept_id=8084 and o.value_text<>'';
+
+
+
 
 /*EDN OF MOTIFS DE CONSULTATION*/
 
@@ -5204,7 +5214,7 @@ WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='0092abda-de8d-4564-9d16-7b
 GROUP BY openmrs.obs.person_id,encounter_id;
  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,comments,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1282,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,5622,substring(o.value_text,1000),1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,1282,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,5622,substring(o.value_text,1,1000),1,e.date_created,UUID()
  FROM itech.encounter c, encounter e,itech.obs o,itech.obs_concept_group og
 where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 o.concept_id=70417 and o.value_text<>'';
@@ -5551,6 +5561,14 @@ o.concept_id=70648 and o.value_text<>'';
 /* end of Conduite a tenir */
 
 /* AUTRE PLAN */
+
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,161011,e.encounter_id,e.encounter_datetime,e.location_id,o.value_text,1,e.date_created,UUID()
+ FROM itech.encounter c, encounter e,itech.obs o
+where e.uuid = c.encGuid and c.encounter_id=o.encounter_id and
+o.concept_id=70427 and o.value_text<>'';
+
+
 /*Date de prochaine visite */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,5096,e.encounter_id,e.encounter_datetime,e.location_id,o.value_datetime,1,e.date_created,UUID()
