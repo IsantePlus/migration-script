@@ -1392,8 +1392,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-	obs_group_id,value_numeric,creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,5916,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
 	ELSE (FindNumericValue(ito.value_text) * 0.45)
@@ -1409,8 +1408,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND FindNumericValue(ito.value_text) > 0;
 	/*======================================================================================*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='ea404f7d-0434-4894-82dc-a7df5627ea61'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1428,8 +1426,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,5916,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
 	     ELSE (FindNumericValue(ito.value_text) * 0.45)
@@ -1445,8 +1442,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND FindNumericValue(ito.value_text) > 0;
 	/*=========================================================================================*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,	creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='3ec025a5-1d98-4761-9ca5-e56bb41b7547'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1464,8 +1460,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,5916,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
 	ELSE (FindNumericValue(ito.value_text) * 0.45)
@@ -1481,8 +1476,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND FindNumericValue(ito.value_text) > 0;
 	/*=========================================================================================*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='955122a5-c40a-4d20-85ef-c87da9c26486'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1500,8 +1494,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-	obs_group_id,value_numeric,creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,	obs_group_id,value_numeric,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,5916,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
 	     ELSE (FindNumericValue(ito.value_text) * 0.45)
@@ -1522,8 +1515,7 @@ SET SQL_SAFE_UPDATES = 0;
 	/*End migration for Périmètre cranien et taille :*/
 	/*Start migration for Sexe*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='5a30a073-1102-4450-aa53-56c0ba58d305'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1541,8 +1533,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1587,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1534
 	     WHEN ito.value_numeric=2 THEN 1535
@@ -1556,8 +1547,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND ito.value_numeric IN (1,2);
 	/*=====================================================*/
 		/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='ea404f7d-0434-4894-82dc-a7df5627ea61'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1575,8 +1565,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1587,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1534
 	     WHEN ito.value_numeric=2 THEN 1535
@@ -1590,8 +1579,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND ito.value_numeric IN (1,2);
 	/*========================================================================================*/
 		/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='3ec025a5-1d98-4761-9ca5-e56bb41b7547'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1609,8 +1597,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1587,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1534
 	     WHEN ito.value_numeric=2 THEN 1535
@@ -1624,8 +1611,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND ito.value_numeric IN (1,2);
 	/*===============================================================*/
 		/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='955122a5-c40a-4d20-85ef-c87da9c26486'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1643,8 +1629,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1587,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1534
 	     WHEN ito.value_numeric=2 THEN 1535
@@ -1659,8 +1644,7 @@ SET SQL_SAFE_UPDATES = 0;
 	/*End migration for sexe*/
 	/*Start migration for Malformation congénitale visible : */
 		/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='5a30a073-1102-4450-aa53-56c0ba58d305'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1678,8 +1662,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,143849,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1065
 	     WHEN ito.value_numeric=2 THEN 1066
@@ -1693,8 +1676,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND ito.value_numeric IN (1,2);
 	/*====================================================*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='ea404f7d-0434-4894-82dc-a7df5627ea61'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1712,8 +1694,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,143849,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1065
 	     WHEN ito.value_numeric=2 THEN 1066
@@ -1727,8 +1708,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND ito.value_numeric IN (1,2);
 	/*=========================================================*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='3ec025a5-1d98-4761-9ca5-e56bb41b7547'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1746,8 +1726,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,143849,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1065
 	     WHEN ito.value_numeric=2 THEN 1066
@@ -1761,8 +1740,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND ito.value_numeric IN (1,2);
 	/*=================================================================*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='955122a5-c40a-4d20-85ef-c87da9c26486'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1780,8 +1758,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,143849,c.encounter_id,c.encounter_datetime,c.location_id, og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1065
 	     WHEN ito.value_numeric=2 THEN 1066
@@ -1796,8 +1773,7 @@ SET SQL_SAFE_UPDATES = 0;
 	/*End migration for Malformation congénitale visible : */
 	/*Start migration for Allaitement maternel 1ere heure*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='5a30a073-1102-4450-aa53-56c0ba58d305'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1815,8 +1791,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163459,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1065
          WHEN ito.value_numeric=2 THEN 1066
@@ -1830,8 +1805,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND ito.value_numeric IN (1,2);
 	/*=========================================================================*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='ea404f7d-0434-4894-82dc-a7df5627ea61'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1849,8 +1823,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163459,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1065
 	     WHEN ito.value_numeric=2 THEN 1066
@@ -1864,8 +1837,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND ito.value_numeric IN (1,2);
 	/*============================================================================*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='3ec025a5-1d98-4761-9ca5-e56bb41b7547'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1883,8 +1855,7 @@ SET SQL_SAFE_UPDATES = 0;
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163459,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1065
 	     WHEN ito.value_numeric=2 THEN 1066
@@ -1898,8 +1869,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND ito.value_numeric IN (1,2);
 	/*=========================================================================================*/
 	/*concept group*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,
-		creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,
 		(select concept_id from concept where uuid='955122a5-c40a-4d20-85ef-c87da9c26486'),
 		c.encounter_id,c.encounter_datetime,c.location_id,1,e.createDate, UUID()
@@ -1916,8 +1886,7 @@ SET SQL_SAFE_UPDATES = 0;
 		WHERE openmrs.obs.concept_id=c.concept_id and c.uuid='955122a5-c40a-4d20-85ef-c87da9c26486'
 		GROUP BY openmrs.obs.person_id,encounter_id;
 	/*concepts*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163459,c.encounter_id,c.encounter_datetime,c.location_id,og.obs_id,
 	CASE WHEN ito.value_numeric=1 THEN 1065
 	     WHEN ito.value_numeric=2 THEN 1066
@@ -1933,8 +1902,7 @@ SET SQL_SAFE_UPDATES = 0;
 	/*End migration for TABLEAU DE NAISSANCE Part*/
 	/*Start migration for SIGNES VITAUX A L'ADMISSION Part*/
 		/*Start migration for TA*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
+		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
 	     ELSE (FindNumericValue(ito.value_text) * 0.09)
@@ -1947,8 +1915,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND itob.concept_id=7841
 	AND FindNumericValue(ito.value_text) > 0;
 	
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
+	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,5086,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
 	     ELSE (FindNumericValue(ito.value_text) * 0.09)
@@ -1962,8 +1929,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND FindNumericValue(ito.value_text) > 0;
 		/*End migration for TA*/
 		/*Start migration for Pouls*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
+		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,5087,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.obs ito
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
@@ -1972,8 +1938,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND FindNumericValue(ito.value_text) > 0;
 		/*End migration for Pouls*/
 		/*Start migration for FR*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
+		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,5242,c.encounter_id,c.encounter_datetime,c.location_id,FindNumericValue(ito.value_text),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.obs ito
 	WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
@@ -1982,8 +1947,7 @@ SET SQL_SAFE_UPDATES = 0;
 	AND FindNumericValue(ito.value_text) > 0;
 		/*End migration for FR*/
 		/*Start migration for Temp*/
-		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,
-	creator,date_created,uuid)
+		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,5088,c.encounter_id,c.encounter_datetime,c.location_id,
 	CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text)
 	WHEN itob.value_numeric=2 THEN ((5/9)*(FindNumericValue(ito.value_text) -32)) /*C = 5/9(F - 32)*/
