@@ -950,7 +950,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.drugLookup d,
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and d.drugID=v.drugID and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=31 and and v.stdDosage in (1,2);
+v.drugID=31 and v.stdDosage in (1,2);
 
 select 72 as test72;
  /* dosage alternative */

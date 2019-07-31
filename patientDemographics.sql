@@ -139,7 +139,7 @@ case when t.name = 'Code National' then left(j.nationalid,50)
      when t.name = 'Code ST' then left(j.clinicPatientID,50) 
 	 when t.name = 'iSante ID' then left(j.patientID,50) end, t.patient_identifier_type_id, 1, l.location_id, 1, p.date_created,UUID()
 FROM person p, itech.patient j, patient_identifier_type t , itech.location_mapping l
-WHERE p.uuid = j.patGuid and j.patStatus<255 AND  l.siteCode=j.location_id AND (t.name = 'iSante ID' or t.name = 'Code ST' OR (t.name = 'Code National' and j.nationalid is not null and j.nationalid <> '') OR (t.name = 'Code ST' and j.clinicPatientID is not null and j.clinicPatientID <> '')) ON DUPLICATE KEY UPDATE
+WHERE p.uuid = j.patGuid and j.patStatus<255 AND  l.siteCode=j.location_id AND (t.name = 'iSante ID' OR (t.name = 'Code National' and j.nationalid is not null and j.nationalid <> '') OR (t.name = 'Code ST' and j.clinicPatientID is not null and j.clinicPatientID <> '')) ON DUPLICATE KEY UPDATE
 identifier=VALUES(identifier),
 identifier_type=VALUES(identifier_type), 
 preferred=VALUES(preferred), 

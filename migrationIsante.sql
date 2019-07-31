@@ -216,15 +216,15 @@ create table if not exists migration_log(id int(11) primary key auto_increment,p
    update migration_log set endtime=now() where prcodedure = 'pediatric visit';
    select 5 as Pediatric;
 
-   
+  /*  
    delete from migration_log where prcodedure in ('accouchemnet');
    insert into migration_log(prcodedure,starttime) values('accouchemnet',now());     
-/* travail et accouchemnet*/
+travail et accouchemnet
    call travailAccMigration();
    SET SQL_SAFE_UPDATES = 0;
    select 9 as travailAcc; 
    update migration_log set endtime=now() where prcodedure = 'accouchemnet';
-
+*/
   
    delete from migration_log where prcodedure in ('adherence');
    insert into migration_log(prcodedure,starttime) values('adherence',now());   
