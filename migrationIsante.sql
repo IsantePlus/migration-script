@@ -328,6 +328,29 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= 
 v.assessmentPlan<>'';
 
  select 14 as comments;
+ 
+ 
+ /* Home visit remarque */ 
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,161011,e.encounter_id,e.encounter_datetime,e.location_id,
+CASE WHEN v.homeVisitRemarks<>'' then substring(v.homeVisitRemarks,1,1000)
+ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.homeCareVisits v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.homeVisitRemarks<>'';
+
+/* counseling remarque */
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,163104,e.encounter_id,e.encounter_datetime,e.location_id,
+CASE WHEN v.obstaclesRemarks<>'' then v.obstaclesRemarks
+ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.comprehension v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+v.obstaclesRemarks <>'';
 
  /* migration for From Autor*/  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
