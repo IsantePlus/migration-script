@@ -7,4 +7,9 @@ ON pt.patient_id = ident.id
 where pt.patient_id NOT IN (select pid.patient_id from patient_identifier pid,patient_identifier_type p1 where p1.patient_identifier_type_id=pid.identifier_type and p1.name = "iSantePlus ID");
 
 
-update patient_identifier set location_id=913;
+update patient_identifier p,
+(select distinct value_reference as siteCode,l.location_id  from location_attribute l, location_attribute_type sl,itech.patient p
+where sl.name='iSanteSiteCode' and sl.location_attribute_type_id=l.attribute_type_id and p.location_id=value_reference) A
+set p.location_id=A.location_id;
+
+

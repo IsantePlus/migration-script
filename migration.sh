@@ -17,7 +17,7 @@ createProcedure() {
 
 
 createProcedure cleanOpenmrs.sql
-echo "procedure cleanOpenmrs created" > $HOME/migration/migration.Log.txt
+echo "procedure cleanOpenmrs created" > $HOME/migration/migrationLog.txt
 
 createProcedure patientDemographics.sql
 echo "procedure patientDemographics created"  >> $HOME/migration/migrationLog.txt
@@ -60,6 +60,10 @@ echo "procedure obgynMigration created"  >> $HOME/migration/migrationLog.txt
 
 createProcedure home_visit_migration.sql
 echo "procedure homeVisitMigration created"  >> $HOME/migration/migrationLog.txt 
+
+createProcedure vaccination.sql
+echo "procedure vaccination created"  >> $HOME/migration/migrationLog.txt 
+
 
 createProcedure migrationIsante.sql
 echo "procedure migrationIsante created"  >> $HOME/migration/migrationLog.txt 

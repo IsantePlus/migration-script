@@ -49,6 +49,11 @@ BEGIN
    set dateDd='01';
    END IF;
  
+ IF(length(dateDd)<=2) 
+  THEN 
+   set dateDd=concat('0',FindNumericValue(dateDd));
+   END IF;
+ 
  IF((dateMm='01' or dateMm='03' or dateMm='05' or dateMm='07' or dateMm='08' or dateMm='10' or dateMm='12') and dateDd>31)
  THEN 
   set dateDd='31';
@@ -67,19 +72,19 @@ BEGIN
   RETURN date_format(concat(dateYy,'-',dateMm,'-',dateDd),'%y-%m-%d');
 END$$
 DELIMITER ;
-
 DROP FUNCTION if exists `digits`;
 DELIMITER $$
-CREATE FUNCTION `digits`( str CHAR(32) ) RETURNS char(32) CHARSET utf8
+
+CREATE FUNCTION `digits`( str longtext ) RETURNS char(32) CHARSET utf8
 BEGIN
   DECLARE i, len SMALLINT DEFAULT 1;
   DECLARE ret CHAR(32) DEFAULT '';
   DECLARE c CHAR(1);
   DECLARE pos SMALLINT;
-  DECLARE after_p CHAR(20);
+  DECLARE after_p CHAR(100);
   IF str IS NULL
   THEN 
-    RETURN "";
+    RETURN "0.0";
   END IF;
   SET len = CHAR_LENGTH( str );
   l:REPEAT
@@ -91,13 +96,22 @@ BEGIN
 		IF c = '.' THEN
 			SET pos=INSTR(str, '.' );
             SET after_p=MID(str,pos,pos+2);
-            SET ret=CONCAT(FindNumericValue(ret),'.',FindNumericValue(after_p));
-            LEAVE l;
+			
+			IF FindNumericValue(ret) = '' THEN
+            SET ret=FindNumericValue(after_p);
+			ELSE 
+			 SET ret=CONCAT(FindNumericValue(ret),'.',FindNumericValue(after_p));
+            END IF;
+			LEAVE l;
 		ELSEIF c = ',' THEN 
 			SET pos=INSTR(str, ',');
             SET after_p=MID(str,pos,pos+2);
-            SET ret=CONCAT(FindNumericValue(ret),'.',FindNumericValue(after_p));
-            LEAVE l;
+			IF FindNumericValue(ret) = '' THEN
+            SET ret=FindNumericValue(after_p);
+			ELSE 
+			 SET ret=CONCAT(FindNumericValue(ret),'.',FindNumericValue(after_p));            
+            END IF;
+			LEAVE l;
 		END IF;
       END IF;
       
@@ -105,6 +119,12 @@ BEGIN
       
     END;
   UNTIL i > len END REPEAT;
+  
+    IF ret=""
+  THEN 
+    RETURN "0.0";
+  END IF;
+  
   RETURN ret;
 END$$
 DELIMITER ;
@@ -272,6 +292,25 @@ travail et accouchemnet
  end if;
  
  
+ 
+   select count(*) into cnt from migration_log where prcodedure = 'vaccination' and endtime is not null;
+  if(cnt=0) then    
+   delete from migration_log where prcodedure in ('vaccination');
+   insert into migration_log(prcodedure,starttime) values('vaccination',now());
+   update obs o,encounter e, encounter_type et set o.obs_group_id=null where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='a86ad9bb-d596-413c-bd4e-30f6fea5057d'; 
+   delete o from obs o, encounter e, encounter_type et where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='a86ad9bb-d596-413c-bd4e-30f6fea5057d';
+   
+   SET SQL_SAFE_UPDATES = 0;
+/* vaccinantion migration */ 
+   call vaccination();
+   select 10 as Vaccination;
+   SET SQL_SAFE_UPDATES = 0;
+   update migration_log set endtime=now() where prcodedure = 'vaccination';
+ end if; 
+ 
+ 
+ 
+ 
  /* migration for next VisitDate*/  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,5096,e.encounter_id,e.encounter_datetime,e.location_id,
@@ -279,6 +318,7 @@ formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e
 WHERE e.uuid = c.encGuid and formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd) is not null;
 
+select 1 as nextv;
 /*Statut de la fiche*/
 /* complete/Incomplete */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
@@ -290,6 +330,7 @@ SELECT DISTINCT e.patient_id,163340,e.encounter_id,e.encounter_datetime,e.locati
 FROM itech.encounter c, encounter e
 WHERE e.uuid = c.encGuid and encStatus in (0,1,3,5,7);
 
+select 2 as nextv;
 /* La fiche doit être passée en revue par la personne responsable de la qualité des données. */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,163341,e.encounter_id,e.encounter_datetime,e.location_id,
@@ -300,7 +341,7 @@ FROM itech.encounter c, encounter e
 WHERE e.uuid = c.encGuid and encStatus in (3,7);
 
 /*Evaluation et plan */
-
+select 3 as nextv;
 
 
 /*visit suivi */
@@ -311,7 +352,7 @@ ELSE NULL
 END,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.followupTreatment v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
-c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= formatDate(v.visitDateYy,v.visitDateMm,v.visitDateDd) AND 
 v.followupComments<>'';
 
  select 13 as comments;

@@ -853,7 +853,7 @@ v.drugID=29;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1003,7 +1003,7 @@ v.drugID=31;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when FindNumericValue(v.dispDateDd)>0 and FindNumericValue(dispDateMm)>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1151,7 +1151,7 @@ v.drugID=33;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when FindNumericValue(v.dispDateDd)>0 and FindNumericValue(dispDateMm)>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1194,7 +1194,7 @@ v.drugID=33 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 77 as test;
 
 
 /* Zidovudine(AZT) */
@@ -1295,7 +1295,7 @@ v.drugID=34;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1338,7 +1338,7 @@ v.drugID=34 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 78 as test;
 
 
 /* Efavirenz(EFV)*/
@@ -1439,7 +1439,7 @@ v.drugID=11;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1483,7 +1483,7 @@ v.drugID=11 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 79 as test;
 
 
 /* Nevirapine(NVP)*/
@@ -1584,7 +1584,7 @@ v.drugID=23;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1628,7 +1628,7 @@ v.drugID=23 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 79 as test;
 
 
 /* Atazanavir(ATZN) */
@@ -1729,7 +1729,7 @@ v.drugID=5;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1773,7 +1773,7 @@ v.drugID=5 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 80 as test;
 
 
 /* Atazanavir+BostRTV */
@@ -1874,7 +1874,7 @@ v.drugID=6;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1917,7 +1917,7 @@ v.drugID=6 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 81 as test;
 
 /* Indinavir(IDV) */
   /* migration group 1 */
@@ -2017,7 +2017,7 @@ v.drugID=16;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2061,7 +2061,7 @@ v.drugID=16 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 82 as test;
 
 
 
@@ -2163,7 +2163,7 @@ v.drugID=21;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2207,7 +2207,7 @@ v.drugID=21 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 83 as test;
 
 
 
@@ -2309,7 +2309,7 @@ v.drugID=88;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2353,7 +2353,7 @@ v.drugID=88 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 84 as test;
 
 
 /* Raltegravir */
@@ -2454,7 +2454,7 @@ v.drugID=87;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2496,7 +2496,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  
 v.drugID=87 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
-
+select 85 as test;
 
 /*Acétaminophène*/
   /* migration group 1 */
@@ -2579,7 +2579,7 @@ v.drugID=36;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2622,7 +2622,7 @@ v.drugID=36 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 86 as test;
 
 /* Aspirine */
   /* migration group 1 */
@@ -2705,7 +2705,7 @@ v.drugID=37;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2748,7 +2748,7 @@ v.drugID=37 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 87 as test;
 /* Hydroxyde d'aluminium */
   /* migration group 1 */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
@@ -2830,7 +2830,7 @@ v.drugID=82;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2874,7 +2874,7 @@ v.drugID=82 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 88 as test;
 
 /* Enalapril */
   /* migration group 1 */
@@ -2957,7 +2957,7 @@ v.drugID=80;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3000,7 +3000,7 @@ v.drugID=80 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 89 as test;
 
 /* HCTZ */
   /* migration group 1 */
@@ -3083,7 +3083,7 @@ v.drugID=81;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3127,7 +3127,7 @@ v.drugID=81 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 90 as test;
 
 
 /* Amoxiciline */
@@ -3211,7 +3211,7 @@ v.drugID=55;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3254,7 +3254,7 @@ v.drugID=55 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 91 as test;
 
 
 /* Ciprofloxacine */
@@ -3339,7 +3339,7 @@ v.drugID=42;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3383,7 +3383,7 @@ v.drugID=42 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 92 as test;
 
 
 /* Clarithromycin */
@@ -3467,7 +3467,7 @@ v.drugID=56;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3511,7 +3511,7 @@ v.drugID=56 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 93 as test;
 
 
 /* Clindamycine */
@@ -3595,7 +3595,7 @@ v.drugID=57;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3639,7 +3639,7 @@ v.drugID=57 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 94 as test;
 
 
 
@@ -3738,7 +3738,7 @@ v.drugID=9;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3781,7 +3781,7 @@ v.drugID=9 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 95 as test;
 
 
 /* Erythromycin */
@@ -3866,7 +3866,7 @@ v.drugID=43;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3910,7 +3910,7 @@ v.drugID=43 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 96 as test;
 
 
 /* Metromidazole */
@@ -3994,7 +3994,7 @@ v.drugID=44;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4038,7 +4038,7 @@ v.drugID=44 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 97 as test;
 
 
 /* Doxycyline */
@@ -4124,7 +4124,7 @@ v.drugID=79;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4167,7 +4167,7 @@ v.drugID=79 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 98 as test;
 
 
 /* PNC */
@@ -4253,7 +4253,7 @@ v.drugID=84;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4296,7 +4296,7 @@ v.drugID=84 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 99 as test;
 
 
 /* Amphotericine B */
@@ -4383,7 +4383,7 @@ v.drugID=58;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4427,7 +4427,7 @@ v.drugID=58 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 100 as test;
 
 /* Fluconazole */
   /* migration group 1 */
@@ -4512,7 +4512,7 @@ v.drugID=14;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4556,7 +4556,7 @@ v.drugID=14 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 101 as test;
 
 
 /* Itraconazole */
@@ -4641,7 +4641,7 @@ v.drugID=59;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4686,7 +4686,7 @@ v.drugID=59 and FindNumericValue(v.dispAltNumPills)>0;
 
 
 
-
+select 102 as test;
 
 
 /* Ketaconazole */
@@ -4772,7 +4772,7 @@ v.drugID=19;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4816,7 +4816,7 @@ v.drugID=19 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 103 as test;
 
 /* Miconazole */
   /* migration group 1 */
@@ -4902,7 +4902,7 @@ v.drugID=45;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4947,7 +4947,7 @@ v.drugID=45 and FindNumericValue(v.dispAltNumPills)>0;
 
 
 
-
+select 104 as test;
 
 
 
@@ -5035,7 +5035,7 @@ v.drugID=46;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5079,7 +5079,7 @@ v.drugID=46 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 105 as test;
 
 
 /* Chloroquine */
@@ -5166,7 +5166,7 @@ v.drugID=60;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5209,7 +5209,7 @@ v.drugID=60 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 106 as test;
 /* Ivermectine */
   /* migration group 1 */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
@@ -5295,7 +5295,7 @@ v.drugID=64;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5338,7 +5338,7 @@ v.drugID=64 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 107 as test;
 
 
 /* Primaquine */
@@ -5425,7 +5425,7 @@ v.drugID=85;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5468,7 +5468,7 @@ v.drugID=85 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 108 as test;
 
 
 /* Pyrimethamine */
@@ -5556,7 +5556,7 @@ v.drugID=61;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5599,7 +5599,7 @@ v.drugID=61 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 109 as test;
 
 
 /* Quinine */
@@ -5685,7 +5685,7 @@ v.drugID=62;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5728,7 +5728,7 @@ v.drugID=62 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 110 as test;
 
 /* Sulfadiazine */
   /* migration group 1 */
@@ -5815,7 +5815,7 @@ v.drugID=63;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5859,7 +5859,7 @@ v.drugID=63 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 111 as test;
 
 /* Ethambutol */
   /* migration group 1 */
@@ -5944,7 +5944,7 @@ v.drugID=13;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5989,7 +5989,7 @@ v.drugID=13 and FindNumericValue(v.dispAltNumPills)>0;
 
 
 
-
+select 112 as test;
 
 
 
@@ -6090,7 +6090,7 @@ v.drugID=18;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6134,7 +6134,7 @@ v.drugID=18 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 113 as test;
 
 /* Pyrazinamide */
   /* migration group 1 */
@@ -6218,7 +6218,7 @@ v.drugID=24;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6261,7 +6261,7 @@ v.drugID=24 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 115 as test;
 
 
 /* Rifampicine */
@@ -6348,7 +6348,7 @@ v.drugID=25;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6392,7 +6392,7 @@ v.drugID=25 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 116 as test;
 
 
 
@@ -6478,7 +6478,7 @@ v.drugID=30;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6522,7 +6522,7 @@ v.drugID=30 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 117 as test;
 
 
 
@@ -6609,7 +6609,7 @@ v.drugID=48;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6653,7 +6653,7 @@ v.drugID=48 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 118 as test;
 
 
 
@@ -6739,7 +6739,7 @@ v.drugID=47;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6783,7 +6783,7 @@ v.drugID=47 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 119 as test;
 
 
 /* Fer */
@@ -6869,7 +6869,7 @@ v.drugID=49;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6914,7 +6914,7 @@ v.drugID=49 and FindNumericValue(v.dispAltNumPills)>0;
 
 
 
-
+select 120 as test;
 
 
 
@@ -7002,7 +7002,7 @@ v.drugID=50;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7046,7 +7046,7 @@ v.drugID=50 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 121 as test;
 
 /* Pyridoxine */
   /* migration group 1 */
@@ -7131,7 +7131,7 @@ v.drugID=65;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7174,7 +7174,7 @@ v.drugID=65 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 122 as test;
 
 
 /* Supplément Protéinique */
@@ -7258,7 +7258,7 @@ v.drugID=51;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7302,7 +7302,7 @@ v.drugID=51 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 123 as test;
 
 
 /* Vitamine C */
@@ -7387,7 +7387,7 @@ v.drugID=52;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7430,7 +7430,7 @@ v.drugID=52 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 123 as test;
 
 
 /* Acyclovir*/
@@ -7475,7 +7475,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=52 and v.pedPresentationDesc<>'';
+v.drugID=2 and v.pedPresentationDesc<>'';
 
 /* Durée de prise des médicaments */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,creator,date_created,uuid)
@@ -7514,7 +7514,7 @@ v.drugID=2;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7557,7 +7557,7 @@ v.drugID=2 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 125 as test;
 
 /* Loperamide*/
   /* migration group 1 */
@@ -7640,7 +7640,7 @@ v.drugID=53;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7683,7 +7683,7 @@ v.drugID=53 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 126 as test;
 
 
 /* Promethazine*/
@@ -7767,7 +7767,7 @@ v.drugID=54;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7811,7 +7811,7 @@ v.drugID=54 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 127 as test;
 
 
 
@@ -7897,7 +7897,7 @@ v.drugID=78;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7940,7 +7940,7 @@ v.drugID=78 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 128 as test;
 
 /* Bromhexine*/
   /* migration group 1 */
@@ -8024,7 +8024,7 @@ v.drugID=77;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8067,7 +8067,7 @@ v.drugID=77 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 129 as test;
 
 /* Benzoate de benzyl */
   /* migration group 1 */
@@ -8151,7 +8151,7 @@ v.drugID=76;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8194,7 +8194,7 @@ v.drugID=76 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 130 as test;
 
 /* drug pediatric */
 
@@ -8306,7 +8306,7 @@ v.drugID=22;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8349,7 +8349,7 @@ v.drugID=22 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 131 as test;
 
 /* Saquinavir (SQV) */
   /* migration group 1 */
@@ -8460,7 +8460,7 @@ v.drugID=27;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8503,7 +8503,7 @@ v.drugID=27 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 132 as test;
 
 /* Ritonavir (RTV) */
   /* migration group 1 */
@@ -8613,7 +8613,7 @@ v.drugID=26;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8658,7 +8658,7 @@ v.drugID=26 and FindNumericValue(v.dispAltNumPills)>0;
 
 
 
-
+select 133 as test;
 
 
 
@@ -8743,7 +8743,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  
 v.drugID=72;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8786,7 +8786,7 @@ v.drugID=72 and FindNumericValue(v.dispAltNumPills)>0;
 
 /* End of migration group 2*/
 
-
+select 134 as test;
 /* Ibuprofen */
   /* migration group 1 */
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
@@ -8867,7 +8867,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  
 v.drugID=38;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8911,7 +8911,7 @@ v.drugID=38 and FindNumericValue(v.dispAltNumPills)>0;
 /* End of migration group 2*/
 
 
-
+select 135 as test;
 
 
 /* Paracétamol */
@@ -9039,7 +9039,7 @@ v.drugID=39 and FindNumericValue(v.dispAltNumPills)>0;
 
 
 
-
+select 136 as test;
 
 
 
@@ -9125,7 +9125,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  
 v.drugID=73;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -9170,7 +9170,7 @@ v.drugID=73 and FindNumericValue(v.dispAltNumPills)>0;
 
 
 
-
+select 137 as test;
 
 
 
@@ -9255,7 +9255,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  
 v.drugID=75;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when v.dispDateDd>0 and dispDateMm>0 and dispDateYy>0 then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when v.dispDateDd>0 and dispDateMm>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -9306,6 +9306,9 @@ formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e
 WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd) is not null;
 
+update itech.prescriptionOtherFields set arvStartDateDd='01' where arvStartDateDd like '%un%';
+update itech.prescriptionOtherFields set arvStartDateMm='01' where arvStartDateMm like '%un%';
+update itech.prescriptionOtherFields set arvStartDateYy='01' where arvStartDateYy like '%un%';
 
  /* Date d'initiation ARV in ordonance form*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
@@ -9350,7 +9353,7 @@ WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and other.patientID=c.pat
 date_format(date(e.encounter_datetime),'%y-%m-%d')  = other.visitDate and other.otherDrugs<>'';
 
 
-
+select 138 as test;
 
 /* Ajout de dolutogravir et etravirine */
 

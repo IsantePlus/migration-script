@@ -95,12 +95,11 @@ select now() as personName;
  END IF; 
  
 -- CREATE UNIQUE INDEX addressIndex ON person_address (person_id, address1, city_village);
-INSERT INTO person_address(person_id,   preferred, address1, city_village, creator, date_created, uuid)
-SELECT distinct p.person_id, 1, addrDistrict, addrSection, 1, p.date_created, UUID()
+INSERT INTO person_address(person_id,   preferred, address2, creator, date_created, uuid)
+SELECT distinct p.person_id, 1, left(concat(addrSection,'-',addrDistrict,'(',homeDirections,')'),255), 1, p.date_created, UUID()
 FROM person p, itech.patient j where p.uuid = j.patGuid  and j.patStatus<255 ON DUPLICATE KEY UPDATE
 preferred = VALUES(preferred), 
-address1 = VALUES(address1), 
-city_village = VALUES(city_village), 
+address2 = VALUES(address2),  
 creator = VALUES(creator), 
 date_created = VALUES(date_created);
  
@@ -133,6 +132,7 @@ select now() as patient;
  *   masterPID (first iSanté patientID nationwide: assumes national fingerprint server in use), 
  *   clinicPatientID (ST code: HIV patients) 
 */
+
 INSERT INTO patient_identifier(patient_id,  identifier, identifier_type, preferred, location_id, creator, date_created, uuid)
 SELECT p.person_id, 
 case when t.name = 'Code National' then left(j.nationalid,50)
@@ -147,6 +147,20 @@ location_id=VALUES(location_id),
 creator=VALUES(creator), 
 date_created=VALUES(date_created);
 
+/*
+INSERT INTO patient_identifier(patient_id,  identifier, identifier_type, preferred, location_id, creator, date_created, uuid)
+SELECT p.person_id, 
+case when t.name = 'Code National' then left(j.nationalid,50) 
+	 when t.name = 'iSante ID' then left(j.patientID,50) end, t.patient_identifier_type_id, 1, l.location_id, 1, p.date_created,UUID()
+FROM person p, itech.patient j, patient_identifier_type t , itech.location_mapping l
+WHERE p.uuid = j.patGuid and j.patStatus<255 AND  l.siteCode=j.location_id AND (t.name = 'iSante ID' OR (t.name = 'Code National' and j.nationalid is not null and j.nationalid <> '')) ON DUPLICATE KEY UPDATE
+identifier=VALUES(identifier),
+identifier_type=VALUES(identifier_type), 
+preferred=VALUES(preferred), 
+location_id=VALUES(location_id), 
+creator=VALUES(creator), 
+date_created=VALUES(date_created);
+*/
 /* Numero de code PC */
 INSERT INTO patient_identifier(patient_id,  identifier, identifier_type, preferred, location_id, creator, date_created, uuid)
 SELECT p.person_id, 
@@ -161,19 +175,6 @@ creator=VALUES(creator),
 date_created=VALUES(date_created);
 
 
-/* Numero TB*/
-INSERT INTO patient_identifier(patient_id,  identifier, identifier_type, preferred, location_id, creator, date_created, uuid)
-SELECT p.person_id, 
-case when t.name = 'No. de dossier TB' then left(st.currentTreatNo,50) end, t.patient_identifier_type_id, 1, l.location_id, 1, p.date_created,UUID()
-FROM person p, itech.patient j, patient_identifier_type t , itech.location_mapping l,itech.tbStatus st
-WHERE p.uuid = j.patGuid and st.patientID=j.patientID and j.patStatus<255 AND  l.siteCode=j.location_id AND (t.name = 'No. de dossier TB' and st.currentTreatNo is not null and st.currentTreatNo <> '') ON DUPLICATE KEY UPDATE
-identifier=VALUES(identifier),
-identifier_type=VALUES(identifier_type), 
-preferred=VALUES(preferred), 
-location_id=VALUES(location_id), 
-creator=VALUES(creator), 
-date_created=VALUES(date_created);
-  
  
 select now() as patientIdentifier;
 
@@ -263,7 +264,7 @@ select now() as birthDistrict;
 	
 /* migration of contact*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
-SELECT DISTINCT p.person_id,164958,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.birthDistrict ,1,e.date_created,UUID()
+SELECT DISTINCT p.person_id,162725,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,j.birthDistrict ,1,e.date_created,UUID()
 from person p, itech.patient j, encounter e,itech.obs_concept_group og
  where j.patGuid = p.uuid and e.patient_id=p.person_id and e.visit_id is null
  and og.person_id=e.patient_id and e.encounter_id=og.encounter_id 

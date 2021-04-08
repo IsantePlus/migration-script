@@ -269,7 +269,7 @@ BEGIN
 	/*Start migration for Discontinuations (Autre raison)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,1667,c.encounter_id,c.encounter_datetime,c.location_id,5622,substring(de.discReasonOtherText,1000),1,e.createDate, UUID()
+	SELECT DISTINCT c.patient_id,1667,c.encounter_id,c.encounter_datetime,c.location_id,5622,left(de.discReasonOtherText,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.discEnrollment de
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = de.patientID and e.siteCode = de.siteCode 
@@ -327,7 +327,7 @@ BEGIN
 	CASE WHEN (l.result = 1) THEN 1115
 		WHEN (l.result = 2) THEN 1116
 	END,
-	substring(l.resultRemarks,1000),1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -345,7 +345,7 @@ BEGIN
 	CASE WHEN (l.result = 1) THEN 1115
 		WHEN (l.result = 2) THEN 1116
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 

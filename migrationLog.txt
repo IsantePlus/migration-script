@@ -1,0 +1,41 @@
+procedure patientDemographics created
+procedure encounter_Migration created
+procedure ordonanceMigration created
+procedure labs_migration created
+procedure labs_migration_for_old_form. created
+procedure adulte_visit_Migration created
+procedure pediatric_visit_Migration created
+procedure discontinuation_migration created
+procedure adherence_migration created
+procedure ssp_migration_adult created
+procedure ssp_migration_pediatric created
+procedure travail_et_accouchement_migration created
+procedure obgynMigration created
+procedure homeVisitMigration created
+procedure migrationIsante created
+Lunch migration process
+CleanOpenmrs
+1
+person
+2020-11-19 13:28:36
+personName
+2020-11-19 13:28:40
+personAddress
+2020-11-19 13:28:45
+patient
+2020-11-19 13:28:47
+patientIdentifier
+2020-11-19 13:29:01
+Encounter
+2020-11-19 13:29:11
+birthDistrict
+2020-11-19 13:29:16
+obs1
+2020-11-19 13:29:17
+endDemo
+2020-11-19 13:29:22
+Demographic
+2
+id	prcodedure	starttime	endtime
+1	demographic	2020-11-19 13:28:21	2020-11-19 13:29:22
+2	encounter	2020-11-19 13:29:22	NULL

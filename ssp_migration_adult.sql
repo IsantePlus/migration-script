@@ -28,7 +28,7 @@ SET SQL_SAFE_UPDATES = 0;
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161421,c.encounter_id,
-	c.encounter_datetime,c.location_id,'Autre',ito.value_text,1,e.createDate, UUID()
+	c.encounter_datetime,c.location_id,'Autre',left(ito.value_text,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.obs ito
 	WHERE c.uuid = e.encGuid 
 	AND e.siteCode = ito.location_id 
@@ -227,7 +227,7 @@ SET SQL_SAFE_UPDATES = 0;
 	GROUP BY o.person_id, o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments=ito.value_text
+		   SET ob.comments=left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -282,7 +282,7 @@ SET SQL_SAFE_UPDATES = 0;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments=ito.value_text
+		   SET ob.comments=left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -340,7 +340,7 @@ SET SQL_SAFE_UPDATES = 0;
 	/*Start migration for Autres:*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	comments,creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,159614,c.encounter_id,c.encounter_datetime,c.location_id,114767,ito.value_text,1,e.createDate, UUID()
+	SELECT DISTINCT c.patient_id,159614,c.encounter_id,c.encounter_datetime,c.location_id,114767,left(ito.value_text,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.obs ito
 	WHERE c.uuid = e.encGuid and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -498,7 +498,7 @@ SET SQL_SAFE_UPDATES = 0;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments=ito.value_text
+		   SET ob.comments=left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -624,7 +624,7 @@ SET SQL_SAFE_UPDATES = 0;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments=ito.value_text
+		   SET ob.comments=left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -874,7 +874,7 @@ SET SQL_SAFE_UPDATES = 0;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments = ito.value_text
+		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -1618,7 +1618,7 @@ SET SQL_SAFE_UPDATES = 0;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments = ito.value_text
+		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -1749,7 +1749,7 @@ SET SQL_SAFE_UPDATES = 0;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments = ito.value_text
+		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -1878,7 +1878,7 @@ SET SQL_SAFE_UPDATES = 0;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments = ito.value_text
+		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -2404,7 +2404,7 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments = ito.value_text
+		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -2482,7 +2482,7 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments = ito.value_text
+		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -3173,7 +3173,7 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments = ito.value_text
+		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -3250,7 +3250,7 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments = ito.value_text
+		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
@@ -3328,7 +3328,7 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	GROUP BY o.person_id,o.encounter_id;
 	
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-		   SET ob.comments = ito.value_text
+		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id

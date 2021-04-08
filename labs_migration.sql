@@ -34,6 +34,7 @@ BEGIN
 	and e.seqNum = l.seqNum
 	AND l.labID IN(1380,1379,1364);
 
+select 1 as test;
 /*Migration for the concept Anti-Thrombine III (Activite)*/
 
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
@@ -57,7 +58,7 @@ BEGIN
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -67,6 +68,7 @@ BEGIN
 	AND l.labID IN(1380,1379,1364)
 	AND (l.result <> "" AND digits(l.result) >= 0);
 /*END*/
+select 2 as test;
 /*Create table obs_concept_group for the obs_group_id*/
 create table if not exists itech.obs_concept_group (obs_id int,person_id int,concept_id int,encounter_id int);
 /*Insertion for CCMH test (concept_id CCMH, CAUSE of the group, 
@@ -99,6 +101,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=163700 
 	GROUP BY openmrs.obs.person_id,encounter_id;
+	
+	select 3 as test;
    /*Answer*/
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
@@ -117,7 +121,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -128,6 +132,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND c.patient_id=cg.person_id
 	AND l.labID=1357
 	AND (l.result <> "" AND digits(l.result) >= 0);
+	
+	select 4 as test;
 	/*END CCMH TEST*/
 	/*Start migration for CD4 Compte Absolu*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
@@ -142,6 +148,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
 	AND l.labID=1561;
+	
+	select 5 as test;
 	/*Insert obs_group for CD4 Compte Absolu */
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 	SELECT DISTINCT e.patient_id,657,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
@@ -149,6 +157,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	WHERE e.uuid = c.encGuid and c.patientID = l.patientID and c.seqNum = l.seqNum and 
 	c.sitecode = l.sitecode and DATE(e.encounter_datetime) = DATE_FORMAT(concat(l.visitDateYy,'-',l.visitDateMm,'-',l.visitDateDd),"%Y-%m-%d") AND 
 	l.labID=1561 and l.result is not null;
+	
+	select 6 as test;
 	/*Finding the last obs_group_id inserted */
 	TRUNCATE TABLE itech.obs_concept_group;
 	INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
@@ -175,7 +185,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -186,6 +196,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND c.patient_id=cg.person_id
 	AND l.labID=1561
 	AND (l.result <> "" AND digits(l.result) > 0);
+	
+	select 7 as test;
 	/*END of CD4 Compte Absolu*/
 	/*Starting insert for CD4 Compte en %*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
@@ -200,6 +212,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 		and e.seqNum = l.seqNum
 		AND l.labID=1562;
+		
+		select 8 as test;
 		/*add obsgroup*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT e.patient_id,657,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
@@ -207,6 +221,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHERE e.uuid = c.encGuid and c.patientID = l.patientID and c.seqNum = l.seqNum and 
 		c.sitecode = l.sitecode and DATE(e.encounter_datetime) = DATE_FORMAT(concat(l.visitDateYy,'-',l.visitDateMm,'-',l.visitDateDd),"%Y-%m-%d") AND 
 		l.labID=1562 AND (l.result <> "" AND digits(l.result) > 0);
+		
+		select 9 as test;
 		/*Finding the last obs_group_id inserted */
 	TRUNCATE TABLE itech.obs_concept_group;
 	INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
@@ -232,7 +248,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -243,6 +259,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND c.patient_id=cg.person_id
 	AND l.labID=1562
 	AND (l.result <> "" AND digits(l.result) > 0);
+	
+	select 10 as test;
 	/*Ending insert for CD4 Compte en %*/
 	/*Migration for Compte des Globules Blancs*/
 	 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
@@ -257,6 +275,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 		and e.seqNum = l.seqNum
 		AND l.labID=1351;
+		
+		select 11 as test;
 		/*add obsgroup*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT e.patient_id,163700,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
@@ -289,7 +309,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -301,6 +321,9 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1351
 	AND (l.result <> "" AND digits(l.result) > 0);
 	/*END of migration for Compte des Globules Blancs*/
+	
+	select 12 as test;
+	
 	/*Starting insert for Compte des Globules Rouges*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -314,6 +337,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 		and e.seqNum = l.seqNum
 		AND l.labID=1352;
+
+select 13 as test;
 		/*add obsgroup*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 		SELECT DISTINCT e.patient_id,163700,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
@@ -346,7 +371,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -358,7 +383,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1352
 	AND (l.result <> "" AND digits(l.result) > 0);
 	/*Ending insert for Compte des Globules Rouges*/
-	
+select 14 as test;	
 	/*Starting insertion for Coombs Test Direct, Coombs Test Indirect*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -375,7 +400,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID IN(1385,1386);
 		
-		
+select 15 as test;		
 		/*concept Coombs*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 		creator,date_created,uuid)
@@ -401,7 +426,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		 CASE WHEN (l.result LIKE LOWER ("NEG%"))THEN 664
 			  WHEN (l.result LIKE LOWER ("POS%"))THEN 703
 			ELSE null
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -411,6 +436,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID IN(1385,1386)
 		AND (l.result <> "" AND l.result is not null);
 	/*Ending insertion for Coombs Test Direct----------------------*/
+select 16 as test;
 	/*Starting migration for Electrophorese de l’hemoglobine*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -425,7 +451,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1369;
 		
-		
+select 17 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,comments,
 		creator,date_created,uuid)
@@ -444,7 +470,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,l.result,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,l.result,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -454,6 +480,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1369
 		AND (l.result <> "" AND l.result is not null);
 	/*Ending migration for Electrophorese de l’hemoglobine*/
+select 18 as test;
 	/*Starting migration for Eosinophiles*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -468,7 +495,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1363;
 		
-		
+select 19 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -487,7 +514,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,l.result,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -497,7 +524,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1363
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Eosinophiles*/
-	
+select 20 as test;	
 	/*Starting migration for Facteur IX*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -512,7 +539,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1377;
 		
-		
+select 21 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -531,7 +558,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,l.result,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -541,7 +568,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1377
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Facteur IX*/
-	
+select 22 as test;	
 	/*Starting migration for Facteur VIII*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -556,7 +583,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1376;
 		
-		
+select 23 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -575,7 +602,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,l.result,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -585,6 +612,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1376
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Facteur VIII*/
+select 24 as test;
 	/*Starting migration for Ferritine sérique*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -599,7 +627,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=306;
 		
-		
+select 25 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -618,7 +646,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -628,6 +656,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=306
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Ferritine sérique*/
+select 26 as test;
 	/*Starting Migration for Groupe Sanguin - ABO (Have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -658,6 +687,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		(l.result4 <> "" and l.result4 is not null)
 	
 	);
+
+select 27 as test;
 	/*Finding the last obs_group_id inserted */
 	TRUNCATE TABLE itech.obs_concept_group;
 	INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
@@ -720,7 +751,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			WHEN (l.result4 LIKE LOWER ("AB+"))THEN 1230
 			WHEN (l.result4 LIKE LOWER ("AB-"))THEN 1231
 			
-	END,l.resultRemarks,1,e.createDate, UUID()
+	END,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -741,6 +772,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	
 	);
 	/*Ending migration for Groupe Sanguin - ABO*/
+select 28 as test;
 	/*Starting migration for Groupe Sanguin - Rhesus (Have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -768,6 +800,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=161473 
 	GROUP BY openmrs.obs.person_id,encounter_id;
+
+select 29 as test;
    /*Answer*/
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,comments,
 	creator,date_created,uuid)
@@ -790,7 +824,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	CASE WHEN (l.result like LOWER("%POS%")) THEN 703
 	WHEN(l.result like LOWER ("%NEG%")) THEN 664
 	ELSE null
-	END,l.resultRemarks,1,e.createDate, UUID()
+	END,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -802,6 +836,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1382
 	AND (l.result <> "" AND l.result is not null);
 	/*Ending migration for Groupe Sanguin - Rhesus*/
+select 30 as test;
 	/*Starting migration for Hematocrite (Have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -816,6 +851,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	and e.seqNum = l.seqNum
 	AND l.labID=1354
 	AND (l.result <> "" AND digits(l.result) >= 0);
+
+select 31 as test;
 	 /*Migration for obsgroup*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 	SELECT DISTINCT e.patient_id,163700,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
@@ -830,6 +867,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=163700 
 	GROUP BY openmrs.obs.person_id,encounter_id;
+
+select 32 as test;
    /*Answer*/
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
@@ -848,7 +887,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -860,6 +899,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1354
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Hematocrite*/
+
+select 33 as test;
 	/*Starting migration for Hemoglobine (Have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -880,6 +921,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	WHERE e.uuid = c.encGuid and c.patientID = l.patientID and c.seqNum = l.seqNum and 
 	c.sitecode = l.sitecode and DATE(e.encounter_datetime) = DATE_FORMAT(concat(l.visitDateYy,'-',l.visitDateMm,'-',l.visitDateDd),"%Y-%m-%d") AND 
 	l.labID=1353 and (l.result <> "" AND digits(l.result) >= 0);
+
+select 34 as test;
 	/*Finding the last obs_group_id inserted */
 	TRUNCATE TABLE itech.obs_concept_group;
 	INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
@@ -905,7 +948,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -917,7 +960,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1353
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Hemoglobine*/
-	
+select 35 as test;	
 	/*Starting migration for Heparinemie*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -932,7 +975,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1378;
 		
-		
+select 36 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -951,7 +994,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -961,6 +1004,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1378
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Heparinemie*/
+select 37 as test;
 	/*Starting migration for INR (Have concept group )*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -988,6 +1032,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=163436 
 	GROUP BY openmrs.obs.person_id,encounter_id;
+
+select 38 as test;
    /*Answer*/
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
@@ -1006,7 +1052,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1017,7 +1063,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND c.patient_id=cg.person_id
 	AND l.labID=1375
 	AND (l.result <> "" AND digits(l.result) >= 0);
-	
+select 39 as test;	
 	/*Stop migration for INR*/
 	/*Starting migration for Lymphocytes (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
@@ -1032,6 +1078,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
 	AND l.labID=1360;
+
+select 40 as test;	
 	 /*Migration for obsgroup*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 	SELECT DISTINCT e.patient_id,163700,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
@@ -1046,6 +1094,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=163700 
 	GROUP BY openmrs.obs.person_id,encounter_id;
+select 41 as test;
    /*Answer*/
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
@@ -1064,7 +1113,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1076,6 +1125,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1360
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Stoping migration for Lymphocytes*/
+select 42 as test;
 	/*Starting migration for Mixtes (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -1103,6 +1153,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=163700 
 	GROUP BY openmrs.obs.person_id,encounter_id;
+
+select 43 as test;
    /*Answer*/
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
@@ -1121,7 +1173,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1133,6 +1185,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1361
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Mixtes*/
+select 44 as test;
 	/*Starting migration for Monocytes*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -1147,7 +1200,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1362;
 		
-		
+select 45 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -1166,7 +1219,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1176,7 +1229,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1362
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Monocytes*/
-	
+select 46 as test;	
 	/*Starting migration for Neutrophiles (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -1204,6 +1257,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=163700 
 	GROUP BY openmrs.obs.person_id,encounter_id;
+
+select 47 as test;
    /*Answer*/
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
@@ -1222,7 +1277,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1235,6 +1290,9 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	
 	/*Ending migration for Neutrophiles*/
+
+select 48 as test;
+
 	/*Starting migration for Plaquettes (have concept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -1280,7 +1338,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1292,6 +1350,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1358
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Plaquettes*/
+select 49 as test;
 	/*Starting migration for Sickling Test*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -1328,7 +1387,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		 CASE WHEN (l.result LIKE LOWER ("N%"))THEN 664
 			  WHEN (l.result LIKE LOWER ("P%"))THEN 703
 			ELSE null
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1338,6 +1397,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1370
 		AND (l.result <> "" AND l.result is not null);
 	/*Ending migration for Sickling Test*/
+
+select 50 as test;
 	/*Starting migration for Taux reticulocytes - Auto*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -1352,7 +1413,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1371;
 		
-		
+select 51 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -1371,7 +1432,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1381,6 +1442,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1371
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Taux reticulocytes - Auto*/
+select 52 as test;
 	/*Starting migration for TCMH (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -1408,6 +1470,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=163700 
 	GROUP BY openmrs.obs.person_id,encounter_id;
+
+select 54 as test;
    /*Answer*/
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
@@ -1426,7 +1490,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1438,6 +1502,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1356
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for TCMH*/
+select 54 as test;
 	/*Starting migration for Temps de cephaline Activé(TCA) (have concept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -1484,7 +1549,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1496,6 +1561,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1373
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Temps de cephaline Activé(TCA)*/
+select 55 as test;
 	/*Starting migration for Temps de Coagulation (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -1541,7 +1607,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1553,6 +1619,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1367
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Temps de Coagulation*/
+select 56 as test;
 	/*Starting migration for Temps de Coagulation en tube*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -1567,7 +1634,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1366;
 		
-		
+select 57 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -1586,7 +1653,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1596,6 +1663,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1366
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending for Temps de Coagulation en tube*/
+select 58 as test;
 	/*Starting migration for Temps de Prothrombine*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -1610,7 +1678,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1374;
 		
-		
+select 59 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -1629,7 +1697,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1639,6 +1707,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1374
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Temps de Prothrombine*/
+select 60 as test;
 	/*Starting migration for Temps de saignement (have concept group)*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -1666,6 +1735,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=163702
 	GROUP BY openmrs.obs.person_id,encounter_id;
+
+select 61 as test;
    /*Answer*/
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
@@ -1684,7 +1755,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1697,6 +1768,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	
 	/*Ending migration for Temps de saignement*/
+select 62 as test;
 	/*Starting migration for Test de comptabilite*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -1711,7 +1783,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1383;
 		
-		
+select 63 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 		creator,date_created,uuid)
@@ -1734,7 +1806,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	END,c.location_id,
 		 CASE WHEN (l.result LIKE LOWER ("%INC%"))THEN 163434
 			ELSE 163433
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1745,6 +1817,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND (l.result <> "" AND l.result is not null);
 	
 	/*Ending migration for Test de comptabilite*/
+select 64 as test;
 	/*Starting migration for VGM (have concept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -1790,7 +1863,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1803,6 +1876,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	
 	/*Ending migration for VGM*/
+select 65 as test;
 	/*Starting migration for Vitamine B12*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -1817,7 +1891,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=307;
 		
-		
+select 66 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -1836,7 +1910,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1846,7 +1920,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=307
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration Vitamine B12*/
-	
+select 67 as test;	
 	/*Starting migration for Vitesse de Sedimentation*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -1860,7 +1934,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1365;
 		
-		
+select 68 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -1879,7 +1953,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1890,7 +1964,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Ending migration for Vitesse de Sedimentation*/
 	/*END OF Migration for Hematologie part*/
-	
+select 69 as test;	
 
 	/*Starting migration for Biochimie tests*/
 	/*Migration for Acide urique=159825*/
@@ -1906,7 +1980,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1456;
 		
-		
+select 70 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -1925,7 +1999,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1935,6 +2009,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1456
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Acide urique*/
+select 71 as test;
 	/*Start migration for Albumine*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -1967,7 +2042,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -1977,6 +2052,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1395
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Albumine*/
+select 72 as test;
 	/*Starting migration for Amylase*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2009,7 +2085,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2019,6 +2095,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1404
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Amylase*/
+select 73 as test;
 	/*Starting migration for Azote de l’Uree (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2064,7 +2141,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2076,6 +2153,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1387
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Azote de l’Uree*/
+select 74 as test;
 	/*Starting migration for BE (have concept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2121,7 +2199,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2133,6 +2211,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1436
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for BE*/
+select 75 as test;
 	/*Starting migration for Bicarbonates (Have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2178,7 +2257,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2190,6 +2269,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1409
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Bicarbonates*/
+select 76 as test;
 	/*Starting migration for Bilirubine direct*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2222,7 +2302,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2232,6 +2312,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1416
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Bilirubine direct*/
+select 77 as test;
 	/*Starting migration for Bilirubine indirecte*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2264,7 +2345,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2274,7 +2355,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1417
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Bilirubine indirecte*/
-	
+select 78 as test;	
 	/*Starting migration for Bilirubine totale(have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2320,7 +2401,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2332,6 +2413,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1415
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Bilirubine totale*/
+select 79 as test;
 	/*Starting migration for C3 complement*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2364,7 +2446,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2374,6 +2456,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1470
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for C3 complement*/
+select 80 as test;
 	/*Starting migration for C4 complement*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2406,7 +2489,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2416,6 +2499,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1471
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for C4 complement*/
+select 81 as test;
 	/*Starting migration for Calcium (Have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2461,7 +2545,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2473,6 +2557,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1410
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Calcium*/
+select 82 as test;
 	/*Starting migration Chlore (have concept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2518,7 +2603,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2530,6 +2615,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1393
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration Chlore*/
+select 83 as test;
 	/*Starting migration for Cholestérol total(have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2575,7 +2661,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2587,6 +2673,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1451
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Cholestérol total*/
+select 85 as test;
 	/*Starting migration for CPK MB*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2619,7 +2706,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2629,6 +2716,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=302
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for CPK MB*/
+select 86 as test;
 	/*Starting migration for Créatinine (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2674,7 +2762,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2686,6 +2774,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1461
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*END migration for Créatinine*/
+
+select 87 as test;
 	/*Starting migration for CRP Quantitatif (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2731,7 +2821,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2743,6 +2833,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1468
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for CRP Quantitatif*/
+select 88 as test;
 	/*Starting migration for Facteur Rhumatoide (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -2808,7 +2899,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		) THEN 664
 	ELSE null
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2825,6 +2916,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	);
 	
 	/*End migration for Facteur Rhumatoide*/
+select 89 as test;
 	/*Start migration for Fer Serique*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2857,7 +2949,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2867,6 +2959,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1414
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Fer Serique*/
+select 90 as test;
 	/*Start migration for Glycemie*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2899,7 +2992,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2909,6 +3002,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1391
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Glycemie*/
+select 91 as test;
 	/*Start migration for Glycemie Postprandiale*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2941,7 +3035,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2951,6 +3045,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1445
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Glycemie Postprandiale*/
+select 92 as test;
 	/*Migration for Glycémie provoquée*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -2983,7 +3078,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -2993,6 +3088,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1444
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration Glycémie provoquée*/ 
+select 94 as test;
 	/*Migration for Glycémie provoquée 1/2 hre*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3025,7 +3121,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3035,6 +3131,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1439
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/* End Migration for Glycémie provoquée 1/2 hre*/
+select 96 as test;
 	/*Migration for Glycémie provoquée 1hre*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3067,7 +3164,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3077,6 +3174,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1440
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Glycémie provoquée 1hre*/
+select 97 as test;
 	/*Migration for Glycémie provoquée 2hres*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3109,7 +3207,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3119,7 +3217,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1441
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Migration for Glycémie provoquée 2hres*/
-	
+select 97 as test;	
 	/*Migration for Glycémie provoquée 3hres*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3152,7 +3250,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3162,6 +3260,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1442
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Migration for Glycémie provoquée 3hres*/
+select 98 as test;
 	/*Migration for Glycémie provoquée 4hres*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3194,7 +3293,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3204,6 +3303,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1443
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Migration for Glycémie provoquée 4hres*/
+select 99 as test;
 	/*Migration for Glycemie Provoquée Fasting*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3217,7 +3317,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1438;
 		
-		
+select 100 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -3236,7 +3336,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3246,6 +3346,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1438
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*Migration for Glycemie Provoquée Fasting*/
+select 101 as test;
 	/*Start Migration for HCO3 (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -3259,6 +3360,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
 	AND l.labID=1433;
+select 102 as test;
 	 /*Migration for obsgroup*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 	SELECT DISTINCT e.patient_id,163602,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
@@ -3291,7 +3393,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3304,7 +3406,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND (l.result <> "" AND digits(l.result) >= 0);
 		
 	/*End migration for HCO3*/
-	
+	select 103 as test;
 	/*Start Migration for HDL (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -3318,6 +3420,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
 	AND l.labID=1424;
+	
+	select 104 as test;
 	 /*Migration for obsgroup*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 	SELECT DISTINCT e.patient_id,1010,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
@@ -3350,7 +3454,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3362,6 +3466,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1424
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*END Migration for HDL */
+select 105 as test;
 	/*Start migration for Hémoglobine glycolisee*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3394,7 +3499,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3405,7 +3510,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Hémoglobine glycolisee*/
 	/*Start migration for La porphyrineVLDL – cholesterol (calculée) (A verifier)*/
-	
+select 106 as test;	
 	/*End migration for La porphyrineVLDL – cholesterol (calculée)*/
 	/*Start migration for LDH*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
@@ -3420,7 +3525,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		and e.seqNum = l.seqNum
 		AND l.labID=1429;
 		
-		
+select 107 as test;		
 		/*concept*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 		creator,date_created,uuid)
@@ -3439,7 +3544,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3449,6 +3554,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1429
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for LDH*/
+select 108 as test;
 	/*Start migration for LDL (have oncept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -3494,7 +3600,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3506,6 +3612,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1425
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for LDL*/
+select 109 as test;
 	/*Starting migration for Lipase*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3545,7 +3652,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			WHEN (l.result LIKE LOWER ("AN%") OR l.result2 LIKE LOWER ("AN%") 
 		            OR l.result3 LIKE LOWER ("AN%") OR l.result4 LIKE LOWER ("AN%"))THEN 1116
 			ELSE null
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3563,6 +3670,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			(l.result4 <> "" OR l.result4 is not null)
 			);
 	/*End migration for Lipase*/
+select 110 as test;
 	/*Start Migration for Lithium=163592*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3595,7 +3703,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3605,6 +3713,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1413
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Lithium*/
+select 111 as test;
 	/*Start migration for magnésium*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3637,7 +3746,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3647,6 +3756,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1411
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for magnésium*/
+select 112 as test;
 	/*Start migration for MBG*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3679,7 +3789,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3689,6 +3799,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1427
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for MBG*/
+select 113 as test;
 	/*Start migration for O2 Saturation (have concept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -3734,7 +3845,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3746,6 +3857,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1434
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for O2 Saturation*/
+select 114 as test;
 	/*Start migration for PaCO2 (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -3791,7 +3903,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3803,6 +3915,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1432
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for PaCO2*/
+select 115 as test;
 	/*Start migration for PaO2 (have concept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -3848,7 +3961,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3860,6 +3973,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1435
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for PaO2*/
+select 116 as test;
 	/*Start migration for Ph*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3892,7 +4006,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3902,6 +4016,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1431
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Ph*/
+select 117 as test;
 	/*Start migration for Phosphatase Acide*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3934,7 +4049,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3944,6 +4059,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1400
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Phosphatase Acide*/
+select 118 as test;
 	/*Start migration for Phosphatase Alcaline*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -3976,7 +4092,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -3986,6 +4102,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1420
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Phosphatase Alcaline*/
+select 119 as test;
 	/*Start migration for Phosphore*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -4018,7 +4135,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4028,6 +4145,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1412
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Phosphore*/
+select 120 as test;
 	/*Start migration for Potassium (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4073,7 +4191,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4085,6 +4203,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1408
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Potassium*/
+select 121 as test;
 	/*Start migration for Proteines (have concept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4130,7 +4249,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4142,6 +4261,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1392
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Proteines*/
+select 122 as test;
 	/*Start migration for Protéines totales */
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -4174,7 +4294,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4184,6 +4304,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1459
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Protéines totales*/
+select 123 as test;
 	/*Start Migration for SGOT (AST) (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4229,7 +4350,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4241,6 +4362,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1450
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for SGOT (AST)*/
+select 124 as test;
 	/*Start migration for SGPT (ALT) (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4286,7 +4408,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4298,6 +4420,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1449
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for SGPT (ALT)*/
+select 125 as test;
 	/*Start migration for Sodium (have concept group)*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4343,7 +4466,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4355,6 +4478,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1407
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Sodium*/
+select 126 as test;
 	/*Start migration for Triglycéride (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4400,7 +4524,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4412,6 +4536,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1455
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Triglycéride*/
+select 127 as test;
 	/*Start migration for Triponine I*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -4444,7 +4569,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4454,6 +4579,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1430
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Triponine I*/
+select 128 as test;
 	/*Start migration for Urée (calculée) (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4499,7 +4625,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4511,6 +4637,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1447
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Urée (calculée)*/
+select 129 as test;
 	/*Start migration for VLDL (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4556,7 +4683,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4568,6 +4695,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1426
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for VLDL*/
+select 130 as test;
 	/*Start migration for α1 globuline*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -4600,7 +4728,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4610,6 +4738,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1396
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for α1 globuline*/
+select 131 as test;
 	/*Start migration for α2 globuline*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -4642,7 +4771,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4652,6 +4781,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1397
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for α2 globuline*/
+select 132 as test;
 	/*Start migration for β globuline*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -4684,7 +4814,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4694,6 +4824,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1398
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for β globuline*/
+select 133 as test;
 	/*Start Migration for ϒ globuline*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -4726,7 +4857,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4736,6 +4867,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1399
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for ϒ globuline*/
+select 134 as test;
 	/*Ending migration for Biochimie tests Part*/
 	/*Start Migration for Cytobacteriologie part*/
 		/*Start migration for Bacteries (Pour Femme)(have concept group)*/
@@ -4766,6 +4898,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result3 <> "" AND l.result3 is not null)
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
+select 135 as test;
 	/*Finding the last obs_group_id inserted */
 	TRUNCATE TABLE itech.obs_concept_group;
 	INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
@@ -4818,7 +4951,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4836,6 +4969,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Bacteries*/
+select 136 as test;
 		/*Start migration for Bacteries (Pour Homme)(have concept group)*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4916,7 +5050,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -4935,6 +5069,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	);
 		
 		/*End migration for Bacteries*/
+select 137 as test;
 		/*Start migration for Cellules Epitheliales*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -4994,7 +5129,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5008,7 +5143,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Cellules Epitheliales*/
-		
+select 138 as test;		
 		/*Start migration for Cholera Test rapide*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -5041,7 +5176,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result),l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5051,6 +5186,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1513
 		AND (l.result <> "" AND digits(l.result) >= 0);
 		/*End migration for Cholera Test rapide*/
+select 139 as test;
 		/*Start migration for Coloration de Gram*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -5088,7 +5224,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result2 <> "" AND l.result2 is not null) THEN l.result2
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5103,6 +5239,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			   OR (l.result4 <> "" AND l.result4 is not null)
 			);
 		/*End migration for Coloration de Gram*/
+select 139 as test;
 		/*Start migration Compte de spermes (have concept group)*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -5148,7 +5285,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5160,6 +5297,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1520
 	AND (l.result <> "" AND digits(l.result) >= 0);
 		/*End migration for Compte de spermes*/
+select 140 as test;
 		/*Start migration for Couleur (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -5186,6 +5324,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			   OR (l.result3 <> "" AND l.result3 is not null)
 			   OR (l.result4 <> "" AND l.result4 is not null)
 			);
+select 141 as test;
 	/*Finding the last obs_group_id inserted */
 	TRUNCATE TABLE itech.obs_concept_group;
 	INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
@@ -5226,7 +5365,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result3 like lower("JAUNE FONC%")) OR (l.result4 like lower("JAUNE FONC%"))) THEN 162098
 		WHEN ((l.result like lower("MARRON")) OR (l.result2 like lower("MARRON")) 
 		OR (l.result3 like lower("MARRON")) OR (l.result4 like lower("MARRON"))) THEN 162100
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5245,6 +5384,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	
    
 		/*End migration for Couleur*/
+select 142 as test;
 		/*Start migration for Filaments Myceliens*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -5303,7 +5443,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("3%") OR l.result4 like lower("TROIS%"))
 			  ) THEN 1364
 			  
-	END,l.resultRemarks,1,e.createDate, UUID()
+	END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5318,6 +5458,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			   OR (l.result4 <> "" AND l.result4 is not null)
 			);
 		/*End migration for Filaments Myceliens*/
+select 142 as test;
 		/*Start migration for Formes normales (have concept group)(a corriger dans eclipse)*/
 		 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -5363,7 +5504,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5375,7 +5516,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1521
 	AND (l.result <> "" AND digits(l.result) >= 0);
 		/*End migration for Formes anormales*/
-		
+select 143 as test;		
 		/*Start migration for Fructose (have concept group)*/
 		 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -5421,7 +5562,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5433,6 +5574,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1518
 	AND (l.result <> "" AND digits(l.result) >= 0);
 		/*End migration for Fructose*/
+select 144 as test;
 		/*Start migration for Globules Blancs (pour femmes) (have concept group)*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -5513,7 +5655,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5531,6 +5673,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Globules Blancs (pour femmes)*/
+select 145 as test;
 		/*Start migration for Globules Blancs (pour hommes) (have concept group)*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -5611,7 +5754,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5629,6 +5772,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Globules Blancs*/
+select 146 as test;
 		/*Start migration for Globules Rouges (pour femmes) (have concept group)*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -5709,7 +5853,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5727,6 +5871,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Globules Rouges (pour femmes)*/
+select 147 as test;
 		/*Start migration for Globules Rouges (pour hommes) (have concept group)*/
 		
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
@@ -5808,7 +5953,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5826,6 +5971,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Globules Rouges*/
+select 148 as test;
 		/*Start migration for KOH*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -5863,7 +6009,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result2 <> "" AND l.result2 is not null) THEN l.result2
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5878,6 +6024,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			   OR (l.result4 <> "" AND l.result4 is not null)
 			);
 		/*End migration for KOH*/
+select 149 as test;
 		/*Migration for Levures Bourgeonantes (have concept group) (pour femmes)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -5958,7 +6105,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -5977,7 +6124,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	);
 		
 		/*End Levures Bourgeonantes pour femmes*/
-		
+select 150 as test;		
 		/*Migration for Levures Bourgeonantes (have concept group) (pour hommes)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -6058,7 +6205,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6076,6 +6223,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End Levures Bourgeonantes pour hommes*/
+select 151 as test;
 		/*Migration for levures simples (pour femmes) (have concept group)*/
 			INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -6156,7 +6304,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6174,6 +6322,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*END migration for levures simples (pour femmes)*/
+select 152 as test;
 		/*Migration for levures simples (pour hommes)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -6254,7 +6403,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg, itech.patient p 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6272,6 +6421,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for levures simples (pour hommes)*/
+select 153 as test;
 		/*Starting migration for Liquefaction (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -6317,7 +6467,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6329,6 +6479,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1516
 	AND (l.result <> "" AND digits(l.result) >= 0);
 		/*End migration for Liquefaction*/
+select 154 as test;
 	/*Start migration for Motilite 1 heure*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -6362,7 +6513,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,l.result,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6372,6 +6523,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		AND l.labID=1524
 		AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Motilite 1 heure*/
+select 155 as test;
 	/*Start migration for ph*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 		creator,date_created,uuid)
@@ -6405,7 +6557,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,l.result,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result),left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l 
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6468,7 +6620,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1138
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6482,6 +6634,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 	/*End migration for Test de Rivalta*/
+select 156 as test;
 	/*Migration for Trichomonas hominis (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -6559,7 +6712,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6575,6 +6728,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 	/*END migration for Trichomonas hominis*/
+select 157 as test;
 	/*Start migration for Trichomonas vaginalis*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -6652,7 +6806,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1364
 			  
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6668,7 +6822,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 	/*End migration for Trichomonas vaginalis*/
-	
+select 158 as test;	
 	/*Start Migration for Volume (have concept group)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -6714,7 +6868,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6726,7 +6880,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND l.labID=1519
 	AND (l.result <> "" AND digits(l.result) >= 0);
 	/*End migration for Volume*/
-	
+select 159 as test;	
 	/*End Migration for Cytobacteriologie part*/
 	
 	/*Start migration for Bacteriologie Part*/
@@ -6786,7 +6940,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6802,6 +6956,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 	    /*End migration for Camp-test*/
+select 160 as test;
 		/*Start migration for Catalase*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -6858,7 +7013,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6874,6 +7029,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Catalase*/
+select 161 as test;
 		/*Start migration for Coagulase libre*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -6930,7 +7086,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -6946,7 +7102,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Coagulase libre*/
-		/*Start migration for Coloration à l’acridine orange*/
+select 162 as test;	
+	/*Start migration for Coloration à l’acridine orange*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1271,c.encounter_id,e.createDate,c.location_id,
@@ -7002,7 +7159,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7019,6 +7176,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	);
 		
 		/*End migration for Coloration à l’acridine orange*/
+select 163 as test;
 		/*Start migration for Coloration à l’auramine*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -7075,7 +7233,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7091,7 +7249,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Coloration à l’auramine*/
-		
+select 164 as test;		
 		/*Start Migration for Coloration de Gram*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -7148,7 +7306,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7164,7 +7322,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Coloration de Gram*/
-		
+select 165 as test;		
 		/*Start migration for Coloration de Kinyoun*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -7221,7 +7379,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7237,6 +7395,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 		/*End migration for Coloration de Kinyoun*/
+
+select 166 as test;
 		/*Start migration for Coloration de Ziehl-Neelsen (Correction imp)*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -7331,7 +7491,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("%CONTAMIN%"))
 			  ) THEN 160008
 			  END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7385,7 +7545,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7455,7 +7615,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7527,7 +7687,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7600,7 +7760,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7672,7 +7832,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7745,7 +7905,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7817,7 +7977,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7889,7 +8049,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -7977,7 +8137,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8049,7 +8209,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8111,7 +8271,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8181,7 +8341,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8254,7 +8414,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8336,7 +8496,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("TRACE"))
 			  ) THEN 1874
 			  END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8420,7 +8580,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("%TURBINE%"))
 			  ) THEN 162104
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8502,7 +8662,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8582,7 +8742,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("RARE%"))
 			  ) THEN 159416
 			  END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8679,7 +8839,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("4%") OR l.result4 like lower("QUATRE%") OR l.result4 like ("++++"))
 			  ) THEN 1365
 			  END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8760,7 +8920,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result3 like lower("JAUNE FONC%")) OR (l.result4 like lower("JAUNE FONC%"))) THEN 162098
 		WHEN ((l.result like lower("MARRON")) OR (l.result2 like lower("MARRON")) 
 		OR (l.result3 like lower("MARRON")) OR (l.result4 like lower("MARRON"))) THEN 162100
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8855,7 +9015,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result3 like lower("%CRISTAUX DE PHOSPHATE AMORPHES%")) OR (l.result4 like lower("%CRISTAUX DE PHOSPHATE AMORPHES%"))) THEN 722
 		WHEN ((l.result like lower("AUCUN")) OR (l.result2 like lower("AUCUN")) 
 		OR (l.result3 like lower("AUCUN")) OR (l.result4 like lower("AUCUN"))) THEN 1107
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -8942,7 +9102,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result3 like lower("%CIREUX%")) OR (l.result4 like lower("%CIREUX%"))) THEN 163694
 		WHEN ((l.result like lower("AUCUN")) OR (l.result2 like lower("AUCUN")) 
 		OR (l.result3 like lower("AUCUN")) OR (l.result4 like lower("AUCUN"))) THEN 1107
-		END,l.resultRemarks,1,e.createDate, UUID()
+		END,left(l.resultRemarks,255),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 		WHERE c.uuid = e.encGuid and 
 		e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9004,7 +9164,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9100,7 +9260,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("3%") OR l.result4 like lower("TROIS%") OR l.result4 like ("+++"))
 			  ) THEN 1364
 			  END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9161,7 +9321,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9245,7 +9405,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("AUCUN%"))
 			  ) THEN 1107
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9332,7 +9492,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9425,7 +9585,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("3%") OR l.result4 like lower("TROIS%") OR l.result4 like ("+++"))
 			  ) THEN 1364
 			  END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9512,7 +9672,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9529,8 +9689,9 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	);
 	
 	/*End migration for Nitrites*/
+
 	/*Start migration for pH*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
+/*	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1271,c.encounter_id,e.createDate,c.location_id,
 	161438,1,e.createDate,
@@ -9542,22 +9703,29 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
 	AND l.labID=1532;
+	*/
 	 /*Migration for obsgroup*/
-	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
+/*	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 	SELECT DISTINCT e.patient_id,161446,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
 	FROM itech.encounter c, encounter e, itech.labs l 
 	WHERE e.uuid = c.encGuid and c.patientID = l.patientID and c.seqNum = l.seqNum and 
 	c.sitecode = l.sitecode and DATE(e.encounter_datetime) = DATE_FORMAT(concat(l.visitDateYy,'-',l.visitDateMm,'-',l.visitDateDd),"%Y-%m-%d") AND 
-	l.labID=1532 and (l.result <> "" AND digits(l.result) >= 0);
+	l.labID=1532 and (l.result <> "" );
+	*/
+	select 180 as test;
+	
 	/*Finding the last obs_group_id inserted */
+/*
 	TRUNCATE TABLE itech.obs_concept_group;
 	INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
 	SELECT MAX(openmrs.obs.obs_id) as obs_id,openmrs.obs.person_id,openmrs.obs.concept_id,openmrs.obs.encounter_id
 	FROM openmrs.obs
 	WHERE openmrs.obs.concept_id=161446
 	GROUP BY openmrs.obs.person_id,encounter_id;
-   /*Answer*/
-    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
+*/ 
+ /*Answer*/
+/* 
+ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161438,c.encounter_id,
 	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
@@ -9574,7 +9742,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,FindNumericValue(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9584,9 +9752,10 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	AND c.encounter_id=cg.encounter_id
 	AND c.patient_id=cg.person_id
 	AND l.labID=1532
-	AND (l.result <> "" AND digits(l.result) >= 0);
-	
+	AND (l.result <> "");
+*/	
 	/*End migration for pH*/
+select 181 as test;
 	/*Start migration for Proteines*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -9600,7 +9769,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 	and e.seqNum = l.seqNum
 	AND l.labID=1533;
-	
+select 182 as test;	
 	/*Migration for obsgroup*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
 	SELECT DISTINCT e.patient_id,161446,e.encounter_id,e.encounter_datetime,e.location_id,1,e.date_created,UUID()
@@ -9613,6 +9782,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result3 <> "" AND l.result3 is not null)
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
+select 183 as test;
 	/*Finding the last obs_group_id inserted */
 	TRUNCATE TABLE itech.obs_concept_group;
 	INSERT INTO itech.obs_concept_group (obs_id,person_id,concept_id,encounter_id)
@@ -9676,7 +9846,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("4%") OR l.result4 like lower("QUATRE%") OR l.result4 like ("++++"))
 			  ) THEN 1365
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9692,7 +9862,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		OR (l.result4 <> "" AND l.result4 is not null)
 	);
 	/*End migration for Proteines*/
-	
+select 184 as test;	
 	/*Start migration for Sang*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
 	creator,date_created,uuid)
@@ -9770,7 +9940,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("3%") OR l.result4 like lower("TROIS%") OR l.result4 like ("+++"))
 			  ) THEN 1364
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9863,7 +10033,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("3%") OR l.result4 like lower("TROIS%") OR l.result4 like ("+++"))
 			  ) THEN 1364
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -9956,7 +10126,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("ELEVE%"))
 			  ) THEN 1107
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10035,7 +10205,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("TRACE%"))
 			  ) THEN 1874
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10098,7 +10268,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("%URINE PAS CLAIR%"))
 			  ) THEN 162103
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10150,7 +10320,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10229,7 +10399,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 			  ) THEN 1077
 		ELSE 5622
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10281,7 +10451,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10341,7 +10511,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("% LARVE%"))
 			  ) THEN 137504
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10419,7 +10589,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("4%") OR l.result4 like lower("QUATRE%") OR l.result4 like ("++++"))
 			  ) THEN 1365
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10484,7 +10654,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10549,7 +10719,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("%MANSONELLA%"))
 			  ) THEN 114412
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10601,7 +10771,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10666,7 +10836,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10729,7 +10899,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10800,7 +10970,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("ECHANTILLON DE PAUVRE%"))
 			  ) THEN 1304
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10872,7 +11042,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("ECHANTILLON DE PAUVRE%"))
 			  ) THEN 1304
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -10944,7 +11114,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("ECHANTILLON DE PAUVRE%"))
 			  ) THEN 1304
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11016,7 +11186,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("ECHANTILLON DE PAUVRE%"))
 			  ) THEN 1304
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11101,7 +11271,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("%CONTAMINE%"))
 			  ) THEN 160008
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11180,7 +11350,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("NON REACTI%") OR l.result4 like lower("NON-REACTI%"))
 			  ) THEN 1229
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11241,7 +11411,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,cg.obs_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11291,7 +11461,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11361,7 +11531,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11406,7 +11576,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11448,7 +11618,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11489,7 +11659,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11530,7 +11700,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11571,7 +11741,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11612,7 +11782,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11653,7 +11823,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
 	ELSE
 		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	END,c.location_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11681,21 +11851,8 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,45,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,
+	c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -11721,7 +11878,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("ECHANTILLON DE PAUVRE%"))
 			  ) THEN 1304
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11753,21 +11910,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161505,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11796,21 +11939,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161466,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -11842,7 +11971,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like ("4%") OR l.result4 like lower("QUATRE%") OR l.result4 like ("++++"))
 			  ) THEN 1365
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11889,21 +12018,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161469,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,cg.obs_id,digits(l.result) as resultat,left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg 
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11932,21 +12047,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163618,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -11960,7 +12061,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -11991,21 +12092,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163619,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12019,7 +12106,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12050,21 +12137,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163612,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12078,7 +12151,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12110,21 +12183,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161527,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12144,7 +12203,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12176,21 +12235,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161526,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12210,7 +12255,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(left(l.resultRemarks,255),255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12242,21 +12287,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161500,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12284,27 +12315,13 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163613,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (l.result <> "" AND l.result is not null) THEN l.result
 		WHEN (l.result2 <> "" AND l.result2 is not null) THEN l.result2	
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12335,21 +12352,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163617,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12363,7 +12366,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12394,21 +12397,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163616,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12422,7 +12411,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12453,21 +12442,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163620,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12481,7 +12456,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12513,21 +12488,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,908,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12553,7 +12514,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("%EQUIVOQUE%"))
 			  ) THEN 1300
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12584,21 +12545,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163627,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12612,7 +12559,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12644,21 +12591,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163615,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12678,7 +12611,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12710,21 +12643,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163614,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12738,7 +12657,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12770,21 +12689,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1619,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12804,7 +12709,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("INCONNU%"))
 			  ) THEN 1067
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12835,21 +12740,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163626,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -12863,7 +12754,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -12894,21 +12785,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1031,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("<1:2"))
 				OR (l.result2 like lower("<1:2"))
@@ -12976,7 +12853,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower(">1:572"))
 			  ) THEN 163624
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13007,21 +12884,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,306,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("REACTI%"))
 				OR (l.result2 like lower("REACTI%"))
@@ -13035,7 +12898,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("NON REACTI%"))
 			  ) THEN 1229
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13066,21 +12929,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161523,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -13100,7 +12949,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13131,21 +12980,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,161522,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -13165,7 +13000,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("IND%"))
 			  ) THEN 1138
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13220,21 +13055,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1040,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,cg.obs_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -13248,7 +13069,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13282,21 +13103,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,1326,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -13310,7 +13117,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 703
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13349,21 +13156,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,160913,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,digits(l.result) as resultat,l.resultRemarks,1,e.createDate, UUID()
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,digits(l.result) as resultat,left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13392,27 +13185,13 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,856,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (digits(l.result) > 0) THEN digits(l.result)
 		WHEN (digits(l.result2) > 0) THEN digits(l.result2)
 		WHEN (digits(l.result3) > 0) THEN digits(l.result3)
 		WHEN (digits(l.result4) > 0) THEN digits(l.result4)
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13447,21 +13226,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,844,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (
 				(l.result like lower("NEG%"))
 				OR (l.result2 like lower("NEG%"))
@@ -13475,7 +13240,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("POS%"))
 			  ) THEN 1301
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13527,21 +13292,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,159984,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,cg.obs_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,cg.obs_id,
 	CASE WHEN (
 				(l.result like lower("RESISTANTES AUX MEDICAMENTS ANTI-TUBERCULOSE%"))
 				OR (l.result2 like lower("RESISTANTES AUX MEDICAMENTS ANTI-TUBERCULOSE%"))
@@ -13573,7 +13324,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
 				OR (l.result4 like lower("INVALID%"))
 			  ) THEN 163611
 		END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l, itech.obs_concept_group cg
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13608,27 +13359,13 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
     INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,comments,
 	creator,date_created,uuid)
 	SELECT DISTINCT c.patient_id,163610,c.encounter_id,
-	CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-			AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-			AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-			THEN e.createDate
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-		AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-		AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-		THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-	    AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-		AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-	THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
-	ELSE
-		DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
-	END,c.location_id,
+	ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
 	CASE WHEN (l.result <> "" AND l.result is not null) THEN l.result
 		WHEN (l.result2 <> "" AND l.result2 is not null) THEN l.result2	
 		WHEN (l.result3 <> "" AND l.result3 is not null) THEN l.result3
 		WHEN (l.result4 <> "" AND l.result4 is not null) THEN l.result4
 	END,
-	l.resultRemarks,1,e.createDate, UUID()
+	left(l.resultRemarks,255),1,e.createDate, UUID()
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
@@ -13701,21 +13438,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
    INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
  creator,date_created,uuid)
  SELECT DISTINCT c.patient_id,1305,c.encounter_id,
- CASE WHEN ((FindNumericValue(l.resultDateYy)<1 OR FindNumericValue(l.resultDateYy) is null)
-   AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-   AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
-   THEN e.createDate
- WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null) 
-  AND (FindNumericValue(l.resultDateMm) < 1 OR FindNumericValue(l.resultDateMm) is null)
-  AND (FindNumericValue(l.resultDateDd) > 0 AND FindNumericValue(l.resultDateDd) is not null)) 
-  THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",01,"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
- WHEN((FindNumericValue(l.resultDateYy)>0 AND FindNumericValue(l.resultDateYy) is not null)
-     AND (FindNumericValue(l.resultDateMm) > 0 AND FindNumericValue(l.resultDateMm) is not null)
-  AND (FindNumericValue(l.resultDateDd) < 1) OR FindNumericValue(l.resultDateDd) is null) 
- THEN DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",01),"%Y-%m-%d")
- ELSE
-  DATE_FORMAT(concat(FindNumericValue(l.resultDateYy),"-",FindNumericValue(l.resultDateMm),"-",FindNumericValue(l.resultDateDd)),"%Y-%m-%d")
- END,c.location_id,
+ ifnull(formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),e.createDate) as obs_datetime,c.location_id,
  CASE WHEN (
     (l.result like lower("D%"))
     OR (l.result2 like lower("D%"))
@@ -13729,7 +13452,7 @@ create table if not exists itech.obs_concept_group (obs_id int,person_id int,con
     OR (l.result4 like lower("I%"))
      ) THEN 1306
   END,
- l.resultRemarks,1,e.createDate, UUID()
+ left(l.resultRemarks,255),1,e.createDate, UUID()
  from encounter c, itech.encounter e, itech.labs l
  WHERE c.uuid = e.encGuid and 
  e.patientID = l.patientID and e.siteCode = l.siteCode 
