@@ -51,13 +51,13 @@ createProcedure ssp_migration_pediatric.sql
 echo "procedure ssp_migration_pediatric created"  >> $HOME/migration-script/migrationLog.txt
 
 createProcedure travail_et_accouchement_migration.sql
-echo "procedure travail_et_accouchement_migration created"  >> $HOME/migration/migrationLog.txt
+echo "procedure travail_et_accouchement_migration created"  >> $HOME/migration-script/migrationLog.txt
 
 createProcedure obgynMigration.sql
 echo "procedure obgynMigration created"  >> $HOME/migration-script/migrationLog.txt 
 
 createProcedure home_visit_migration.sql
-echo "procedure homeVisitMigration created"  >> $HOME/migration/migrationLog.txt 
+echo "procedure homeVisitMigration created"  >> $HOME/migration-script/migrationLog.txt 
 
 createProcedure vaccination.sql
 echo "procedure vaccination created"  >> $HOME/migration-script/migrationLog.txt 
