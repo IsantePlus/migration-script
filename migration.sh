@@ -62,6 +62,9 @@ echo "procedure homeVisitMigration created"  >> $HOME/migration-script/migration
 createProcedure vaccination.sql
 echo "procedure vaccination created"  >> $HOME/migration-script/migrationLog.txt 
 
+createProcedure validation.sql
+echo "procedure validation created"  >> $HOME/migration-script/migrationLog.txt 
+
 
 createProcedure migrationIsante.sql
 echo "procedure migrationIsante created"  >> $HOME/migration-script/migrationLog.txt 
@@ -71,7 +74,13 @@ mysql -u root -pwahbahphoeth -D openmrs -e 'call migrationIsante();'  >> $HOME/m
 
 mysql -u root -pwahbahphoeth -D openmrs -e 'select * from migration_log;'  >> $HOME/migration-script/migrationLog.txt
 
+
+echo "Lunch validation process"  >> $HOME/migration-script/migrationLog.txt 
+mysql -u root -pwahbahphoeth -D openmrs -e 'call validation();'  >> $HOME/migration-script/migrationLog.txt
+
 echo "Ending migration process" 
+
+
 
 
 
