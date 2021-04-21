@@ -23,7 +23,7 @@ SET SQL_SAFE_UPDATES = 0;
 		concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd) 
 		and e.seqNum = l.seqNum
 		AND l.labID=150
-		AND l.result IN(1,2,4,8,16);
+		AND digits(l.result) IN(1,2,4,8,16);
 		/*Autre Precisez*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,comments,
 	creator,date_created,uuid)

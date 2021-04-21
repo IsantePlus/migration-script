@@ -19,7 +19,7 @@ where e.encounter_type=ec.encounter_type_id group by 1;
 
 select count(*) as visitOpenmrs from openmrs.visit;
 
-select count(distinct patientID) as patient,count (visitDate) as visitIsante from 
+select count(distinct patientID) as patient,count(visitDate) as visitIsante from 
 (select distinct patientID,visitDate from itech.encounter) A group by 1;
 /* drugs */
 
@@ -47,3 +47,4 @@ e.encounter_type in
   where uuid in ('f037e97b-471e-4898-a07c-b8e169e0ddc4'));
 
 end;
+
