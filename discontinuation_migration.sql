@@ -298,7 +298,7 @@ BEGIN
 			from encounter c, itech.encounter e, itech.discEnrollment de
 			WHERE c.uuid = e.encGuid and 
 			e.patientID = de.patientID and e.siteCode = de.siteCode 
-			and DATE_FORMAT(concat(e.visitdateYy,'-',e.visitDateMm,'-',e.visitDateDd),"%Y-%m-%d") = DATE_FORMAT(concat(de.visitdateYy,'-',de.visitDateMm,'-',de.visitDateDd),"%Y-%m-%d") 
+			and formatDate(e.visitdateYy,e.visitDateMm,e.visitDateDd) = formatDate(de.visitdateYy,de.visitDateMm,de.visitDateDd)
 			and e.seqNum = de.seqNum
 			AND de.seroreversion = 1;
 		/*END migration for Séroréversion*/
@@ -331,7 +331,7 @@ BEGIN
 	from encounter c, itech.encounter e, itech.labs l
 	WHERE c.uuid = e.encGuid and 
 	e.patientID = l.patientID and e.siteCode = l.siteCode 
-	and concat(e.visitDateYy,'-',e.visitDateMm,'-',e.visitDateDd) = concat(l.visitdateYy,'-',l.visitDateMm,'-',l.visitDateDd)
+	and formatDate(e.visitDateYy,e.visitDateMm,e.visitDateDd) = formatDate(l.visitdateYy,l.visitDateMm,l.visitDateDd)
 	and e.seqNum = l.seqNum
 	AND l.labID=137
 	AND l.result3='chest'
