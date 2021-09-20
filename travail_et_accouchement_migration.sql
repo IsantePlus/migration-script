@@ -2284,7 +2284,9 @@ SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location
 from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
-	AND ito.encounter_id = itob.encounter_id and og.person_id=c.patient_id and c.encounter_id=og.encounter_id
+	AND ito.encounter_id = itob.encounter_id and 
+	og.person_id=c.patient_id and 
+	c.encounter_id=og.encounter_id
 	AND ito.concept_id=70537 
 	AND itob.concept_id=70545 
 	AND FindNumericValue(ito.value_text) > 0;
@@ -2473,7 +2475,9 @@ AND ito.concept_id IN (70559);
 /*Start migration for TA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,obs_group_id,creator,date_created,uuid)
 SELECT DISTINCT c.patient_id,5085,c.encounter_id,c.encounter_datetime,c.location_id,
-      CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text) ELSE (FindNumericValue(ito.value_text) * 0.09) END,og.obs_id,1,e.createDate, UUID()
+      CASE WHEN itob.value_numeric=1 THEN FindNumericValue(ito.value_text) 
+	       ELSE (FindNumericValue(ito.value_text) * 0.09) END,
+	  og.obs_id,1,e.createDate, UUID()
 from encounter c, itech.encounter e, itech.obs ito, itech.obs itob ,itech.obs_concept_group og
 WHERE c.uuid = e.encGuid  and e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id

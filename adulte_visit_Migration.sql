@@ -31,7 +31,10 @@ CASE WHEN v.vitalTempUnits=2 THEN ROUND((substring_index(replace(v.vitalTemp,','
 ELSE ROUND(substring_index(replace(v.vitalTemp,',','.'),'.',2)+0,2) END,1,c.date_created,UUID()
 from encounter c, itech.encounter e, itech.vitals v 
 WHERE c.uuid = e.encGuid and 
-e.patientID = v.patientID and e.sitecode = v.sitecode and concat(e.visitDateYy,'-',e.visitDateMm,'-',e.visitDateDd) = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) and e.seqNum = v.seqNum AND 
+e.patientID = v.patientID and 
+e.sitecode = v.sitecode and 
+concat(e.visitDateYy,'-',e.visitDateMm,'-',e.visitDateDd) = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) and 
+e.seqNum = v.seqNum AND 
 (substring_index(replace(v.vitalTemp,',','.'),'.',2)+0 > 0 AND vitalTempUnits IS NOT NULL);
 
 select 4 as vital1;
@@ -42,8 +45,9 @@ CASE WHEN v.vitalBPUnits=1 THEN substring_index(replace(digits(v.vitalBp1)+0,','
 WHEN v.vitalBPUnits=2 THEN substring_index(replace(digits(v.vitalBp1)+0,',','.'),'.',2) END,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and
-c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-substring_index(replace(v.vitalBp1,',','.'),'.',2) REGEXP '^[0-9\.]+$' and v.vitalBp1 IS NOT NULL AND v.vitalBp2 <> '';
+v.seqNum=c.seqNum and c.sitecode = v.sitecode and
+date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+substring_index(replace(v.vitalBp1,',','.'),'.',2) REGEXP '^[0-9\.]+$' and v.vitalBp1 IS NOT NULL AND v.vitalBp1 <> '';
 
 select 5 as vital10;
 
@@ -53,7 +57,8 @@ CASE WHEN v.vitalBPUnits=1 THEN substring_index(replace(digits(v.vitalBp2),',','
 WHEN v.vitalBPUnits=2 THEN substring_index(replace(digits(v.vitalBp2),',','.'),'.',2) END,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and
-c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
+c.sitecode = v.sitecode and v.seqNum=c.seqNum and
+date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
 substring_index(replace(v.vitalBp2,',','.'),'.',2) REGEXP '^[0-9\.]+$' and v.vitalBp2 IS NOT NULL AND v.vitalBp2 <> '';
 
 select 5 as vital10;
@@ -61,8 +66,11 @@ select 5 as vital10;
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,5087,e.encounter_id,e.encounter_datetime,e.location_id,digits(v.vitalHr),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
-WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
-c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd)
+WHERE e.uuid = c.encGuid and 
+c.patientID = v.patientID and 
+c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and 
+date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd)
 AND v.vitalHr<>'';
 select 5 as vital11;
 
@@ -70,8 +78,11 @@ select 5 as vital11;
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,5242,e.encounter_id,e.encounter_datetime,e.location_id,digits(v.vitalRr),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
-WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
-c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd)
+WHERE e.uuid = c.encGuid and 
+c.patientID = v.patientID and 
+c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and 
+date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd)
 AND v.vitalRr<>'';
 
 select 5 as vital12;
@@ -84,7 +95,9 @@ WHEN digits(v.vitalHeightCm)>0 and digits(vitalHeight)=0  THEN digits(v.vitalHei
 ELSE NULL
 END,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
-WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+WHERE e.uuid = c.encGuid and 
+c.patientID = v.patientID and 
+c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
 (digits(v.vitalHeight)>0 OR digits(v.vitalHeightCm)>0);
 select 5 as vital13;
@@ -97,7 +110,9 @@ WHEN v.vitalWeightUnits=2  THEN digits(v.vitalWeight)/2.2046
 ELSE NULL
 END,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
-WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+WHERE e.uuid = c.encGuid and 
+c.patientID = v.patientID and 
+c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
 digits(v.vitalWeight)>0 and v.vitalWeightUnits in (1,2);
 
@@ -268,10 +283,8 @@ v.functionalStatus>0;
  
  /*PLANNING FAMILIAL*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,374,e.encounter_id,e.encounter_datetime,e.location_id,
-CASE WHEN v.famPlan=1 THEN 965
-     WHEN v.famPlan=2 THEN 160652
-     ELSE NULL END,1,e.date_created,UUID()
+SELECT DISTINCT e.patient_id,965,e.encounter_id,e.encounter_datetime,e.location_id,
+ v.famPlan,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -481,7 +494,9 @@ case when o.value_numeric=1 then 1115
 	 when o.value_numeric=4 then 1067
 	 else null end ,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.obs o
-WHERE e.uuid = c.encGuid and c.encounter_id=o.encounter_id  and  o.value_numeric in (1,2,4) and 
+WHERE e.uuid = c.encGuid and 
+c.encounter_id=o.encounter_id  and  
+o.value_numeric in (1,2,4) and 
 c.sitecode = o.location_id and o.concept_id=70029;
 	
 	/*END OF ANTECEDENTS OBSTETRIQUES ET GROSSESSE MENU*/

@@ -382,3 +382,5 @@ FROM itech.encounter c, encounter e
 WHERE e.uuid = c.encGuid ;
 
 END$$
+
+

@@ -873,8 +873,9 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') =
 FindNumericValue(v.pregnantLmpYy)>0;
 
 /*Grossesse*/
+/*
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1434,e.encounter_id,e.encounter_datetime,e.location_id,
+SELECT DISTINCT e.patient_id,5272,e.encounter_id,e.encounter_datetime,e.location_id,
 	CASE WHEN v.pregnant=1 THEN 1065
 	     WHEN v.pregnant=2 THEN 1066
 		 WHEN v.pregnant=4 THEN 1067
@@ -885,6 +886,7 @@ WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum a
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
 v.pregnant in (1,2,4);
 
+*/
 /*Si Oui, suivie en clinique prénatale?*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1622,e.encounter_id,e.encounter_datetime,e.location_id,

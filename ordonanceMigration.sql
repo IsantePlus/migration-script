@@ -424,9 +424,7 @@ v.drugID=10;
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
 ifnull(formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd),e.encounter_datetime),e.location_id,og.obs_id,
-case when v.dispensed=1 then 1
-	 else null
-end ,1,e.date_created,UUID()
+1 ,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_group og
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
