@@ -5,7 +5,7 @@ CREATE PROCEDURE validation()
 BEGIN
 
 select count(distinct patient_id) as patientOpenmrs from openmrs.patient;
-select count(distinct patientID) as patientIsante  from itech.patient where patStatus<255;
+select count(distinct patientID) as patientIsante  from itech.patient where patStatus=0;
 
 
 select ec.frName as formIsante,count(e.encounter_id) as form 
@@ -20,7 +20,7 @@ where e.encounter_type=ec.encounter_type_id group by 1;
 select count(*) as visitOpenmrs from openmrs.visit;
 
 select count(distinct patientID) as patient,count(visitDate) as visitIsante from 
-(select distinct patientID,visitDate from itech.encounter) A group by 1;
+(select distinct patientID,visitDate from itech.encounter) A ;
 /* drugs */
 
 select count(distinct patientId) as patient,count(distinct drugID) as drugIsante from itech.prescriptions;

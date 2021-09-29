@@ -50,8 +50,9 @@ CASE WHEN ageYears is not null then 1 ELSE 0 END,
 CASE WHEN date(deathDt) <> "0000-00-00" then 1 ELSE 0 END,
 CASE WHEN date(deathDt) = "0000-00-00" then NULL ELSE deathDt END, 
 1,e.visitDate, patGuid 
-FROM itech.patient p,itech.encounter e
-where p.location_id > 0 and p.patStatus=0 and p.patientID=e.patientID and e.encounterType in (10,15) ON DUPLICATE KEY UPDATE
+FROM itech.patient p,
+(select patientID,min(visitDate) as visitDate from itech.encounter e group by 1) e
+where p.location_id > 0 and p.patStatus=0 and p.patientID=e.patientID ON DUPLICATE KEY UPDATE
 gender=VALUES(gender),
 birthdate=VALUES(birthdate),
 birthdate_estimated=VALUES(birthdate_estimated),
