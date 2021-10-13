@@ -4,7 +4,7 @@ use itech;
 update itech.encounter set visitDateDd=31 where visitDateMm in (1,3,5,7,8,10,12) and visitDateDd>31;
 update itech.encounter set visitDateDd=30 where visitDateMm in (4,6,9,11) and visitDateDd>30;
 update itech.encounter set visitDateDd=28 where visitDateMm in (2) and visitDateDd>29;
-update itech.encounter e set createDate=concat(e.visitDateYy,'-',e.visitDateMm,'-',e.visitDateDd) where createDate is null or createDate=''; 
+update itech.encounter e set createDate=date(concat(e.visitDateYy,'-',e.visitDateMm,'-',trim(e.visitDateDd))) where createDate is null or createDate=''; 
 update itech.encounter set lastModified=createDate where lastModified is null or lastModified='' or lastModified like '%0000%'; 
 
 ALTER TABLE encounter  DROP INDEX encounterINDEX; 
@@ -105,7 +105,7 @@ insert into itech.encounter(siteCode,patientID,visitDateDd,visitDateMm,visitDate
 select siteCode,patientID,day(visitDate),month(visitDate),DATE_FORMAT(visitdate,'%y'),visitDate,35,0,0,dbSite,'admin','admin',visitDate,visitDate,uuid()
 from 
 (select siteCode,i.dbSite,i.patientID,
-min(date_format(date(concat(visitDateYy,'-',visitDateMm,'-',visitDateDd)),'%y-%m-%d')) as visitDate
+min(formatDate(visitDateYy,visitDateMm,visitDateDd)) as visitDate
 from itech.immunizations i,itech.patient p 
 where p.patientID=i.patientID
 group by 1,2,3) it;
@@ -137,12 +137,12 @@ where o.person_id=right(e.patientID,length(e.patientID)-5) and
 /* Visit Migration */
 INSERT INTO visit (patient_id, visit_type_id, date_started, date_stopped, location_id, creator, date_created, uuid)
 SELECT DISTINCT p.person_id,vvisit_type_id,
-date_format(date(concat(e.visitDateYy,'-',e.visitDateMm,'-',e.visitDateDd)),'%y-%m-%d'),
-date_format(date(concat(e.visitDateYy,'-',e.visitDateMm,'-',e.visitDateDd)),'%y-%m-%d'), 
+formatDate(visitDateYy,visitDateMm,visitDateDd),
+formatDate(visitDateYy,visitDateMm,visitDateDd), 
 l.location_id,1, e.lastModified, UUID()
 FROM person p, itech.patient it, itech.encounter e,itech.location_mapping l
 WHERE p.uuid = it.patGuid AND it.patientid = e.patientid AND l.siteCode=e.siteCode AND e.encStatus<255 AND
-e.encounterType in (1,2,3,4,5,6,7,12,14,16,17,18,19,20,21,24,25,26,27,28,29,31,32);
+e.encounterType in (1,2,3,4,5,6,7,12,14,16,17,18,19,20,21,24,25,26,27,28,29,31,32,35);
 
 select 1 as visit;
 

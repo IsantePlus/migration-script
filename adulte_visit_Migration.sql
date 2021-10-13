@@ -210,7 +210,7 @@ transferOnArv in (1,2);
 	   /*Migration for Date du premier test (anticorps) VIH positif*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,160082,e.encounter_id,e.encounter_datetime,e.location_id,
-formatDate(v.firstTestYy,v.firstTestMm,v.firstTestDd),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.firstTestYy),FindNumericValue(v.firstTestMm),FindNumericValue(v.firstTestDd)),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -244,17 +244,17 @@ v.firstTestOtherFac=1;
 /* Date du test de répétition dans cet établissement */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,(select concept_id from concept where uuid='b8bdec55-6b04-4750-958c-e09eed84a2f8') ,e.encounter_id,e.encounter_datetime,e.location_id,
-	formatDate(v.repeatTestYy,v.repeatTestMm,'01'),1,e.date_created,UUID()
+	formatDate(FindNumericValue(v.repeatTestYy),FindNumericValue(v.repeatTestMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.repeatTestYy>1;	
+FindNumericValue(v.repeatTestYy)>1;	
 
 /* Résultats reçus par le patient ? */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,164848 ,e.encounter_id,e.encounter_datetime,e.location_id,
-	case when ifnull(v.firstTestResultsReceived,0)=1 then 1065
-	     when ifnull(v.firstTestResultsReceived,0)=2 then 1066
+	case when ifnull(FindNumericValue(v.firstTestResultsReceived),0)=1 then 1065
+	     when ifnull(FindNumericValue(v.firstTestResultsReceived),0)=2 then 1066
     end,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.vitals v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 

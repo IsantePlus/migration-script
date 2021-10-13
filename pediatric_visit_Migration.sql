@@ -247,7 +247,7 @@ FROM itech.encounter c, encounter e, itech.pedHistory v ,itech.obs_concept_group
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-digits(v.pedMotherHistGrosDeadAge1>0);
+digits(v.pedMotherHistGrosDeadAge1)>0;
 /*----------------------------------------------------------------*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,163527,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
@@ -258,7 +258,7 @@ FROM itech.encounter c, encounter e, itech.pedHistory v ,itech.obs_concept_group
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-digits(v.pedMotherHistGrosDeadAge2>0);
+digits(v.pedMotherHistGrosDeadAge2)>0;
 /*----------------------------------------------------------------*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,163527,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
@@ -269,7 +269,7 @@ FROM itech.encounter c, encounter e, itech.pedHistory v ,itech.obs_concept_group
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-digits(v.pedMotherHistGrosDeadAge3>0);
+digits(v.pedMotherHistGrosDeadAge3)>0;
 
 
 select 1 as Age; 
@@ -309,7 +309,7 @@ FROM itech.encounter c, encounter e, itech.pedHistory v ,itech.obs_concept_group
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-(v.pedMotherHistGrosDeadCause3<>'');
+(v.pedMotherHistGrosDeadCause3)<>'';
 
 select 1 as Cause3; 
 

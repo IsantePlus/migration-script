@@ -144,7 +144,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=1 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=1 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
 		 
  /* Posologie alternative  */
@@ -281,7 +281,7 @@ v.drugID=8;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-ifnull(formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd),e.encounter_datetime),e.location_id,og.obs_id,
+ifnull(formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)),e.encounter_datetime),e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
 end ,1,e.date_created,UUID()
@@ -289,7 +289,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=8 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=8 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -429,7 +429,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=10 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=10 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -571,7 +571,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=12 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null);
+v.drugID=12 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null);
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -715,7 +715,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=20 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=20 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -851,7 +851,7 @@ v.drugID=29;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then date_format(concat(v.dispDateYy,'-',v.dispDateMm,'-',v.dispDateDd),'%Y-%m-%d')
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) 
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -860,7 +860,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=29 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=29 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1001,7 +1001,7 @@ v.drugID=31;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when FindNumericValue(v.dispDateDd)>0 and FindNumericValue(dispDateMm)>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when FindNumericValue(v.dispDateDd)>0 and FindNumericValue(dispDateMm)>0 and FindNumericValue(dispDateYy)>0 then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1010,7 +1010,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=31 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=31 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
 select 74 as test74;
  /* Posologie alternative  */
@@ -1149,7 +1149,7 @@ v.drugID=33;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when FindNumericValue(v.dispDateDd)>0 and FindNumericValue(dispDateMm)>0 and FindNumericValue(dispDateYy)>0 then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when FindNumericValue(v.dispDateDd)>0 and FindNumericValue(dispDateMm)>0 and FindNumericValue(dispDateYy)>0 then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1158,7 +1158,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=33 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=33 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1293,7 +1293,7 @@ v.drugID=34;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1302,7 +1302,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=34 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=34 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1437,7 +1437,7 @@ v.drugID=11;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1446,7 +1446,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=11 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=11 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1582,7 +1582,7 @@ v.drugID=23;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1591,7 +1591,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=23 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null);
+v.drugID=23 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null);
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1727,7 +1727,7 @@ v.drugID=5;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1736,7 +1736,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=5 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null);
+v.drugID=5 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null);
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -1872,7 +1872,7 @@ v.drugID=6;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -1881,7 +1881,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=6 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=6 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2015,7 +2015,7 @@ v.drugID=16;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2024,7 +2024,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=16 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=16 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2161,7 +2161,7 @@ v.drugID=21;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2170,7 +2170,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=21 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null);
+v.drugID=21 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null);
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2307,7 +2307,7 @@ v.drugID=88;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2316,7 +2316,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=88 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null);
+v.drugID=88 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null);
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2452,7 +2452,7 @@ v.drugID=87;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2461,7 +2461,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=87 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=87 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2577,7 +2577,7 @@ v.drugID=36;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2586,7 +2586,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=36 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=36 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2703,7 +2703,7 @@ v.drugID=37;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2712,7 +2712,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=37 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=37 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2828,7 +2828,7 @@ v.drugID=82;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2837,7 +2837,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=82 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=82 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -2955,7 +2955,7 @@ v.drugID=80;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -2964,7 +2964,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=80 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=80 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -3081,7 +3081,7 @@ v.drugID=81;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3090,7 +3090,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=81 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=81 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -3209,7 +3209,7 @@ v.drugID=55;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3218,7 +3218,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=55 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=55 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -3337,7 +3337,7 @@ v.drugID=42;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3346,7 +3346,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=42 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=42 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -3465,7 +3465,7 @@ v.drugID=56;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3474,7 +3474,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=56 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=56 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -3593,7 +3593,7 @@ v.drugID=57;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3602,7 +3602,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=57 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=57 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -3736,7 +3736,7 @@ v.drugID=9;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3745,7 +3745,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=9 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=9 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -3864,7 +3864,7 @@ v.drugID=43;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -3873,7 +3873,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=43 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=43 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -3992,7 +3992,7 @@ v.drugID=44;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4001,7 +4001,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=44 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=44 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -4122,7 +4122,7 @@ v.drugID=79;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4131,7 +4131,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=79 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=79 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -4251,7 +4251,7 @@ v.drugID=84;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4260,7 +4260,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=84 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=84 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -4381,7 +4381,7 @@ v.drugID=58;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4390,7 +4390,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=58 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=58 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -4510,7 +4510,7 @@ v.drugID=14;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4519,7 +4519,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=14 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=14 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -4639,7 +4639,7 @@ v.drugID=59;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4648,7 +4648,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=59 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=59 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -4770,7 +4770,7 @@ v.drugID=19;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4779,7 +4779,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=19 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=19 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -4900,7 +4900,7 @@ v.drugID=45;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -4909,7 +4909,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=45 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=45 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -5033,7 +5033,7 @@ v.drugID=46;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5042,7 +5042,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=46 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=46 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -5164,7 +5164,7 @@ v.drugID=60;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5173,7 +5173,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=60 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=60 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -5293,7 +5293,7 @@ v.drugID=64;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5302,7 +5302,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=64 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=64 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -5423,7 +5423,7 @@ v.drugID=85;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5432,7 +5432,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=85 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=85 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -5554,7 +5554,7 @@ v.drugID=61;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5563,7 +5563,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=61 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=61 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -5683,7 +5683,7 @@ v.drugID=62;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5692,7 +5692,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=62 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=62 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -5813,7 +5813,7 @@ v.drugID=63;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5822,7 +5822,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=63 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=63 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -5942,7 +5942,7 @@ v.drugID=13;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -5951,7 +5951,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=13 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=13 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -6088,7 +6088,7 @@ v.drugID=18;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6097,7 +6097,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=18 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=18 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -6216,7 +6216,7 @@ v.drugID=24;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6225,7 +6225,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=24 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=24 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -6346,7 +6346,7 @@ v.drugID=25;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6355,7 +6355,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=25 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=25 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -6476,7 +6476,7 @@ v.drugID=30;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6485,7 +6485,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=30 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=30 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -6607,7 +6607,7 @@ v.drugID=48;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6616,7 +6616,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=48 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=48 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -6737,7 +6737,7 @@ v.drugID=47;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6746,7 +6746,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=47 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=47 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -6867,7 +6867,7 @@ v.drugID=49;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -6876,7 +6876,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=49 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=49 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -7000,7 +7000,7 @@ v.drugID=50;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7009,7 +7009,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=50 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=50 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -7129,7 +7129,7 @@ v.drugID=65;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7138,7 +7138,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=65 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=65 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -7256,7 +7256,7 @@ v.drugID=51;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7265,7 +7265,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=51 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=51 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -7385,7 +7385,7 @@ v.drugID=52;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7394,7 +7394,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=52 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=52 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -7512,7 +7512,7 @@ v.drugID=2;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7521,7 +7521,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=2 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=2 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -7638,7 +7638,7 @@ v.drugID=53;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7647,7 +7647,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=53 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=53 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -7765,7 +7765,7 @@ v.drugID=54;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7774,7 +7774,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=54 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=54 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -7895,7 +7895,7 @@ v.drugID=78;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -7904,7 +7904,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=78 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=78 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -8022,7 +8022,7 @@ v.drugID=77;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8031,7 +8031,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=77 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=77 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -8149,7 +8149,7 @@ v.drugID=76;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8158,7 +8158,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=76 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=76 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -8304,7 +8304,7 @@ v.drugID=22;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8313,7 +8313,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=22 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=22 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -8458,7 +8458,7 @@ v.drugID=27;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8467,7 +8467,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=27 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=27 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -8611,7 +8611,7 @@ v.drugID=26;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1276,e.encounter_id,
-case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8620,7 +8620,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=26 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=26 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -8741,7 +8741,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  
 v.drugID=72;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8750,7 +8750,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=72 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=72 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -8865,7 +8865,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  
 v.drugID=38;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -8874,7 +8874,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=38 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=38 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -9001,7 +9001,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=39 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=39 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -9123,7 +9123,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  
 v.drugID=73;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -9132,7 +9132,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=73 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=73 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -9253,7 +9253,7 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  
 v.drugID=75;
  /* MÉDICAMENT dispense A LA VISITE */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_coded,creator,date_created,uuid)
-SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null then formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd)
+SELECT DISTINCT e.patient_id,1276,e.encounter_id,case when formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null then formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd))
      else e.encounter_datetime end as obs_datetime,e.location_id,og.obs_id,
 case when v.dispensed=1 then 1
 	 else null
@@ -9262,7 +9262,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=75 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=75 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
  /* Posologie alternative  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_text,creator,date_created,uuid)
@@ -9300,9 +9300,9 @@ v.drugID=75 and FindNumericValue(v.dispAltNumPills)>0;
 /* Date de renouvellement de la prescription*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,162549,e.encounter_id,e.encounter_datetime,e.location_id,
-formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd),1,e.date_created,UUID()
+formatDate(FindNumericValue(c.nxtVisitYy),FindNumericValue(c.nxtVisitMm),FindNumericValue(c.nxtVisitDd)),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e
-WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd) is not null;
+WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and formatDate(FindNumericValue(c.nxtVisitYy),FindNumericValue(c.nxtVisitMm),FindNumericValue(c.nxtVisitDd)) is not null;
 
 update itech.prescriptionOtherFields set arvStartDateDd='01' where arvStartDateDd like '%un%';
 update itech.prescriptionOtherFields set arvStartDateMm='01' where arvStartDateMm like '%un%';
@@ -9311,9 +9311,9 @@ update itech.prescriptionOtherFields set arvStartDateYy='01' where arvStartDateY
  /* Date d'initiation ARV in ordonance form*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,159599,e.encounter_id,e.encounter_datetime,e.location_id,
-formatDate(pr.arvStartDateYy,pr.arvStartDateMm,pr.arvStartDateDd),1,e.date_created,UUID()
+formatDate(FindNumericValue(pr.arvStartDateYy),FindNumericValue(pr.arvStartDateMm),FindNumericValue(pr.arvStartDateDd)),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e,itech.prescriptionOtherFields pr
-WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and pr.patientID=c.patientID and pr.arvStartDateYy>0 and
+WHERE e.uuid = c.encGuid and c.encounterType in (5,18) and pr.patientID=c.patientID and FindNumericValue(pr.arvStartDateYy)>0 and
 date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(pr.visitDateYy,'-',pr.visitDateMm,'-',pr.visitDateDd);
 
 /* Patient inscrit dans le programme ARV*/
@@ -9459,7 +9459,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=90 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=90 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
 		 
  /* Posologie alternative  */
@@ -9603,7 +9603,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=89 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=89 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
 		 
  /* Posologie alternative  */
@@ -9747,7 +9747,7 @@ FROM itech.encounter c, encounter e,  itech.prescriptions v ,itech.obs_concept_g
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.drugID=91 and (v.dispensed=1 or formatDate(v.dispDateYy,v.dispDateMm,v.dispDateDd) is not null );
+v.drugID=91 and (v.dispensed=1 or formatDate(FindNumericValue(v.dispDateYy),FindNumericValue(v.dispDateMm),FindNumericValue(v.dispDateDd)) is not null );
 
 		 
  /* Posologie alternative  */

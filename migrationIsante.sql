@@ -29,9 +29,15 @@ DROP FUNCTION if exists `formatDate`;
 DELIMITER $$
 CREATE FUNCTION `formatDate`( dateYy Varchar(10),dateMm Varchar(10),dateDd Varchar(10) ) RETURNS DATE
 BEGIN
-  IF (FindNumericValue(dateYy)<=0)
+
+  IF (FindNumericValue(dateYy)<0)
   THEN 
     RETURN null;
+  END IF;
+  
+  IF (dateYy='00')
+  THEN 
+     set dateYy='2000';
   END IF;
   
   IF(length(dateYy)<=2) 
@@ -64,9 +70,14 @@ BEGIN
   set dateDd='30';
   END IF;
   
- IF((dateMm='02') and dateDd>29)
+ IF((dateMm='02') and mod(dateYy,4)>0 and dateDd>28)
  THEN 
   set dateDd='28';
+  END IF;
+  
+   IF((dateMm='02') and mod(dateYy,4)=0 and dateDd>29)
+ THEN 
+  set dateDd='29';
   END IF;
  
   RETURN date_format(concat(dateYy,'-',dateMm,'-',dateDd),'%y-%m-%d');
