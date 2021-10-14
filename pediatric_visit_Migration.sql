@@ -240,36 +240,36 @@ GROUP BY openmrs.obs.person_id,encounter_id;
 /* age du deces*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,163527,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-	CASE WHEN digits(v.pedMotherHistGrosDeadAge1)>0 THEN digits(v.pedMotherHistGrosDeadAge1)
+	CASE WHEN FindNumericValue(v.pedMotherHistGrosDeadAge1)>0 THEN FindNumericValue(v.pedMotherHistGrosDeadAge1)
 	     ELSE NULL
 	END,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.pedHistory v ,itech.obs_concept_group og
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-digits(v.pedMotherHistGrosDeadAge1)>0;
+FindNumericValue(v.pedMotherHistGrosDeadAge1)>0;
 /*----------------------------------------------------------------*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,163527,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-	CASE WHEN digits(v.pedMotherHistGrosDeadAge2)>0 THEN digits(v.pedMotherHistGrosDeadAge2)
+	CASE WHEN FindNumericValue(v.pedMotherHistGrosDeadAge2)>0 THEN FindNumericValue(v.pedMotherHistGrosDeadAge2)
 	     ELSE NULL
 	END,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.pedHistory v ,itech.obs_concept_group og
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-digits(v.pedMotherHistGrosDeadAge2)>0;
+FindNumericValue(v.pedMotherHistGrosDeadAge2)>0;
 /*----------------------------------------------------------------*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_numeric,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,163527,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-	CASE WHEN digits(v.pedMotherHistGrosDeadAge3)>0 THEN digits(v.pedMotherHistGrosDeadAge3)
+	CASE WHEN FindNumericValue(v.pedMotherHistGrosDeadAge3)>0 THEN FindNumericValue(v.pedMotherHistGrosDeadAge3)
 	     ELSE NULL
 	END,1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.pedHistory v ,itech.obs_concept_group og
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-digits(v.pedMotherHistGrosDeadAge3)>0;
+FindNumericValue(v.pedMotherHistGrosDeadAge3)>0;
 
 
 select 1 as Age; 
@@ -825,7 +825,7 @@ SELECT DISTINCT e.patient_id,163544,e.encounter_id,e.encounter_datetime,e.locati
 FROM itech.encounter c, encounter e, itech.vitals v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.lowestCd4CntNotDone>0;
+FindNumericValue(v.lowestCd4CntNotDone)>0;
 
 /* Virémie la plus récente*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,creator,date_created,uuid)
@@ -847,7 +847,7 @@ SELECT DISTINCT e.patient_id,163546,e.encounter_id,e.encounter_datetime,e.locati
 FROM itech.encounter c, encounter e, itech.vitals v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.firstViralLoadNotDone>0;
+FindNumericValue(v.firstViralLoadNotDone)>0;
 
 
 /* ÉVALUATION GYNÉCOLOGIQUE (ADOLESCENTE EN ÂGE DE PROCRÉER) */
