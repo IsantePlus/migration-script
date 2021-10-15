@@ -226,9 +226,9 @@ SELECT DISTINCT e.patient_id,163528,e.encounter_id,e.encounter_datetime,e.locati
  FROM itech.encounter c, encounter e,itech.pedHistory v
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-   (FindNumericValue(v.pedMotherHistGrosDeadAge1)>0 or FindNumericValue(v.pedMotherHistGrosDeadCause1)>0 or FindNumericValue(v.pedMotherHistGrosDeadUnk1)>0 or
-     FindNumericValue(v.pedMotherHistGrosDeadAge2)>0 or FindNumericValue(v.pedMotherHistGrosDeadCause2)>0 or FindNumericValue(v.pedMotherHistGrosDeadUnk2)>0 or
-     FindNumericValue(v.pedMotherHistGrosDeadAge3)>0 or FindNumericValue(v.pedMotherHistGrosDeadCause3)>0 or FindNumericValue(v.pedMotherHistGrosDeadUnk3)>0
+   (digits(v.pedMotherHistGrosDeadAge1)>0 or digits(v.pedMotherHistGrosDeadCause1)>0 or digits(v.pedMotherHistGrosDeadUnk1)>0 or
+     digits(v.pedMotherHistGrosDeadAge2)>0 or digits(v.pedMotherHistGrosDeadCause2)>0 or digits(v.pedMotherHistGrosDeadUnk2)>0 or
+     digits(v.pedMotherHistGrosDeadAge3)>0 or digits(v.pedMotherHistGrosDeadCause3)>0 or digits(v.pedMotherHistGrosDeadUnk3)>0
      );
 
 delete from itech.obs_concept_group where 1;		
@@ -1298,7 +1298,7 @@ v.propINH=1;
 /* Date de début Prophylaxie TB à I'INH */ 
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,162320,e.encounter_id,e.encounter_datetime,e.location_id,
-formatDate(v.debutINHYy,v.debutINHMm,'XX'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.debutINHYy),FindNumericValue(v.debutINHMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.tbStatus v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
@@ -1307,7 +1307,7 @@ v.propINH=1 and FindNumericValue(v.debutINHYy)>0;
 /* Date de fin Prophylaxie TB à I'INH */ 
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,163284,e.encounter_id,e.encounter_datetime,e.location_id,
-formatDate(v.arretINHYy,v.arretINHMm,'XX'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.arretINHYy),FindNumericValue(v.arretINHMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.tbStatus v 
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d') = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 

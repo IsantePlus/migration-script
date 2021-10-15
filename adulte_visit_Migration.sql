@@ -4231,7 +4231,7 @@ CASE WHEN v.coupleSerodiscordant=1 THEN 6096 else null END,1,e.date_created,UUID
 FROM itech.encounter c, encounter e, itech.medicalEligARVs v 	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')  = concat(v.visitDateYy,'-',v.visitDateMm,'-',v.visitDateDd) AND 
-v.medElig=1	AND ( v.coupleSerodiscordant=1);	
+v.medElig=1	AND (v.coupleSerodiscordant=1);	
 
 select 162 as test;
 
