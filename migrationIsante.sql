@@ -89,7 +89,7 @@ DELIMITER $$
 CREATE FUNCTION `digits`( str longtext ) RETURNS char(32) CHARSET utf8
 BEGIN
   DECLARE i, len SMALLINT DEFAULT 1;
-  DECLARE ret CHAR(32) DEFAULT '';
+  DECLARE ret VARCHAR(255) DEFAULT '';
   DECLARE c CHAR(1);
   DECLARE pos SMALLINT;
   DECLARE after_p CHAR(100);
@@ -325,9 +325,9 @@ travail et accouchemnet
  /* migration for next VisitDate*/  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,5096,e.encounter_id,e.encounter_datetime,e.location_id,
-formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd),1,e.date_created,UUID()
+formatDate(FindNumericValue(c.nxtVisitYy),FindNumericValue(c.nxtVisitMm),FindNumericValue(c.nxtVisitDd)),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e
-WHERE e.uuid = c.encGuid and formatDate(c.nxtVisitYy,c.nxtVisitMm,c.nxtVisitDd) is not null;
+WHERE e.uuid = c.encGuid and formatDate(FindNumericValue(c.nxtVisitYy),FindNumericValue(c.nxtVisitMm),FindNumericValue(c.nxtVisitDd)) is not null;
 
 select 1 as nextv;
 /*Statut de la fiche*/

@@ -138,13 +138,13 @@ OPEN observation;
 /* Date de la visite manquée */		
         INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,(select concept_id from concept where uuid='e45337bf-6953-4c9d-9604-a3d74523aca9') ,c.encounter_id,c.encounter_datetime,c.location_id,
-		formatDate(ac.missedDateYy,ac.missedDateMm,ac.missedDateDd),1,e.createDate, UUID()
+		formatDate(FindNumericValue(ac.missedDateYy),FindNumericValue(ac.missedDateMm),FindNumericValue(ac.missedDateDd)),1,e.createDate, UUID()
 		from encounter c, itech.encounter e, itech.homeCareVisits ac
 		WHERE c.uuid = e.encGuid 
 		AND e.siteCode = ac.siteCode
 		AND e.patientID = ac.patientID
 		AND concat(e.visitDateYy,"-",e.visitDateMm,"-",e.visitDateDd) =concat(ac.visitDateYy,"-",ac.visitDateMm,"-",ac.visitDateDd)
-		AND ac.missedDateYy>1 and missedDateMm>0;
+		AND FindNumericValue(ac.missedDateYy)>1 and FindNumericValue(missedDateMm)>0;
 /* Raison de la manque de visite */	
         INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,creator,date_created,uuid)
 		SELECT DISTINCT c.patient_id,(select concept_id from concept where uuid='f8162b87-e660-41d4-86c9-392a45bdbf7d') ,c.encounter_id,c.encounter_datetime,c.location_id,
@@ -407,13 +407,13 @@ AND FindNumericValue(ac.nextClinicVisitDays)>0;
 /* Date de la prochaine visite à la établissement */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT c.patient_id,5096 ,c.encounter_id,c.encounter_datetime,c.location_id,
-formatDate(ac.nextClinicVisitYy,ac.nextClinicVisitMm,ac.nextClinicVisitDd) ,1,e.createDate, UUID()
+formatDate(FindNumericValue(ac.nextClinicVisitYy),FindNumericValue(ac.nextClinicVisitMm),FindNumericValue(ac.nextClinicVisitDd)) ,1,e.createDate, UUID()
 from encounter c, itech.encounter e, itech.homeCareVisits ac
 WHERE c.uuid = e.encGuid 
 AND e.siteCode = ac.siteCode
 AND e.patientID = ac.patientID 
 AND concat(e.visitDateYy,"-",e.visitDateMm,"-",e.visitDateDd) =concat(ac.visitDateYy,"-",ac.visitDateMm,"-",ac.visitDateDd)
-AND ac.nextClinicVisitYy>1 and ac.nextClinicVisitMm>0;
+AND FindNumericValue(ac.nextClinicVisitYy)>1 and FindNumericValue(ac.nextClinicVisitMm)>0;
 
 /* Prochaine visite à domicile recommandée dans */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_numeric,creator,date_created,uuid)
@@ -429,13 +429,13 @@ AND FindNumericValue(ac.nextHomeVisitDays)>0;
 /* Date de la prochaine visite à domicile */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT c.patient_id,(select concept_id from concept where uuid='545a2c88-2f37-4228-97ef-3895b480062d') ,c.encounter_id,c.encounter_datetime,c.location_id,
-formatDate(ac.nextHomeVisitYy,ac.nextHomeVisitMm,ac.nextHomeVisitDd) ,1,e.createDate, UUID()
+formatDate(FindNumericValue(ac.nextHomeVisitYy),FindNumericValue(ac.nextHomeVisitMm),FindNumericValue(ac.nextHomeVisitDd)) ,1,e.createDate, UUID()
 from encounter c, itech.encounter e, itech.homeCareVisits ac
 WHERE c.uuid = e.encGuid 
 AND e.siteCode = ac.siteCode
 AND e.patientID = ac.patientID 
 AND concat(e.visitDateYy,"-",e.visitDateMm,"-",e.visitDateDd) =concat(ac.visitDateYy,"-",ac.visitDateMm,"-",ac.visitDateDd)
-AND ac.nextHomeVisitYy>1 and ac.nextHomeVisitMm>0;
+AND FindNumericValue(ac.nextHomeVisitYy)>1 and FindNumericValue(ac.nextHomeVisitMm)>0;
 
 
 
