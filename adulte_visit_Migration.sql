@@ -2268,7 +2268,7 @@ v.drugID=1 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 	,itech.obs_concept_group og 	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -2350,7 +2350,7 @@ v.drugID=8 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v 	,itech.obs_concept_group og	
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -2431,7 +2431,7 @@ v.drugID=10 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -2510,7 +2510,7 @@ v.drugID=12 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -2590,7 +2590,7 @@ v.drugID=20 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -2669,7 +2669,7 @@ v.drugID=29 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -2750,7 +2750,7 @@ v.drugID=31 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -2830,7 +2830,7 @@ v.drugID=33 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -2909,7 +2909,7 @@ v.drugID=34 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -2988,7 +2988,7 @@ v.drugID=11 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3069,7 +3069,7 @@ v.drugID=23 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3148,7 +3148,7 @@ v.drugID=5 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3228,7 +3228,7 @@ v.drugID=6 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3308,7 +3308,7 @@ v.drugID=16 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and 
@@ -3388,7 +3388,7 @@ v.drugID=21 AND FindNumericValue(v.startYy)>0;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3517,7 +3517,7 @@ select 104 as test;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v ,itech.obs_concept_group og		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3588,7 +3588,7 @@ select 110 as test;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and 
@@ -3663,7 +3663,7 @@ select 116 as test;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3741,7 +3741,7 @@ select 1221 as test;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3817,7 +3817,7 @@ select 128 as test;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3893,7 +3893,7 @@ select 134 as test;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -3971,7 +3971,7 @@ select 142 as test;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and
@@ -4045,7 +4045,7 @@ select 148 as test;
 		/*Migration for Arrêt MM/AA*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,obs_group_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,1191,e.encounter_id,e.encounter_datetime,e.location_id,og.obs_id,
-formatDate(v.stopYy,v.stopMm,'01'),1,e.date_created,UUID()
+formatDate(FindNumericValue(v.stopYy),FindNumericValue(v.stopMm),'01'),1,e.date_created,UUID()
 FROM itech.encounter c, encounter e, itech.drugs v,itech.obs_concept_group og 		
 WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
 og.person_id=e.patient_id and e.encounter_id=og.encounter_id and

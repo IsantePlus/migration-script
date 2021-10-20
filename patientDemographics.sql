@@ -51,7 +51,7 @@ CASE WHEN date(deathDt) <> "0000-00-00" then 1 ELSE 0 END,
 CASE WHEN date(deathDt) = "0000-00-00" then NULL ELSE deathDt END, 
 1,e.visitDate, patGuid 
 FROM itech.patient p,
-(select patientID,min(visitDate) as visitDate from itech.encounter e group by 1) e
+(select patientID,min(formatDate(e.visitDateYy,e.visitDateMm,e.visitDateDd)) as visitDate from itech.encounter e group by 1) e
 where p.location_id > 0 and p.patStatus=0 and p.patientID=e.patientID ON DUPLICATE KEY UPDATE
 gender=VALUES(gender),
 birthdate=VALUES(birthdate),
@@ -219,6 +219,8 @@ encounter_datetime=values(encounter_datetime),
 creator=values(creator),
 date_created=values(date_created);
 
+update openmrs.encounter set SET encounter_datetime=DATE_FORMAT(encounter_datetime,concat('20',DATE_FORMAT(encounter_datetime, '%y'),'-%m-%d %T'))
+where year(encounter_datetime) in (1916,1921);
 
 select now() as Encounter;
 
