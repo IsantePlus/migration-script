@@ -30,7 +30,7 @@ DELIMITER $$
 CREATE FUNCTION `formatDate`( dateYy Varchar(10),dateMm Varchar(10),dateDd Varchar(10) ) RETURNS DATE
 BEGIN
 
-  IF (FindNumericValue(dateYy)<0)
+  IF (FindNumericValue(dateYy)<0 or dateYy='' or dateYy is null)
   THEN 
     RETURN null;
   END IF;

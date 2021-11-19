@@ -97,7 +97,7 @@ select now() as personName;
  
 -- CREATE UNIQUE INDEX addressIndex ON person_address (person_id, address1, city_village);
 INSERT INTO person_address(person_id,   preferred, address2, creator, date_created, uuid)
-SELECT distinct p.person_id, 1, left(concat(addrSection,'-',addrDistrict,'(',homeDirections,')'),255), 1, p.date_created, UUID()
+SELECT distinct p.person_id, 1, left(concat(ifnull(addrSection,''),'-',ifnull(addrDistrict,''),'(',ifnull(homeDirections,''),')'),255), 1, p.date_created, UUID()
 FROM person p, itech.patient j where p.uuid = j.patGuid  and j.patStatus<255 ON DUPLICATE KEY UPDATE
 preferred = VALUES(preferred), 
 address2 = VALUES(address2),  
