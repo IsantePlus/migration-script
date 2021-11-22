@@ -219,7 +219,7 @@ encounter_datetime=values(encounter_datetime),
 creator=values(creator),
 date_created=values(date_created);
 
-update openmrs.encounter set SET encounter_datetime=DATE_FORMAT(encounter_datetime,concat('20',DATE_FORMAT(encounter_datetime, '%y'),'-%m-%d %T'))
+update openmrs.encounter SET encounter_datetime=DATE_FORMAT(encounter_datetime,concat('20',DATE_FORMAT(encounter_datetime, '%y'),'-%m-%d %T'))
 where year(encounter_datetime) in (1916,1921);
 
 select now() as Encounter;
