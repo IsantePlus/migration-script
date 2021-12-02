@@ -225,21 +225,16 @@ SET SQL_SAFE_UPDATES = 0;
 	WHERE o.concept_id=159614
     AND o.value_coded=151	
 	GROUP BY o.person_id, o.encounter_id;
-	
+	/*Query Update 2_dec_2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments=left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+	AND ob.obs_id = ip.obs_id
 	AND ito.concept_id=70617
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id=ob.person_id
-	AND ip.concept_id=ob.concept_id
-	AND ip.encounter_id=ob.encounter_id
-	AND ip.location_id=ob.location_id
-	AND ip.value_coded=ob.value_coded
-	AND ip.concept_id=159614
-	AND ip.value_coded=151; 
+	AND (ito.value_text <> '' AND ito.value_text is not null); 
 	/*End migration for Douleur, précisez:*/
 	/*Start migration for Agression Auto-infligée*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
@@ -286,15 +281,10 @@ SET SQL_SAFE_UPDATES = 0;
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+    AND ob.obs_id = ip.obs_id
 	AND ito.concept_id=70179
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id=ob.person_id
-	AND ip.concept_id=ob.concept_id
-	AND ip.encounter_id=ob.encounter_id
-	AND ip.location_id=ob.location_id
-	AND ip.value_coded=ob.value_coded
-	AND ip.concept_id=159614
-	AND ip.value_coded=146623; 
+	AND (ito.value_text <> '' AND ito.value_text is not null); 
 	/*End migration for Brûlures, précisez:*/
 	
 	/*Start migration for Fracture osseuse*/
@@ -496,21 +486,16 @@ SET SQL_SAFE_UPDATES = 0;
 	WHERE o.concept_id=159614
     AND o.value_coded=134337	
 	GROUP BY o.person_id,o.encounter_id;
-	
+	/*Query update 2dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments=left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+    AND ob.obs_id = ip.obs_id
 	AND ito.concept_id=70230
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id=ob.person_id
-	AND ip.concept_id=ob.concept_id
-	AND ip.encounter_id=ob.encounter_id
-	AND ip.location_id=ob.location_id
-	AND ip.value_coded=ob.value_coded
-	AND ip.concept_id=159614
-	AND ip.value_coded=134337; 
+	AND (ito.value_text <> '' AND ito.value_text is not null); 
 	/*End migration for Troubles mentaux, précisez:*/
 	
 	/*Start migration for Aphasie*/
@@ -622,21 +607,16 @@ SET SQL_SAFE_UPDATES = 0;
 	WHERE o.concept_id=159614
     AND o.value_coded=512	
 	GROUP BY o.person_id,o.encounter_id;
-	
+	/*query update 2dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments=left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+    AND ob.obs_id = ip.obs_id
 	AND ito.concept_id=70210
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id=ob.person_id
-	AND ip.concept_id=ob.concept_id
-	AND ip.encounter_id=ob.encounter_id
-	AND ip.location_id=ob.location_id
-	AND ip.value_coded=ob.value_coded
-	AND ip.concept_id=159614
-	AND ip.value_coded=512;
+	AND (ito.value_text <> '' AND ito.value_text is not null);
 	/*End migration for Eruptions cutanées, précisez:*/
 	/*Start migration for Prurit*/
 	INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,
@@ -878,16 +858,10 @@ SET SQL_SAFE_UPDATES = 0;
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+    AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70237
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.obs_group_id = ob.obs_group_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1284
-	AND ip.value_coded = 121629; 
+	AND (ito.value_text <> '' AND ito.value_text is not null); 
 	
 	
 	/*End migration for Anémie, précisez :*/
@@ -1616,22 +1590,16 @@ SET SQL_SAFE_UPDATES = 0;
 	AND o.concept_id = 1284
     AND o.value_coded = 121555
 	GROUP BY o.person_id,o.encounter_id;
-	
+	/*query update 2dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+    AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70881
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.obs_group_id = ob.obs_group_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1284
-	AND ip.value_coded = 121555;
+	AND (ito.value_text <> '' AND ito.value_text is not null);
 	
 	/*End migration for Charbon [A22.9]*, précisez :*/
 	/*Start migration for Choléra [A00.9]**/
@@ -1747,22 +1715,16 @@ SET SQL_SAFE_UPDATES = 0;
 	AND o.concept_id = 1284
     AND o.value_coded = 119905
 	GROUP BY o.person_id,o.encounter_id;
-	
+	/*query update 2dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+    AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70288
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.obs_group_id = ob.obs_group_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1284
-	AND ip.value_coded = 119905;
+	AND (ito.value_text <> '' AND ito.value_text is not null);
 	
 	/*End migration for Conjonctivite [H10.9], précisez :*/
 	/*Start migration for Coqueluche [A37.90]*/
@@ -1876,22 +1838,16 @@ SET SQL_SAFE_UPDATES = 0;
 	AND o.concept_id = 1284
     AND o.value_coded = 142592
 	GROUP BY o.person_id,o.encounter_id;
-	
+	/*query update 2dec2021 */
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+	AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70295
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.obs_group_id = ob.obs_group_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1284
-	AND ip.value_coded = 142592;
+	AND (ito.value_text <> '' AND ito.value_text is not null);
 	/*End migration for Dengue [A90]*, précisez :*/
 	/*Start migration for Diphtérie [A36]**/
 	/*Insert obs_group_id*/
@@ -2402,22 +2358,16 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	AND o.concept_id = 1284
     AND o.value_coded = 115835
 	GROUP BY o.person_id,o.encounter_id;
-	
+	/*query update 2dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+	AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70853
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.obs_group_id = ob.obs_group_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1284
-	AND ip.value_coded = 115835;
+	AND (ito.value_text <> '' AND ito.value_text is not null);
 	/*End migration for Méningites [G03.9]*, précisez :*/
 	
 	/*Start migration for Otite, précisez :*/
@@ -2486,16 +2436,10 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+	AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70326 
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.obs_group_id = ob.obs_group_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1284
-	AND ip.value_coded = 131115;
+	AND (ito.value_text <> '' AND ito.value_text is not null);
 	/*End migration for Otite, précisez :*/
 	
 	/*Start migration for Parasitose [B89]*/
@@ -3171,22 +3115,16 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	AND o.concept_id = 1284
     AND o.value_coded = 146623
 	GROUP BY o.person_id,o.encounter_id;
-	
+	/*query update 2dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+	AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70415 
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.obs_group_id = ob.obs_group_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1284
-	AND ip.value_coded = 146623 ;
+	AND (ito.value_text <> '' AND ito.value_text is not null);
 	/*End migration for Brûlure [T30.0], précisez :*/
 	/*Start migration for Fracture osseuse [T14.8], précisez*/
 	/*Insert obs_group_id*/
@@ -3248,22 +3186,16 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	AND o.concept_id = 1284
     AND o.value_coded = 177
 	GROUP BY o.person_id,o.encounter_id;
-	
+	/*query update 2dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+	AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70369
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.obs_group_id = ob.obs_group_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1284
-	AND ip.value_coded = 177;
+	AND (ito.value_text <> '' AND ito.value_text is not null);
 	/*End migration for Fracture osseuse [T14.8], précisez*/
 	
 	/*Start migration for Plaie, précisez :*/
@@ -3326,22 +3258,16 @@ o.concept_id in (70847,70848,70849) and o.value_boolean=1;
 	AND o.concept_id = 1284
     AND o.value_coded = 159328 
 	GROUP BY o.person_id,o.encounter_id;
-	
+	/*query update 2dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments = left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+	AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70373
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.obs_group_id = ob.obs_group_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1284
-	AND ip.value_coded = 159328;
+	AND (ito.value_text <> '' AND ito.value_text is not null);
 	/*End migration for Plaie, précisez : */
 	
 	/*Start migration for Trauma crânien [S09.90XA]*/
