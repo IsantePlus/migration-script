@@ -4,7 +4,7 @@ use itech;
 update itech.encounter set visitDateDd=31 where visitDateMm in (1,3,5,7,8,10,12) and visitDateDd>31;
 update itech.encounter set visitDateDd=30 where visitDateMm in (4,6,9,11) and visitDateDd>30;
 update itech.encounter set visitDateDd=28 where visitDateMm in (2) and visitDateDd>29;
-update itech.encounter e set createDate=date(concat(e.visitDateYy,'-',e.visitDateMm,'-',trim(e.visitDateDd))) where createDate is null or createDate=''; 
+update itech.encounter e set createDate=openmrs.formatDate(openmrs.FindNumericValue(e.visitDateYy),openmrs.FindNumericValue(e.visitDateMm),openmrs.FindNumericValue(e.visitDateDd)) where createDate is null or createDate=''; 
 update itech.encounter set lastModified=createDate where lastModified is null or lastModified='' or lastModified like '%0000%'; 
 
 ALTER TABLE encounter  DROP INDEX encounterINDEX; 
@@ -137,8 +137,8 @@ where o.person_id=right(e.patientID,length(e.patientID)-5) and
 /* Visit Migration */
 INSERT INTO visit (patient_id, visit_type_id, date_started, date_stopped, location_id, creator, date_created, uuid)
 SELECT DISTINCT p.person_id,vvisit_type_id,
-formatDate(visitDateYy,visitDateMm,visitDateDd),
-formatDate(visitDateYy,visitDateMm,visitDateDd), 
+formatDate(FindNumericValue(visitDateYy),FindNumericValue(visitDateMm),FindNumericValue(visitDateDd)),
+formatDate(FindNumericValue(visitDateYy),FindNumericValue(visitDateMm),FindNumericValue(visitDateDd)), 
 l.location_id,1, e.lastModified, UUID()
 FROM person p, itech.patient it, itech.encounter e,itech.location_mapping l
 WHERE p.uuid = it.patGuid AND it.patientid = e.patientid AND l.siteCode=e.siteCode AND e.encStatus<255 AND
@@ -188,13 +188,13 @@ if(mmmIndex=0) then
 /* encounter migration data */ 
 INSERT INTO encounter(encounter_type,patient_id,location_id,form_id,visit_id, encounter_datetime,creator,date_created,date_changed,uuid,voided)
 SELECT distinct f.encounterTypeOpenmrs, p.person_id, v.location_id, f.form_id, v.visit_id,
-formatDate(e.visitDateYy,e.visitDateMm,e.visitDateDd),1,e.createDate,e.lastModified,e.encGuid,
+formatDate(FindNumericValue(e.visitDateYy),FindNumericValue(e.visitDateMm),FindNumericValue(e.visitDateDd)),1,e.createDate,e.lastModified,e.encGuid,
 case when e.encStatus>=255 then 1 else 0 end as voided
 FROM itech.encounter e, person p, itech.patient j, visit v, itech.typeToForm f
 WHERE p.uuid = j.patGuid and 
 e.patientID = j.patientID AND 
 v.patient_id = p.person_id AND 
-date(v.date_started) = formatDate(e.visitDateYy,e.visitDateMm,e.visitDateDd) AND 
+date(v.date_started) = formatDate(FindNumericValue(e.visitDateYy),FindNumericValue(e.visitDateMm),FindNumericValue(e.visitDateDd)) AND 
 e.encounterType in (1,2,3,4,5,6,7,12,14,16,17,18,19,20,21,24,25,26,27,28,29,31,32,35) AND
 e.encounterType = f.encounterType 
 ON DUPLICATE KEY UPDATE

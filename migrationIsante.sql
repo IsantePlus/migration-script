@@ -146,8 +146,9 @@ CREATE PROCEDURE migrationIsante()
 BEGIN
 
   DECLARE cnt INT;
+  DECLARE maxObsId INT;
 
-create table if not exists migration_log(id int(11) primary key auto_increment,prcodedure varchar(25),starttime datetime,endtime datetime);
+create table if not exists migration_log(id int(11) primary key auto_increment,prcodedure varchar(25),starttime datetime,endtime datetime,maxid int);
 
  select count(*) into cnt from migration_log where prcodedure = 'encounter'  and endtime is not null;
  if(cnt=0) then 
@@ -167,15 +168,19 @@ create table if not exists migration_log(id int(11) primary key auto_increment,p
    call encounter_Migration();
    select 3 as Encounter;
    update migration_log set endtime=now() where prcodedure = 'encounter';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'encounter';
  end if;  
 
-  
+  /* migration of Ordonance */
   select count(*) into cnt from migration_log where prcodedure = 'ordonance' and endtime is not null;
-  if(cnt=0) then    
+  if(cnt=0) then 
+   select maxid into maxObsId from migration_log where prcodedure = 'encounter';  
+   
    delete from migration_log where prcodedure in ('ordonance');
    insert into migration_log(prcodedure,starttime) values('ordonance',now());
-   update obs o,encounter e, encounter_type et set o.obs_group_id=null where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='10d73929-54b6-4d18-a647-8b7316bc1ae3'; 
-   delete o from obs o, encounter e, encounter_type et where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='10d73929-54b6-4d18-a647-8b7316bc1ae3';
+   
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;
    
    SET SQL_SAFE_UPDATES = 0;
 /* ordonance migration */ 
@@ -183,145 +188,216 @@ create table if not exists migration_log(id int(11) primary key auto_increment,p
    select 7 as Ordonance;
    SET SQL_SAFE_UPDATES = 0;
    update migration_log set endtime=now() where prcodedure = 'ordonance';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'ordonance';
  end if; 
    
-  
+ 
+/* migration of Lab*/ 
  select count(*) into cnt from migration_log where prcodedure = 'lab' and endtime is not null;
- if(cnt=0) then    
+ if(cnt=0) then   
+
+   select maxid into maxObsId from migration_log where prcodedure = 'ordonance';  
    delete from migration_log where prcodedure in ('lab');
    insert into migration_log(prcodedure,starttime) values('lab',now());
-   update obs o,encounter e, encounter_type et set o.obs_group_id=null where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='f037e97b-471e-4898-a07c-b8e169e0ddc4'; 
-   delete o from obs o, encounter e, encounter_type et where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='f037e97b-471e-4898-a07c-b8e169e0ddc4';
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;
    
    SET SQL_SAFE_UPDATES = 0;
- /* Lab migration  */
    call labsMigration();
    select 6 as Lab;
+   update migration_log set endtime=now() where prcodedure = 'lab';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'lab';
+ end if; 
+ 
+ 
+  /* migration of Old Lab*/
+  select count(*) into cnt from migration_log where prcodedure = 'Old lab' and endtime is not null;
+ if(cnt=0) then
+   select maxid into maxObsId from migration_log where prcodedure = 'lab'; 
+   delete from migration_log where prcodedure in ('Old lab');
+   insert into migration_log(prcodedure,starttime) values('Old lab',now());   
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;
+   
    SET SQL_SAFE_UPDATES = 0;
    call labsMigrationOldData();
    select 6 as LabOLD;
-   update migration_log set endtime=now() where prcodedure = 'lab';
- end if; 
+   update migration_log set endtime=now() where prcodedure = 'Old lab';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'Old lab';
+ end if;
  
  
+ 
+ 
+ 
+ 
+  /* migration of discontinuation*/
   select count(*) into cnt from migration_log where prcodedure = 'discontinuation' and endtime is not null;
-  if(cnt=0) then    
+  if(cnt=0) then   
+   select maxid into maxObsId from migration_log where prcodedure = 'Old lab'; 
    delete from migration_log where prcodedure in ('discontinuation');
    insert into migration_log(prcodedure,starttime) values('discontinuation',now()); 
-   update obs o,encounter e, encounter_type et set o.obs_group_id=null where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='9d0113c6-f23a-4461-8428-7e9a7344f2ba'; 
-   delete o from obs o, encounter e, encounter_type et where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='9d0113c6-f23a-4461-8428-7e9a7344f2ba';
-      
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;     
 /* discontinutation */   
    call discontinuationMigration();
    SET SQL_SAFE_UPDATES = 0;
    select 8 as discontinuation;
    update migration_log set endtime=now() where prcodedure = 'discontinuation';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'discontinuation';
  end if; 
  
  
- select count(*) into cnt from migration_log where prcodedure in ('sspPediatric') and endtime is not null;
- if(cnt=0) then  
- 
-   update obs o,encounter e, encounter_type et set o.obs_group_id=null where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id 
-   and et.uuid in ('12f4d7c3-e047-4455-a607-47a40fe32460','709610ff-5e39-4a47-9c27-a60e740b0944','fdb5b14f-555f-4282-b4c1-9286addf0aae','a5600919-4dde-4eb8-a45b-05c204af8284',
-			   'd95b3540-a39f-4d1e-a301-8ee0e03d5eab','c45d7299-ad08-4cb5-8e5d-e0ce40532939','49592bec-dd22-4b6c-a97f-4dd2af6f2171','349ae0b4-65c1-4122-aa06-480f186c8350',
-			   '33491314-c352-42d0-bd5d-a9d0bffc9bf1','17536ba6-dd7c-4f58-8014-08c7cb798ac7','204ad066-c5c2-4229-9a62-644bc5617ca2'); 
-   delete o from obs o, encounter e, encounter_type et where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and 
-   et.uuid in ('12f4d7c3-e047-4455-a607-47a40fe32460','709610ff-5e39-4a47-9c27-a60e740b0944','fdb5b14f-555f-4282-b4c1-9286addf0aae','a5600919-4dde-4eb8-a45b-05c204af8284',
-			   'd95b3540-a39f-4d1e-a301-8ee0e03d5eab','c45d7299-ad08-4cb5-8e5d-e0ce40532939','49592bec-dd22-4b6c-a97f-4dd2af6f2171','349ae0b4-65c1-4122-aa06-480f186c8350',
-			   '33491314-c352-42d0-bd5d-a9d0bffc9bf1','17536ba6-dd7c-4f58-8014-08c7cb798ac7','204ad066-c5c2-4229-9a62-644bc5617ca2');
-  
-/* fistVisit migration VIH form */
-   SET SQL_SAFE_UPDATES = 0;
-   delete from migration_log where prcodedure in ('adult visit','pediatric visit');
+
+   /* migration of adult visit */ 
+ select count(*) into cnt from migration_log where prcodedure in ('adult visit') and endtime is not null;
+ if(cnt=0) then 
+   select maxid into maxObsId from migration_log where prcodedure = 'discontinuation'; 
+   delete from migration_log where prcodedure in ('adult visit');
    insert into migration_log(prcodedure,starttime) values('adult visit',now());
-   
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;    
+ 
+   SET SQL_SAFE_UPDATES = 0;
    call adult_visit_Migration();
    select 4 as Adult;
    update migration_log set endtime=now() where prcodedure = 'adult visit';
-   
-   insert into migration_log(prcodedure,starttime) values('pediatric visit',now());
-   SET SQL_SAFE_UPDATES = 0;
-/* pediatric visit HIV migration */
-   call pediatric_visit_Migration();
-   update migration_log set endtime=now() where prcodedure = 'pediatric visit';
-   select 5 as Pediatric;
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'adult visit';
 
-  /*  
-   delete from migration_log where prcodedure in ('accouchemnet');
-   insert into migration_log(prcodedure,starttime) values('accouchemnet',now());     
-travail et accouchemnet
-   call travailAccMigration();
-   SET SQL_SAFE_UPDATES = 0;
-   select 9 as travailAcc; 
-   update migration_log set endtime=now() where prcodedure = 'accouchemnet';
-*/
-  
-   delete from migration_log where prcodedure in ('adherence');
-   insert into migration_log(prcodedure,starttime) values('adherence',now());   
-/* Adherence */
-   call  adherenceMigration();
-   SET SQL_SAFE_UPDATES = 0;
-   select 10 as adherence;
-   update migration_log set endtime=now() where prcodedure = 'adherence';
-   
-  
-   delete from migration_log where prcodedure in ('homeVisit');
-   insert into migration_log(prcodedure,starttime) values('homeVisit',now());   
-/* homeVisit */
-   call  homeVisitMigration();
-   SET SQL_SAFE_UPDATES = 0;
-   select 10 as homeVisit;
-   update migration_log set endtime=now() where prcodedure = 'homeVisit';
-
-
-  
-  delete from migration_log where prcodedure in ('obgyn');
-  insert into migration_log(prcodedure,starttime) values('obgyn',now());    
-/* OBGYN */   
-  call obgynMigration();
-  SET SQL_SAFE_UPDATES = 0;
-  select 11 as obgyn;
-  update migration_log set endtime=now() where prcodedure = 'obgyn';
-  
-  delete from migration_log where prcodedure in ('sspAdult');
-  insert into migration_log(prcodedure,starttime) values('sspAdult',now()); 
-/* SOINS SANTE PRIMAIRE ADULTE */ 
-  call sspAdultMigration();
-  SET SQL_SAFE_UPDATES = 0;
-  select 12 as sspAdult;
-  update migration_log set endtime=now() where prcodedure = 'sspAdult';
-  
-  delete from migration_log where prcodedure in ('sspPediatric');
-  insert into migration_log(prcodedure,starttime) values('sspPediatric',now());   
-/* SOINS SANTE PRIMAIRE ADULTE */  
-  call sspPediatricMigration();
-  SET SQL_SAFE_UPDATES = 0;
-  select 13 as sspPediatric;
-  update migration_log set endtime=now() where prcodedure = 'sspPediatric'; 
- 
  end if;
  
  
  
-   select count(*) into cnt from migration_log where prcodedure = 'vaccination' and endtime is not null;
-  if(cnt=0) then    
-   delete from migration_log where prcodedure in ('vaccination');
-   insert into migration_log(prcodedure,starttime) values('vaccination',now());
-   update obs o,encounter e, encounter_type et set o.obs_group_id=null where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='a86ad9bb-d596-413c-bd4e-30f6fea5057d'; 
-   delete o from obs o, encounter e, encounter_type et where o.encounter_id=e.encounter_id and e.encounter_type=et.encounter_type_id and et.uuid='a86ad9bb-d596-413c-bd4e-30f6fea5057d';
+ 
+ 
+ 
+ 
+ 
+   /* migration of pediatric visit */ 
+ select count(*) into cnt from migration_log where prcodedure in ('pediatric visit') and endtime is not null;
+ if(cnt=0) then 
+   select maxid into maxObsId from migration_log where prcodedure = 'adult visit'; 
+   delete from migration_log where prcodedure in ('pediatric visit');
+   insert into migration_log(prcodedure,starttime) values('pediatric visit',now());
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;    
+ 
+   SET SQL_SAFE_UPDATES = 0;
+   call pediatric_visit_Migration();
    
-   SET SQL_SAFE_UPDATES = 0;
-/* vaccinantion migration */ 
-   call vaccination();
-   select 10 as Vaccination;
-   SET SQL_SAFE_UPDATES = 0;
-   update migration_log set endtime=now() where prcodedure = 'vaccination';
+   select 5 as Pediatric;
+   update migration_log set endtime=now() where prcodedure = 'adult visit';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'adult visit';
  end if; 
  
  
  
+    /* migration of adherence */ 
+ select count(*) into cnt from migration_log where prcodedure in ('adherence') and endtime is not null;
+ if(cnt=0) then 
+   select maxid into maxObsId from migration_log where prcodedure = 'pediatric visit'; 
+   delete from migration_log where prcodedure in ('pediatric visit');
+   insert into migration_log(prcodedure,starttime) values('adherence',now());
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;    
+
+   SET SQL_SAFE_UPDATES = 0;
+   call  adherenceMigration();
+   select 5 as Pediatric;
+   update migration_log set endtime=now() where prcodedure = 'adherence';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'adherence';
+end if; 
  
+ 
+ 
+     /* migration of home Visit */ 
+ select count(*) into cnt from migration_log where prcodedure in ('homeVisit') and endtime is not null;
+ if(cnt=0) then 
+   select maxid into maxObsId from migration_log where prcodedure = 'adherence'; 
+   delete from migration_log where prcodedure in ('homeVisit');
+   insert into migration_log(prcodedure,starttime) values('homeVisit',now());
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;    
+
+   SET SQL_SAFE_UPDATES = 0;
+   call  homeVisitMigration();
+   select 5 as Pediatric;
+   update migration_log set endtime=now() where prcodedure = 'homeVisit';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'homeVisit';
+end if;
+ 
+ 
+ 
+ 
+      /* migration of obgyn */ 
+ select count(*) into cnt from migration_log where prcodedure in ('obgyn') and endtime is not null;
+ if(cnt=0) then 
+   select maxid into maxObsId from migration_log where prcodedure = 'homeVisit'; 
+   delete from migration_log where prcodedure in ('obgyn');
+   insert into migration_log(prcodedure,starttime) values('obgyn',now());
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;    
+
+   SET SQL_SAFE_UPDATES = 0;
+   call obgynMigration();
+   select 11 as obgyn;
+   update migration_log set endtime=now() where prcodedure = 'obgyn';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'obgyn';
+end if;
+ 
+ 
+/* SOINS SANTE PRIMAIRE ADULTE */ 
+ select count(*) into cnt from migration_log where prcodedure in ('obgyn') and endtime is not null;
+ if(cnt=0) then 
+   select maxid into maxObsId from migration_log where prcodedure = 'sspAdult'; 
+   delete from migration_log where prcodedure in ('sspAdult');
+   insert into migration_log(prcodedure,starttime) values('sspAdult',now());
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;    
+
+   SET SQL_SAFE_UPDATES = 0;
+   call sspAdultMigration();
+   select 5 as sspAdult;
+   update migration_log set endtime=now() where prcodedure = 'sspAdult';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'sspAdult';
+end if;
+
+
+/* SOINS SANTE PRIMAIRE PEDIATRIC */ 
+ select count(*) into cnt from migration_log where prcodedure in ('sspAdult') and endtime is not null;
+ if(cnt=0) then 
+   select maxid into maxObsId from migration_log where prcodedure = 'sspPediatric'; 
+   delete from migration_log where prcodedure in ('sspPediatric');
+   insert into migration_log(prcodedure,starttime) values('sspPediatric',now());
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;    
+
+   SET SQL_SAFE_UPDATES = 0;
+   call sspPediatricMigration();
+   select 5 as sspPediatric;
+   update migration_log set endtime=now() where prcodedure = 'sspPediatric';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'sspPediatric';
+end if;
+
+
+
+/* SOINS SANTE PRIMAIRE VACCINATION */ 
+ select count(*) into cnt from migration_log where prcodedure in ('sspPediatric') and endtime is not null;
+ if(cnt=0) then 
+   select maxid into maxObsId from migration_log where prcodedure = 'vaccination'; 
+   delete from migration_log where prcodedure in ('vaccination');
+   insert into migration_log(prcodedure,starttime) values('vaccination',now());
+   update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 
+   delete o from obs o where o.obs_id>maxObsId;    
+
+   SET SQL_SAFE_UPDATES = 0;
+   call vaccination();
+   select 5 as vaccination;
+   update migration_log set endtime=now() where prcodedure = 'vaccination';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'vaccination';
+end if;   
+   
+
  /* migration for next VisitDate*/  
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_datetime,creator,date_created,uuid)
 SELECT DISTINCT e.patient_id,5096,e.encounter_id,e.encounter_datetime,e.location_id,
@@ -367,6 +443,19 @@ c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= 
 v.followupComments<>'';
 
  select 13 as comments;
+ 
+ /*COUNSELING   */
+INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
+SELECT DISTINCT e.patient_id,159395,e.encounter_id,e.encounter_datetime,e.location_id,
+CASE WHEN v.obstaclesRemarks<>'' then trim(v.obstaclesRemarks)
+ELSE NULL
+END,1,e.date_created,UUID()
+FROM itech.encounter c, encounter e, itech.comprehension v 
+WHERE e.uuid = c.encGuid and c.patientID = v.patientID and c.seqNum = v.seqNum and 
+c.sitecode = v.sitecode and date_format(date(e.encounter_datetime),'%y-%m-%d')= formatDate(v.visitDateYy,v.visitDateMm,v.visitDateDd) AND 
+v.obstaclesRemarks<>'';
+ 
+ select 13 as commentCounselling;
 
 /* premiere visit  */
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_text,creator,date_created,uuid)
