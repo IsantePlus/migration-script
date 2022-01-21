@@ -48,10 +48,10 @@ case when dobyy REGEXP '^[0-9]+$' and dobmm REGEXP '^[0-9]+$' AND dobmm+0 BETWEE
 case when dobyy REGEXP '^[0-9]+$' THEN DATE(CONCAT(dobyy,'-01-01')) ELSE NULL END END END,
 CASE WHEN ageYears is not null then 1 ELSE 0 END,
 CASE WHEN date(deathDt) <> "0000-00-00" then 1 ELSE 0 END,
-CASE WHEN date(deathDt) = "0000-00-00" then NULL ELSE deathDt END, 
+CASE WHEN date(deathDt) = "0000-00-00" then NULL ELSE date(deathDt) END, 
 1,e.visitDate, patGuid 
 FROM itech.patient p,
-(select patientID,min(formatDate(e.visitDateYy,e.visitDateMm,e.visitDateDd)) as visitDate from itech.encounter e group by 1) e
+(select patientID,min(formatDate(FindNumericValue(e.visitDateYy),FindNumericValue(e.visitDateMm),FindNumericValue(e.visitDateDd))) as visitDate from itech.encounter e group by 1) e
 where p.location_id > 0 and p.patStatus=0 and p.patientID=e.patientID ON DUPLICATE KEY UPDATE
 gender=VALUES(gender),
 birthdate=VALUES(birthdate),

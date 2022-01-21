@@ -341,7 +341,7 @@ BEGIN
 			/*Start migration for Radiographie (Autre):*/
 		 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,comments,
 	creator,date_created,uuid)
-	SELECT DISTINCT c.patient_id,309,c.encounter_id,formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd ),c.location_id,
+	SELECT DISTINCT c.patient_id,309,c.encounter_id,formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd),c.location_id,
 	CASE WHEN (l.result = 1) THEN 1115
 		WHEN (l.result = 2) THEN 1116
 	END,
@@ -353,6 +353,7 @@ BEGIN
 	and e.seqNum = l.seqNum
 	AND l.labID=137
 	AND l.result3='otherChest'
+	AND formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd) is not null
 	AND (l.result=1 OR l.result=2);	
 			/*End migration for Radiographie (Autre):*/
 			
