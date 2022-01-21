@@ -42,21 +42,16 @@ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value
 	WHERE o.concept_id=5629
     AND o.value_coded=1	
 	GROUP BY o.person_id, o.encounter_id;
-	
+	/*query update 1dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments=left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+	AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 70766
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 5629
-	AND ip.value_coded = 1; 
+	AND (ito.value_text <> '' AND ito.value_text is not null); 
 	
 	/*End migration for Scolarisé :*/
     /*Start migration for Poids de naissance :*/
@@ -117,21 +112,16 @@ INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value
 	WHERE o.concept_id = 1628
     AND o.value_coded = 163390	
 	GROUP BY o.person_id, o.encounter_id;
-	
+	/*query update 1dec2021*/
 	UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
 		   SET ob.comments=left(ito.value_text,255)
 	WHERE c.uuid = e.encGuid
 	AND e.siteCode = ito.location_id 
 	AND e.encounter_id = ito.encounter_id
+	AND ob.encounter_id = c.encounter_id
+	AND ob.obs_id = ip.obs_id
 	AND ito.concept_id = 71071
-	AND (ito.value_text <> '' AND ito.value_text is not null)
-	AND ip.person_id = ob.person_id
-	AND ip.concept_id = ob.concept_id
-	AND ip.encounter_id = ob.encounter_id
-	AND ip.location_id = ob.location_id
-	AND ip.value_coded = ob.value_coded
-	AND ip.concept_id = 1628
-	AND ip.value_coded = 163390; 
+	AND (ito.value_text <> '' AND ito.value_text is not null); 
 		/*Malf. Congénitales, précisez:*/
 		/*Start migration for RAA*/
 		INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,creator,date_created,uuid)
@@ -1769,21 +1759,16 @@ TRUNCATE TABLE itech.precisez;
  WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=111145 
  GROUP BY openmrs.obs.person_id,encounter_id;
- 
+ /*Query update 2dec2021*/
  UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
      SET ob.comments=left(ito.value_text,255)
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=70928 
- AND (ito.value_text <> '' AND ito.value_text is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=1284
- AND ip.value_coded=111145;		
+ AND (ito.value_text <> '' AND ito.value_text is not null);		
 	
 	
 /* Confirmé,Suspecté */	
@@ -1908,15 +1893,10 @@ TRUNCATE TABLE itech.precisez;
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=70933 
- AND (ito.value_text <> '' AND ito.value_text is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=1284
- AND ip.value_coded=119525;		
+ AND (ito.value_text <> '' AND ito.value_text is not null);		
 	
 	
 /* Confirmé,Suspecté */	
@@ -1964,21 +1944,16 @@ TRUNCATE TABLE itech.precisez;
  WHERE openmrs.obs.concept_id=1284
     AND openmrs.obs.value_coded=112770 
  GROUP BY openmrs.obs.person_id,encounter_id;
- 
+ /*query update 2dec2021*/
  UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
      SET ob.comments=left(ito.value_text,255)
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=70936 
- AND (ito.value_text <> '' AND ito.value_text is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=1284
- AND ip.value_coded=112770;		
+ AND (ito.value_text <> '' AND ito.value_text is not null);		
 	
 	
 /* Confirmé,Suspecté */	
@@ -2026,20 +2001,16 @@ TRUNCATE TABLE itech.precisez;
     AND openmrs.obs.value_coded=481 
  GROUP BY openmrs.obs.person_id,encounter_id;
  
+ /*Query update 2dec2021*/
  UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
      SET ob.comments=left(ito.value_text,255)
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=70938 
- AND (ito.value_text <> '' AND ito.value_text is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=1284
- AND ip.value_coded=481;		
+ AND (ito.value_text <> '' AND ito.value_text is not null);		
 	
 	
 /* Confirmé,Suspecté */	
@@ -2086,15 +2057,10 @@ TRUNCATE TABLE itech.precisez;
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=71039 
- AND (ito.value_text <> '' AND ito.value_text is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=161542
- AND ip.value_coded=1065;
+ AND (ito.value_text <> '' AND ito.value_text is not null);
  
  /*Lait enrichi*/
   INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)

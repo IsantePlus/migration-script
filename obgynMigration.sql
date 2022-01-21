@@ -1664,21 +1664,16 @@ TRUNCATE TABLE itech.precisez;
  WHERE openmrs.obs.concept_id=159614
     AND openmrs.obs.value_coded=148989 
  GROUP BY openmrs.obs.person_id,encounter_id;
- 
+ /*Query that takes too much time*/
  UPDATE openmrs.obs ob, itech.obs ito, encounter c, itech.encounter e, itech.precisez ip
-     SET ob.comments=left(ito.value_text,255)
+    SET ob.comments=ito.value_text
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND c.encounter_id = ob.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=70622
- AND (ito.value_text <> '' AND ito.value_text is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159614
- AND ip.value_coded=148989;
+ AND (ito.value_text <> '' AND ito.value_text is not null);
 
  
  /* Fracture osseuse */
@@ -5409,14 +5404,10 @@ TRUNCATE TABLE itech.precisez;
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=71391
- AND (ito.value_datetime is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=163760 and ip.value_coded=1065;
+ AND (ito.value_datetime is not null);
  
  
  /*Counseling post test Date*/
@@ -5439,14 +5430,10 @@ TRUNCATE TABLE itech.precisez;
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=71393
- AND (ito.value_datetime is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159382 and ip.value_coded=1065;
+ AND (ito.value_datetime is not null);
  
  /*Patiente sous ARV*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
@@ -5658,14 +5645,10 @@ TRUNCATE TABLE itech.precisez;
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=7957
- AND (ito.value_datetime is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=159758 and ip.value_coded=1589;
+ AND (ito.value_datetime is not null);
 
  /*Si domicile et femme VIH positif*/
 INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
@@ -5692,14 +5675,10 @@ TRUNCATE TABLE itech.precisez;
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=7959
- AND (ito.value_datetime is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=163764 and ip.value_coded=1065;
+ AND (ito.value_datetime is not null);
  
  /*Si domicile : Planification pour la présence d’une matrone*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
@@ -5726,14 +5705,10 @@ TRUNCATE TABLE itech.precisez;
  WHERE c.uuid = e.encGuid
  AND e.siteCode = ito.location_id 
  AND e.encounter_id = ito.encounter_id
+ AND ob.encounter_id = c.encounter_id
+ AND ob.obs_id = ip.obs_id
  AND ito.concept_id=7961
- AND (ito.value_datetime is not null)
- AND ip.person_id=ob.person_id
- AND ip.concept_id=ob.concept_id
- AND ip.encounter_id=ob.encounter_id
- AND ip.location_id=ob.location_id
- AND ip.value_coded=ob.value_coded
- AND ip.concept_id=161007 and ip.value_coded=1065;
+ AND (ito.value_datetime is not null);
  
  /*Planification pour un Accompagnateur*/
  INSERT INTO obs(person_id,concept_id,encounter_id,obs_datetime,location_id,value_coded,creator,date_created,uuid)
