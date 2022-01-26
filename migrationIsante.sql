@@ -288,8 +288,8 @@ create table if not exists migration_log(id int(11) primary key auto_increment,p
    call pediatric_visit_Migration();
    SET SQL_SAFE_UPDATES = 0;
    select 5 as Pediatric;
-   update migration_log set endtime=now() where prcodedure = 'adult visit';
-   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'adult visit';
+   update migration_log set endtime=now() where prcodedure = 'pediatric visit';
+   update migration_log set maxid=(select max(obs_id) from obs) where prcodedure = 'pediatric visit';
  end if; 
  
  
