@@ -80,7 +80,7 @@ BEGIN
   set dateDd='29';
   END IF;
  
-  RETURN date_format(concat(trim(dateYy),'-',trim(dateMm),'-',trim(dateDd)),'%y-%m-%d');
+  RETURN date_format(concat(dateYy,'-',dateMm,'-',dateDd),'%y-%m-%d');
 END$$
 DELIMITER ;
 DROP FUNCTION if exists `digits`;
@@ -370,9 +370,9 @@ end if;
 
 
 /* SOINS SANTE PRIMAIRE PEDIATRIC */ 
- select count(*) into cnt from migration_log where prcodedure in ('sspPediatric') and endtime is not null;
+ select count(*) into cnt from migration_log where prcodedure in ('sspAdult') and endtime is not null;
  if(cnt=0) then 
-   select maxid into maxObsId from migration_log where prcodedure = 'sspAdult'; 
+   select maxid into maxObsId from migration_log where prcodedure = 'sspPediatric'; 
    delete from migration_log where prcodedure in ('sspPediatric');
    insert into migration_log(prcodedure,starttime) values('sspPediatric',now());
    update obs o  set o.obs_group_id=null where o.obs_id>maxObsId; 

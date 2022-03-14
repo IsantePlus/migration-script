@@ -335,7 +335,6 @@ BEGIN
 	and e.seqNum = l.seqNum
 	AND l.labID=137
 	AND l.result3='chest'
-	AND formatDate(l.resultDateYy,l.resultDateMm,l.resultDateDd) is not null
 	AND (l.result=1 OR l.result=2);
 			/*End migration for Radiographie pulmonaire:*/
 			

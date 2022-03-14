@@ -16,6 +16,9 @@ createProcedure() {
 }
 
 
+createProcedure migrationFunction.sql
+echo "Function migration created" > $HOME/migration-script/migrationLog.txt
+
 createProcedure cleanOpenmrs.sql
 echo "procedure cleanOpenmrs created" > $HOME/migration-script/migrationLog.txt
 
