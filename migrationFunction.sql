@@ -29,9 +29,15 @@ DROP FUNCTION if exists `formatDate`;
 DELIMITER $$
 CREATE FUNCTION `formatDate`( dateYy Varchar(10),dateMm Varchar(10),dateDd Varchar(10) ) RETURNS DATE
 BEGIN
-  IF (FindNumericValue(dateYy)<=0)
+
+  IF (FindNumericValue(dateYy)<0 or dateYy='' or dateYy is null)
   THEN 
     RETURN null;
+  END IF;
+  
+  IF (dateYy='00')
+  THEN 
+     set dateYy='2000';
   END IF;
   
   IF(length(dateYy)<=2) 
@@ -49,6 +55,11 @@ BEGIN
    set dateDd='01';
    END IF;
  
+ IF(length(dateDd)<=2) 
+  THEN 
+   set dateDd=concat('0',FindNumericValue(dateDd));
+   END IF;
+ 
  IF((dateMm='01' or dateMm='03' or dateMm='05' or dateMm='07' or dateMm='08' or dateMm='10' or dateMm='12') and dateDd>31)
  THEN 
   set dateDd='31';
@@ -59,27 +70,32 @@ BEGIN
   set dateDd='30';
   END IF;
   
- IF((dateMm='02') and dateDd>29)
+ IF((dateMm='02') and mod(dateYy,4)>0 and dateDd>28)
  THEN 
   set dateDd='28';
   END IF;
+  
+   IF((dateMm='02') and mod(dateYy,4)=0 and dateDd>29)
+ THEN 
+  set dateDd='29';
+  END IF;
  
-  RETURN date(concat (dateYy,'-',dateMm,'-',dateDd),'%y-%m-%d');
+  RETURN date_format(concat(trim(dateYy),'-',trim(dateMm),'-',trim(dateDd)),'%y-%m-%d');
 END$$
 DELIMITER ;
-
 DROP FUNCTION if exists `digits`;
 DELIMITER $$
-CREATE FUNCTION `digits`( str CHAR(32) ) RETURNS char(32) CHARSET utf8
+
+CREATE FUNCTION `digits`( str longtext ) RETURNS char(32) CHARSET utf8
 BEGIN
   DECLARE i, len SMALLINT DEFAULT 1;
-  DECLARE ret CHAR(32) DEFAULT '';
+  DECLARE ret VARCHAR(255) DEFAULT '';
   DECLARE c CHAR(1);
   DECLARE pos SMALLINT;
-  DECLARE after_p CHAR(20);
+  DECLARE after_p CHAR(100);
   IF str IS NULL
   THEN 
-    RETURN "";
+    RETURN "0.0";
   END IF;
   SET len = CHAR_LENGTH( str );
   l:REPEAT
@@ -91,13 +107,22 @@ BEGIN
 		IF c = '.' THEN
 			SET pos=INSTR(str, '.' );
             SET after_p=MID(str,pos,pos+2);
-            SET ret=CONCAT(FindNumericValue(ret),'.',FindNumericValue(after_p));
-            LEAVE l;
+			
+			IF FindNumericValue(ret) = '' THEN
+            SET ret=FindNumericValue(after_p);
+			ELSE 
+			 SET ret=CONCAT(FindNumericValue(ret),'.',FindNumericValue(after_p));
+            END IF;
+			LEAVE l;
 		ELSEIF c = ',' THEN 
 			SET pos=INSTR(str, ',');
             SET after_p=MID(str,pos,pos+2);
-            SET ret=CONCAT(FindNumericValue(ret),'.',FindNumericValue(after_p));
-            LEAVE l;
+			IF FindNumericValue(ret) = '' THEN
+            SET ret=FindNumericValue(after_p);
+			ELSE 
+			 SET ret=CONCAT(FindNumericValue(ret),'.',FindNumericValue(after_p));            
+            END IF;
+			LEAVE l;
 		END IF;
       END IF;
       
@@ -105,6 +130,12 @@ BEGIN
       
     END;
   UNTIL i > len END REPEAT;
+  
+    IF ret=""
+  THEN 
+    RETURN "0.0";
+  END IF;
+  
   RETURN ret;
 END$$
 DELIMITER ;
